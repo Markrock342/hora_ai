@@ -21,29 +21,18 @@ export function isValidDate(day: number, month: number, year: number): boolean {
   return day <= daysInMonth(month, year) && year >= 1900 && year <= 2100
 }
 
-export function formatSubjectName(input: BirthInput): string {
-  return input.name.trim()
-}
-
 export function formatBirthDisplay(input: BirthInput): string {
   const pad = (n: number) => String(n).padStart(2, '0')
   return `${pad(input.day)}/${pad(input.month)}/${input.year} เวลา ${input.time}`
 }
 
 export function formatLocationDisplay(input: BirthInput): string {
-  const parts = [input.district, input.province].filter(Boolean)
+  const parts = [input.district, input.province, input.country].filter(Boolean)
   return parts.join(', ')
 }
 
 export function validateBirthInput(input: BirthInput): BirthFormErrors {
   const errors: BirthFormErrors = {}
-
-  const name = input.name.trim()
-  if (!name) {
-    errors.name = 'กรุณากรอกชื่อเจ้าชะตา'
-  } else if (name.length < 2) {
-    errors.name = 'ชื่อต้องมีอย่างน้อย 2 ตัวอักษร'
-  }
 
   if (!input.day || !input.month || !input.year) {
     if (!input.day) errors.day = 'กรุณาเลือกวัน'
@@ -59,7 +48,8 @@ export function validateBirthInput(input: BirthInput): BirthFormErrors {
     errors.time = 'รูปแบบเวลาไม่ถูกต้อง (ใช้ HH:mm)'
   }
 
-  if (!input.province.trim()) errors.province = 'กรุณาเลือกจังหวัด'
+  if (!input.country.trim()) errors.country = 'กรุณาเลือกประเทศ'
+  if (!input.province.trim()) errors.province = 'กรุณากรอกจังหวัด/รัฐ'
   if (!input.district.trim()) errors.district = 'กรุณากรอกอำเภอ/เมือง'
 
   return errors
@@ -73,7 +63,7 @@ export function birthDataSeed(input: BirthInput): number {
   const time = parseTime(input.time)
   const h = time?.hours ?? 0
   const m = time?.minutes ?? 0
-  const str = `${input.name}${input.year}${input.month}${input.day}${h}${m}${input.province}${input.district}`
+  const str = `${input.year}${input.month}${input.day}${h}${m}${input.province}${input.district}`
   let hash = 0
   for (let i = 0; i < str.length; i++) {
     hash = (hash * 31 + str.charCodeAt(i)) >>> 0

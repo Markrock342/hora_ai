@@ -8,7 +8,7 @@ alwaysApply: true
 ## Input only
 - Subject name (ชื่อเจ้าชะตา)
 - Day, month, year, time (HH:mm)
-- Birth place: province, district/city
+- Birth place: country, province/state, district/city
 
 ## Fixed calculation systems (user cannot toggle others)
 - สุริยยาตร์ (suryayat)
@@ -20,10 +20,11 @@ alwaysApply: true
 
 Config: `src/data/calculationSettings.ts`
 
-## Output only
-Single table, **two columns**: ดาว | สถิตราศี
+## Output
+1. **Rasi chakra graph** (`RasiChakraChart`) — lagna wheel, planets, taksa sidebar
+2. Single table, **two columns**: ดาว | สถิตราศี
 
-Do NOT add columns for house, degree, dignity, taksa table, house table, meanings, or other tables unless user explicitly requests.
+Do NOT add extra table columns (house, degree, dignity, meanings, 25-row tables) unless user explicitly requests.
 
 ## Full spec
 See `REQUIREMENTS.md` in project root.

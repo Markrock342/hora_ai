@@ -79,6 +79,24 @@
   border-radius: 50%;
 }
 
+/* ราศีจักร */
+.rasi-chakra-section {
+  print: break-inside: avoid;
+}
+
+.rasi-chakra-svg {
+  filter: drop-shadow(0 0 24px rgba(212, 168, 75, 0.12));
+}
+
+@media print {
+  .rasi-chakra-svg {
+    filter: none;
+  }
+  .rasi-chakra-taksa {
+    font-size: 10px;
+  }
+}
+
 /* ——— Glass & glow ——— */
 .glass-card {
   box-shadow:

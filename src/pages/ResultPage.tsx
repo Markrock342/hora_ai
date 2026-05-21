@@ -3,15 +3,10 @@ import { BirthInfoBanner } from '../components/BirthInfoBanner'
 import { CalculationSettingsBadge } from '../components/CalculationSettingsBadge'
 import { PrintButton } from '../components/PrintButton'
 import { ReportHeader } from '../components/ReportHeader'
-import {
-  HOUSE_TABLE_COLUMNS,
-  PLANET_SIGN_COLUMNS,
-  PLANET_TABLE_COLUMNS,
-  TAKSA_TABLE_COLUMNS,
-} from '../components/resultTableColumns'
+import { PLANET_SIGN_COLUMNS } from '../components/resultTableColumns'
+import { RasiChakraChart } from '../components/RasiChakraChart'
 import { ResultTable } from '../components/ResultTable'
 import { useAstrology } from '../context/AstrologyContext'
-import { TABLE_ROW_COUNT } from '../types/astrology'
 import { GlassCard } from '../components/ui/GlassCard'
 import { PageAmbient } from '../components/ui/PageAmbient'
 
@@ -26,7 +21,7 @@ export function ResultPage() {
           <div className="mystic-empty-mandala" aria-hidden />
           <p className="mystic-empty-moon text-5xl text-hora-gold/60">☽</p>
           <p className="mt-4 font-display text-lg text-hora-cream">ยังไม่มีผลคำนวณ</p>
-          <p className="mt-2 text-sm text-hora-muted">กรอกข้อมูลเกิดเพื่อเปิดเผยดวงชะตา</p>
+          <p className="mt-2 text-sm text-hora-muted">กรอกวันเวลาและสถานที่เกิด</p>
           <Link to="/" className="btn-primary btn-primary-mystic mt-8 inline-block">
             กรอกข้อมูลเกิด
           </Link>
@@ -35,9 +30,18 @@ export function ResultPage() {
     )
   }
 
-  const { meta, tables, planets } = result
-  const totalRows =
-    tables.planets.length + tables.taksa.length + tables.houses.length
+  const { meta, planets } = result
+  const sourceLabel =
+    meta.calculationSource === 'suryayat-100-reference' ||
+    meta.calculationSource === 'suryayat-100-year'
+      ? 'ปฏิทินร้อยปี สุริยยาตร์ (ตรง myhora)'
+      : meta.calculationSource === 'suryayat-cached'
+        ? 'แคชในเครื่อง (คำนวณ/นำเข้าแล้ว)'
+        : meta.calculationSource === 'formula-pipeline'
+          ? 'สูตร: อันโตนาที + ลาหิรี + ราหู 8 + ทักษา (เทียบ myhora ต่อ)'
+          : meta.calculationSource === 'ephemeris-fallback'
+            ? 'ประมาณ (ephemeris)'
+            : null
 
   return (
     <div className="mystic-page result-page-mystic relative space-y-8 print:space-y-5">
@@ -51,35 +55,13 @@ export function ResultPage() {
             ผลการคำนวณ
           </p>
           <h2 className="result-page-title font-display text-4xl font-medium text-hora-cream">
-            รายงาน<span className="text-gradient-gold">ดวงชะตา</span>
+            สถิตร<span className="text-gradient-gold">ราศี</span>
           </h2>
           <p className="mt-2 text-sm text-hora-muted">
             {new Date(result.calculatedAt).toLocaleString('th-TH')}
             {' · '}
-            {totalRows} แถว (mock)
+            {planets.length} ดาว
           </p>
-          <div className="result-stats-row">
-            {meta.subjectName && (
-              <span className="result-stat-chip result-stat-chip--gold">
-                <span className="result-stat-chip-icon" aria-hidden>
-                  ✦
-                </span>
-                {meta.subjectName}
-              </span>
-            )}
-            <span className="result-stat-chip">
-              <span className="result-stat-chip-icon" aria-hidden>
-                ☉
-              </span>
-              4 ตาราง
-            </span>
-            <span className="result-stat-chip">
-              <span className="result-stat-chip-icon" aria-hidden>
-                ☽
-              </span>
-              สถิตราศี
-            </span>
-          </div>
         </header>
         <PrintButton result={result} />
       </div>
@@ -87,72 +69,31 @@ export function ResultPage() {
       <article
         id="astrology-report"
         className="astrology-report relative z-[1] space-y-6 print:space-y-5"
-        aria-label="รายงานโหราศาสตร์"
+        aria-label="ตารางดาวสถิตรราศี"
       >
         <ReportHeader result={result} />
 
         <div className="result-info-stack no-print">
-          <BirthInfoBanner
-            subjectName={meta.subjectName}
-            birth={meta.birthDisplay}
-            location={meta.locationDisplay}
-          />
+          <BirthInfoBanner birth={meta.birthDisplay} location={meta.locationDisplay} />
           <CalculationSettingsBadge />
-          <p className="mystic-mock-banner">
-            <span className="mystic-mock-banner-pulse" aria-hidden>
-              ◈
-            </span>
-            <span>
-              โหมด mock — สูตรจริงรอจากลูกค้า ·{' '}
-              <code>docs/FORMULA_SOURCES.md</code>
-            </span>
-          </p>
+          {sourceLabel && (
+            <p className="text-xs text-hora-gold-dim">{sourceLabel}</p>
+          )}
         </div>
 
-        <div className="result-section-divider no-print" aria-hidden>
-          ตารางดวงชะตา
-        </div>
+        {result.chart && <RasiChakraChart result={result} />}
 
         <ResultTable
-          title="ตารางที่ 1 — ดาว"
-          subtitle={`${TABLE_ROW_COUNT} แถว`}
-          columns={PLANET_TABLE_COLUMNS}
-          rows={tables.planets}
-          variant="chart"
-          staggerIndex={0}
-        />
-
-        <ResultTable
-          title="ตารางที่ 2 — ทักษา"
-          subtitle={`${TABLE_ROW_COUNT} แถว`}
-          columns={TAKSA_TABLE_COLUMNS}
-          rows={tables.taksa}
-          staggerIndex={1}
-        />
-
-        <ResultTable
-          title="ตารางที่ 3 — ราศี / ภพ / เรือน"
-          subtitle={`${TABLE_ROW_COUNT} แถว`}
-          columns={HOUSE_TABLE_COLUMNS}
-          rows={tables.houses}
-          staggerIndex={2}
-        />
-
-        <div className="result-section-divider no-print" aria-hidden>
-          สรุปดาวหลัก
-        </div>
-
-        <ResultTable
-          title="สรุป — ดาวหลัก (10 ดวง)"
-          subtitle="2 คอลัมน์"
+          title="ดาวสถิตรราศี"
+          subtitle="สุริยยาตร์ · ลาหิรี · อันโตนาทีฯ · ราหู ๘ กุมภ์ · ทักษา (คงที่)"
           columns={PLANET_SIGN_COLUMNS}
           rows={planets}
           variant="chart"
-          staggerIndex={3}
+          staggerIndex={1}
         />
 
         <footer className="hidden border-t border-gray-300 pt-4 text-center text-xs text-gray-500 print:block">
-          NewHora — {totalRows} แถว · {meta.subjectName}
+          NewHora — {meta.birthDisplay} — {meta.locationDisplay}
         </footer>
       </article>
 

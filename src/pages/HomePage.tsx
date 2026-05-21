@@ -31,7 +31,7 @@ export function HomePage() {
             <span className="home-hero-title-gold text-gradient-gold"> ดวงชะตา</span>
           </h1>
           <p className="home-hero-lead">
-            กรอกชื่อเจ้าชะตา วันเวลา และสถานที่เกิด — ออกแบบสำหรับคอมพิวเตอร์และ iPad
+            กรอกวัน เดือน ปี เวลา และสถานที่เกิด — ผลลัพธ์ตาราง ดาว | สถิตราศี
           </p>
           <ul className="home-hero-features">
             {['สุริยยาตร์', 'ลาหิรี', 'อันโตนาทีฯ', 'ราหู ๘ กุมภ์'].map((item, i) => (

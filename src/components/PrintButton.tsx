@@ -7,8 +7,7 @@ interface PrintButtonProps {
 export function PrintButton({ result }: PrintButtonProps) {
   const handlePrint = () => {
     const prevTitle = document.title
-    const meta = result.meta as { subjectName?: string; birthDisplay: string }
-    const titleName = meta.subjectName || meta.birthDisplay || 'ดวงชะตา'
+    const titleName = result.meta.birthDisplay || 'ดวงชะตา'
     document.title = `NewHora — ${titleName}`
     window.print()
     document.title = prevTitle

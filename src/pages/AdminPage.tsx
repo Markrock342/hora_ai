@@ -1,6 +1,7 @@
 import type { CSSProperties } from 'react'
 import { CALCULATION_SETTINGS, CALCULATION_SETTINGS_LABELS } from '../data/calculationSettings'
 import { PLANETS, SIGNS } from '../data/astrologyConstants'
+import { SuryayatImportForm } from '../components/SuryayatImportForm'
 import { GlassCard } from '../components/ui/GlassCard'
 import { PageAmbient } from '../components/ui/PageAmbient'
 
@@ -74,6 +75,8 @@ export function AdminPage() {
           </div>
         </div>
       </GlassCard>
+
+      <SuryayatImportForm />
     </div>
   )
 }

@@ -27,11 +27,11 @@ const MONTHS = [
 ]
 
 const CHECKLIST: { key: keyof BirthInput; label: string }[] = [
-  { key: 'name', label: 'ชื่อเจ้าชะตา' },
   { key: 'day', label: 'วันเกิด' },
   { key: 'month', label: 'เดือน' },
   { key: 'year', label: 'ปี' },
   { key: 'time', label: 'เวลา' },
+  { key: 'country', label: 'ประเทศ' },
   { key: 'province', label: 'จังหวัด' },
   { key: 'district', label: 'อำเภอ' },
 ]
@@ -54,12 +54,11 @@ function isFieldFilled(input: BirthInput, key: keyof BirthInput): boolean {
 }
 
 export function BirthForm() {
-  const { input, setInput, resetInput, calculate } = useAstrology()
+  const { input, setInput, resetInput, calculate, calculating } = useAstrology()
   const navigate = useNavigate()
   const tilt = useTiltCard(5)
   const [errors, setErrors] = useState<BirthFormErrors>({})
   const [submitAttempted, setSubmitAttempted] = useState(false)
-  const [isCalculating, setIsCalculating] = useState(false)
 
   const maxDay = useMemo(
     () => (input.month && input.year ? daysInMonth(input.month, input.year) : 31),
@@ -86,11 +85,10 @@ export function BirthForm() {
 
   const handleCalculate = async () => {
     setSubmitAttempted(true)
-    const { ok, errors: nextErrors } = calculate()
+    const { ok, errors: nextErrors } = await calculate()
     setErrors(nextErrors)
     if (ok) {
-      setIsCalculating(true)
-      await new Promise((r) => setTimeout(r, 620))
+      await new Promise((r) => setTimeout(r, 400))
       navigate('/result')
     }
   }
@@ -99,7 +97,6 @@ export function BirthForm() {
     resetInput()
     setErrors({})
     setSubmitAttempted(false)
-    setIsCalculating(false)
   }
 
   const hasErrors = Object.keys(errors).length > 0
@@ -128,7 +125,7 @@ export function BirthForm() {
         className="birth-form-card birth-form-card--tilt max-w-4xl"
         glow
       >
-        {isCalculating && (
+        {calculating && (
           <div className="calc-ritual-overlay" aria-live="polite">
             <div className="calc-ritual-mandala" aria-hidden />
             <div className="calc-ritual-mandala calc-ritual-mandala--reverse" aria-hidden />
@@ -148,7 +145,7 @@ export function BirthForm() {
 
         <div
           ref={tilt.ref}
-          className={`birth-form-card-inner ${isCalculating ? 'birth-form-card-inner--dim' : ''}`}
+          className={`birth-form-card-inner ${calculating ? 'birth-form-card-inner--dim' : ''}`}
           onMouseMove={tilt.onMove}
           onMouseLeave={tilt.onLeave}
         >
@@ -234,31 +231,7 @@ export function BirthForm() {
             }}
             noValidate
           >
-            <FormSection id="section-subject" title="เจ้าชะตา" icon="✦" step={1} delay={0}>
-              <InputField
-                id="name"
-                label="ชื่อเจ้าชะตา"
-                required
-                filled={Boolean(input.name.trim())}
-                error={errors.name}
-                icon="👤"
-                hint="ชื่อสำหรับแสดงบนรายงานดวง"
-                className="max-w-2xl"
-              >
-                <input
-                  id="name"
-                  type="text"
-                  className="hora-input hora-input-3d"
-                  placeholder="เช่น สมชาย ใจดี"
-                  value={input.name}
-                  onChange={(e) => patchInput({ name: e.target.value })}
-                  autoComplete="name"
-                  maxLength={120}
-                />
-              </InputField>
-            </FormSection>
-
-            <FormSection id="section-datetime" title="วันเวลาเกิด" icon="☽" step={2} delay={60}>
+            <FormSection id="section-datetime" title="วันเวลาเกิด" icon="☽" step={1} delay={0}>
               <div className="datetime-panel">
                 <div className="datetime-grid">
                   <InputField
@@ -380,8 +353,9 @@ export function BirthForm() {
               </div>
             </FormSection>
 
-            <FormSection id="section-location" title="สถานที่เกิด" icon="⌖" step={3} delay={120}>
+            <FormSection id="section-location" title="สถานที่เกิด" icon="⌖" step={2} delay={60}>
               <LocationSelect
+                country={input.country}
                 province={input.province}
                 district={input.district}
                 errors={errors}
@@ -425,19 +399,19 @@ export function BirthForm() {
                 type="button"
                 onClick={handleReset}
                 className="btn-ghost btn-ghost-3d w-full sm:w-auto"
-                disabled={isCalculating}
+                disabled={calculating}
               >
                 <span aria-hidden>↺</span> ล้างข้อมูล
               </button>
               <button
                 type="submit"
-                className={`btn-primary btn-primary-3d btn-primary-cosmic w-full sm:w-auto sm:min-w-[240px] ${isCalculating ? 'btn-primary-3d--loading' : ''} ${allFilled ? 'btn-primary--ready' : ''}`}
-                disabled={isCalculating}
+                className={`btn-primary btn-primary-3d btn-primary-cosmic w-full sm:w-auto sm:min-w-[240px] ${calculating ? 'btn-primary-3d--loading' : ''} ${allFilled ? 'btn-primary--ready' : ''}`}
+                disabled={calculating}
               >
                 <span className="btn-primary-shine" aria-hidden />
                 <span className="btn-primary-orbit" aria-hidden />
                 <span className="btn-primary-text">
-                  {isCalculating ? (
+                  {calculating ? (
                     <>
                       <span className="btn-spinner" aria-hidden />
                       กำลังคำนวณดวง…
