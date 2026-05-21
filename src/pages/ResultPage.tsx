@@ -27,7 +27,6 @@ import { isMyhoraScrapeAvailable } from '../utils/myhora/fetchMyhoraThai'
 export function ResultPage() {
   const { result, refreshTransit, refreshingTransit } = useAstrology()
 
-  const meta = result?.meta
   const planets = result?.planets ?? []
   const input = result?.input
   const isMyhora = Boolean(result?.meta.calculationSource === 'myhora-scrape' && result.myhora)
@@ -105,6 +104,7 @@ export function ResultPage() {
     )
   }
 
+  const { meta } = result
   const sourceLabel =
     meta.calculationSource === 'myhora-scrape'
       ? null
