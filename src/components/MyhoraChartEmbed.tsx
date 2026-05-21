@@ -13,8 +13,8 @@ interface MyhoraChartEmbedProps {
 
 /** ขนาด embed myhora (layout ~500×450 + แถบ checkbox) */
 const CHART_SIZE = {
-  large: { width: 550, height: 500 },
-  small: { width: 300, height: 430 },
+  large: { width: 500, height: 480 },
+  small: { width: 268, height: 300 },
 } as const
 
 /**
@@ -41,7 +41,7 @@ export function MyhoraChartEmbed({
             {subtitle ? <p className="text-xs text-hora-muted">{subtitle}</p> : null}
           </header>
         ) : null}
-        <p className="px-4 py-8 text-center text-sm text-hora-muted">ไม่มีกราฟจาก myhora</p>
+        <p className="px-4 py-8 text-center text-sm text-hora-muted">ไม่มีกราฟ</p>
       </section>
     )
   }

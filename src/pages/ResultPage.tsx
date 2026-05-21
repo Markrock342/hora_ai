@@ -7,6 +7,7 @@ import { TransitDateControls } from '../components/TransitDateControls'
 import { PrintButton } from '../components/PrintButton'
 import { ReportHeader } from '../components/ReportHeader'
 import { PLANET_SIGN_COLUMNS } from '../components/resultTableColumns'
+import { MyhoraDateSummaryBlock } from '../components/MyhoraDateSummaryBlock'
 import { MyhoraDetailPanel } from '../components/MyhoraDetailPanel'
 import { MyhoraExactPanel } from '../components/MyhoraExactPanel'
 import { MyhoraNatalPrintSummary } from '../components/MyhoraNatalPrintSummary'
@@ -26,6 +27,67 @@ import { isMyhoraScrapeAvailable } from '../utils/myhora/fetchMyhoraThai'
 export function ResultPage() {
   const { result, refreshTransit, refreshingTransit } = useAstrology()
 
+  const meta = result?.meta
+  const planets = result?.planets ?? []
+  const input = result?.input
+  const isMyhora = Boolean(result?.meta.calculationSource === 'myhora-scrape' && result.myhora)
+  const transit = result?.myhora?.transit ?? defaultTransitInput()
+
+  const place = useMemo(
+    () => (input ? resolvePlaceCoords(input.country, input.province, input.district) : null),
+    [input],
+  )
+
+  const d1ForDivisional = useMemo(
+    () =>
+      result && isMyhora
+        ? {
+            lagna: result.meta.lagna ?? result.chart?.lagna ?? 'เมษ',
+            planets: result.planets,
+          }
+        : undefined,
+    [isMyhora, result],
+  )
+
+  const navamsaLocal = useMemo(
+    () => (input && place ? computeDivisionalRows(input, place, 'navamsa', d1ForDivisional) : null),
+    [input, place, d1ForDivisional],
+  )
+  const drekkanaLocal = useMemo(
+    () =>
+      input && place ? computeDivisionalRows(input, place, 'drekkana', d1ForDivisional) : null,
+    [input, place, d1ForDivisional],
+  )
+
+  const canRefreshTransit = isMyhoraScrapeAvailable() && isMyhora
+
+  const dateDetails = useMemo(() => {
+    if (!result || !input || !place || !navamsaLocal || !drekkanaLocal) {
+      return { natal: null, transit: null, fromMyhora: false }
+    }
+
+    const localNatal = buildLocalNatalDetail(input, place, {
+      lagna: result.meta.lagna ?? result.chart?.lagna,
+      navamsaLagna: navamsaLocal.lagna,
+      drekkanaLagna: drekkanaLocal.lagna,
+    })
+    const localTransit = buildLocalTransitDetail(transit, input, place)
+
+    if (result.myhora?.dateDetailNatal || result.myhora?.dateDetailTransit) {
+      return {
+        natal: result.myhora.dateDetailNatal ?? localNatal,
+        transit: result.myhora.dateDetailTransit ?? localTransit,
+        fromMyhora: Boolean(result.myhora.dateDetailNatal || result.myhora.dateDetailTransit),
+      }
+    }
+
+    return {
+      natal: localNatal,
+      transit: isMyhora ? localTransit : null,
+      fromMyhora: false,
+    }
+  }, [result, input, place, isMyhora, transit, navamsaLocal, drekkanaLocal])
+
   if (!result) {
     return (
       <div className="mystic-page result-page-mystic result-page-mystic--empty relative">
@@ -43,68 +105,16 @@ export function ResultPage() {
     )
   }
 
-  const { meta, planets, input } = result
-  const isMyhora = meta.calculationSource === 'myhora-scrape' && result.myhora
-  const transit = result.myhora?.transit ?? defaultTransitInput()
-
-  const place = useMemo(
-    () => resolvePlaceCoords(input.country, input.province, input.district),
-    [input],
-  )
-
-  const d1ForDivisional = useMemo(
-    () =>
-      isMyhora
-        ? {
-            lagna: result.meta.lagna ?? result.chart?.lagna ?? 'เมษ',
-            planets: result.planets,
-          }
-        : undefined,
-    [isMyhora, result],
-  )
-
-  const navamsaLocal = useMemo(
-    () => computeDivisionalRows(input, place, 'navamsa', d1ForDivisional),
-    [input, place, d1ForDivisional],
-  )
-  const drekkanaLocal = useMemo(
-    () => computeDivisionalRows(input, place, 'drekkana', d1ForDivisional),
-    [input, place, d1ForDivisional],
-  )
-
-  const canRefreshTransit = isMyhoraScrapeAvailable() && isMyhora
-
-  const dateDetails = useMemo(() => {
-    if (result.myhora?.dateDetailNatal || result.myhora?.dateDetailTransit) {
-      return {
-        natal: result.myhora.dateDetailNatal ?? null,
-        transit: result.myhora.dateDetailTransit ?? null,
-        fromMyhora: true,
-      }
-    }
-    return {
-      natal: buildLocalNatalDetail(input, place, {
-        lagna: result.meta.lagna ?? result.chart?.lagna,
-        navamsaLagna: navamsaLocal.lagna,
-        drekkanaLagna: drekkanaLocal.lagna,
-      }),
-      transit: isMyhora
-        ? buildLocalTransitDetail(transit, input, place)
-        : null,
-      fromMyhora: false,
-    }
-  }, [result, input, place, isMyhora, transit, navamsaLocal.lagna, drekkanaLocal.lagna])
-
   const sourceLabel =
     meta.calculationSource === 'myhora-scrape'
-      ? 'ดึงข้อมูลออนไลน์ — กราฟ · ตารางสมผุส · คำทำนาย · ทักษา · ตรีวัย'
+      ? null
       : meta.calculationSource === 'suryayat-100-reference' ||
           meta.calculationSource === 'suryayat-100-year'
-        ? 'ปฏิทินร้อยปี สุริยยาตร์ (ตรง myhora)'
+        ? 'ปฏิทินร้อยปี สุริยยาตร์'
         : meta.calculationSource === 'suryayat-cached'
           ? 'แคชในเครื่อง (คำนวณ/นำเข้าแล้ว)'
           : meta.calculationSource === 'formula-pipeline'
-            ? 'สูตร: อันโตนาที + ลาหิรี + ราหู 8 + ทักษา (เทียบ myhora ต่อ)'
+            ? 'สูตร: อันโตนาที + ลาหิรี + ราหู 8 + ทักษา'
             : meta.calculationSource === 'ephemeris-fallback'
               ? 'ประมาณ (ephemeris)'
               : null
@@ -144,9 +154,7 @@ export function ResultPage() {
         <div className="result-info-stack no-print">
           <BirthInfoBanner birth={meta.birthDisplay} location={meta.locationDisplay} />
           <CalculationSettingsBadge />
-          {sourceLabel ? (
-            <p className="result-source-label text-xs text-hora-gold-dim">{sourceLabel}</p>
-          ) : null}
+          {sourceLabel ? <p className="result-source-label text-xs text-hora-gold-dim">{sourceLabel}</p> : null}
         </div>
 
         {canRefreshTransit && (
@@ -156,6 +164,12 @@ export function ResultPage() {
             onApply={(next: TransitInput) => void refreshTransit(next)}
           />
         )}
+
+        <MyhoraDateSummaryBlock
+          natal={dateDetails.natal}
+          transit={dateDetails.transit}
+          fromMyhora={dateDetails.fromMyhora}
+        />
 
         <MyhoraDetailPanel
           natal={dateDetails.natal}
@@ -170,33 +184,25 @@ export function ResultPage() {
             <div className="result-charts-block space-y-6">
               <div className="result-charts-grid result-charts-grid--local">
                 <div className="result-rasi-chart-slot">
-                  <RasiChakraChart
-                    result={result}
-                    animateOnEnter
-                    subtitle={
-                      isMyhora
-                        ? 'ตำแหน่งดาวออนไลน์ · วงจรในเครื่อง (Whole Sign)'
-                        : undefined
-                    }
-                  />
+                  <RasiChakraChart result={result} animateOnEnter />
                 </div>
 
                 <DivisionalChakraChart
                   result={result}
                   title="นวางศ์จักร"
-                  subtitle={`ลัคนา ${navamsaLocal.lagna} · ปรชายาจารี + ลาหิรี`}
+                  subtitle={`ลัคนา ${navamsaLocal?.lagna ?? '-'} · ปรชายาจารี + ลาหิรี`}
                   printSectionId="navamsa-chakra"
-                  planets={navamsaLocal.planets}
-                  lagna={navamsaLocal.lagna}
+                  planets={navamsaLocal?.planets ?? []}
+                  lagna={navamsaLocal?.lagna ?? 'เมษ'}
                 />
 
                 <DivisionalChakraChart
                   result={result}
                   title="ตรียางศ์จักร"
-                  subtitle={`ลัคนา ${drekkanaLocal.lagna} · ปรชายาจารี + ลาหิรี`}
+                  subtitle={`ลัคนา ${drekkanaLocal?.lagna ?? '-'} · ปรชายาจารี + ลาหิรี`}
                   printSectionId="drekkana-chakra"
-                  planets={drekkanaLocal.planets}
-                  lagna={drekkanaLocal.lagna}
+                  planets={drekkanaLocal?.planets ?? []}
+                  lagna={drekkanaLocal?.lagna ?? 'เมษ'}
                 />
               </div>
             </div>
@@ -205,9 +211,9 @@ export function ResultPage() {
 
             {meta.calculationSource !== 'myhora-scrape' && (
               <p className="text-xs text-hora-muted no-print">
-                ผลดาวจากสูตรในเครื่อง — อาจไม่ตรงแหล่งออนไลน์จนกว่าจะดึงข้อมูลสำเร็จ (รัน{' '}
+                ผลดาวจากสูตรในเครื่อง — รัน{' '}
                 <code className="text-hora-gold-dim">npm run dev</code> หรือ{' '}
-                <code className="text-hora-gold-dim">npm run start</code> พร้อม proxy /api/myhora)
+                <code className="text-hora-gold-dim">npm run start</code> หากต้องการผลแบบเต็ม
               </p>
             )}
           </>
@@ -231,10 +237,7 @@ export function ResultPage() {
       </article>
 
       <p className="relative z-[1] text-center no-print">
-        <Link
-          to="/"
-          className="mystic-back-link text-sm text-hora-gold-dim transition hover:text-hora-gold-light"
-        >
+        <Link to="/" className="mystic-back-link text-sm text-hora-gold-dim transition hover:text-hora-gold-light">
           ← แก้ข้อมูลเกิด
         </Link>
       </p>

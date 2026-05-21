@@ -1,3 +1,5 @@
+import { extractInnerHtmlById } from './extractElementHtml'
+
 /** แยกข้อมูลจาก n_date_info / t_date_info ใน thai.aspx */
 
 export type MyhoraDateLineType =
@@ -113,10 +115,10 @@ export function parseDateInfoFromMainHtml(html: string): {
   natal: MyhoraDateDetail | null
   transit: MyhoraDateDetail | null
 } {
-  const natalHtml = html.match(/id="n_date_info"[^>]*>([\s\S]*?)<\/div>/i)?.[1]
-  const transitHtml = html.match(/id="t_date_info"[^>]*>([\s\S]*?)<\/div>/i)?.[1]
+  const natalHtml = extractInnerHtmlById(html, 'n_date_info')
+  const transitHtml = extractInnerHtmlById(html, 't_date_info')
   return {
-    natal: parseDateInfoBlock(natalHtml, 'natal'),
-    transit: parseDateInfoBlock(transitHtml, 'transit'),
+    natal: parseDateInfoBlock(natalHtml ?? undefined, 'natal'),
+    transit: parseDateInfoBlock(transitHtml ?? undefined, 'transit'),
   }
 }

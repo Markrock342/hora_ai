@@ -59,7 +59,7 @@ export function SuryayatImportForm() {
 
   return (
     <GlassCard mystic className="relative z-[1] space-y-4">
-      <h3 className="font-display text-lg text-gradient-gold">นำเข้าจาก myhora</h3>
+      <h3 className="font-display text-lg text-gradient-gold">นำเข้าข้อมูลอ้างอิง</h3>
       <p className="text-sm text-hora-muted">
         คัดลอกราศีจักรจาก thai.aspx ใส่ JSON แล้วบันทึกแคช — ใช้ได้ทันทีโดยไม่ต้องมีไฟล์ปี
       </p>

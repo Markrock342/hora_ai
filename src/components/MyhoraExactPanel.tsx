@@ -42,30 +42,23 @@ export function MyhoraExactPanel({ tables }: MyhoraExactPanelProps) {
 
   return (
     <div className="myhora-exact-panel space-y-8">
-      <p className="rounded-lg border border-hora-gold/30 bg-hora-gold/10 px-4 py-3 text-sm text-hora-cream no-print">
-        ผลด้านล่างดึงจากแหล่งออนไลน์โดยตรง (กราฟ · ตารางสมผุส · คำทำนาย) — ตรงกับเว็บต้นทาง
-      </p>
-
       <section className="myhora-charts-block" aria-label="กราฟดวงกำเนิด">
         <MyhoraNatalSummary tables={tables} />
         {charts ? <MyhoraChartsPanel charts={charts} bare /> : null}
-        <p className="myhora-charts-note text-xs text-hora-muted no-print">
-          ราศีจักร = ตำแหน่งดาวบนวงกลม (แบบ myhora) · ไม่แสดงตารางตัวเลข Longitude แยก
-        </p>
       </section>
 
       {charts?.bhava ? (
         <MyhoraChartEmbed
           embedPath={charts.bhava}
           title="เรือนลัคนา"
-          subtitle="ภวะจักร — ดึงออนไลน์"
+          subtitle="ภวะจักร"
           size="large"
         />
       ) : null}
 
       <MyhoraHtmlBlock
         title="ตารางสมผุสดวงกำเนิด"
-        subtitle="เรือนลัคนา · ตรียางค์ · นวางค์ · ทักษา · ฤกษ์ — ดึงออนไลน์"
+        subtitle="เรือนลัคนา · ตรียางค์ · นวางค์ · ทักษา · ฤกษ์"
         html={html?.natalTable ?? null}
         minHeight={200}
         className="myhora-html-block--samrap"
@@ -74,7 +67,7 @@ export function MyhoraExactPanel({ tables }: MyhoraExactPanelProps) {
       {predictHtml ? (
         <MyhoraHtmlBlock
           title="ทำนายดวงกำเนิด"
-          subtitle="ข้อความทำนาย (จักรราศี)"
+          subtitle="จักรราศี"
           html={predictHtml}
           minHeight={320}
           className="myhora-html-block--predict"
@@ -83,7 +76,7 @@ export function MyhoraExactPanel({ tables }: MyhoraExactPanelProps) {
         <MyhoraEmbedFrame
           embedPath={content.astrologyNatal}
           title="ทำนายดวงกำเนิด"
-          subtitle="ลัคนา · มาตรฐานดาว · เจ้าเรือน · ดาวในเรือน/ราศี — ดึงออนไลน์"
+          subtitle="ลัคนา · มาตรฐานดาว · เจ้าเรือน · ดาวในเรือน/ราศี"
           height={720}
           wide
           className="myhora-embed-section--natal"

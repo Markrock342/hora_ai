@@ -137,6 +137,7 @@ export function BirthForm() {
 
     return () => {
       alive = false
+      document.documentElement.classList.remove('calc-transition-outro')
     }
   }, [pendingCalcNav, calculating, result, navigate])
 

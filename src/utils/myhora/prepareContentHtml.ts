@@ -20,12 +20,43 @@ function unwrapForms(html: string): string {
 /**
  * HTML จาก myhora (ตารางสมผุส / คำทำนาย) — ตัด script ชี้ asset ผ่าน proxy
  */
-export function prepareMyhoraContentHtml(raw: string): string {
+/** เปิดบล็อกที่ถูกซ่อน + ลิงก์ javascript "แสดง…" (ใช้กับคำทำนาย) */
+export function expandMyhoraInteractiveHtml(html: string): string {
+  let out = html
+
+  out = out.replace(/<div(\s[^>]*)>/gi, (full, attrs) => {
+    if (!/display\s*:\s*none/i.test(attrs)) return full
+    if (/content-ads|print-hide|tool-export|loading-status|cb_/i.test(attrs)) return full
+    const next = attrs
+      .replace(/display\s*:\s*none\s*;?/gi, '')
+      .replace(/;\s*;/g, ';')
+      .replace(/\sstyle="\s*"/i, '')
+    return `<div${next}>`
+  })
+
+  out = out.replace(
+    /<div(\s[^>]*)>/gi,
+    (full, attrs) => {
+      if (!/overflow\s*:\s*hidden/i.test(attrs) || !/height\s*:/i.test(attrs)) return full
+      const next = attrs
+        .replace(/overflow\s*:\s*hidden\s*;?/gi, 'overflow:visible;')
+        .replace(/height\s*:\s*[^;"']+;?/gi, '')
+      return `<div${next}>`
+    },
+  )
+
+  return out
+}
+
+export function prepareMyhoraContentHtml(raw: string, options?: { expandInteractive?: boolean }): string {
   let html = raw
   html = html.replace(/<script[\s\S]*?<\/script>/gi, '')
   html = unwrapForms(html)
   html = rewriteAssetUrls(html)
   html = stripMyhoraChrome(html)
+  if (options?.expandInteractive !== false) {
+    html = expandMyhoraInteractiveHtml(html)
+  }
   return html.trim()
 }
 

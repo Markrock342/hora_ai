@@ -3,7 +3,10 @@ export function PageAmbient({ variant = 'default' }: { variant?: 'default' | 're
   const symbols = ['☉', '☽', '♃', '♄', '♀', '♂', '☿', '☊', '☋', '✦', '☸', '◈'] as const
 
   return (
-    <div className={`page-ambient page-ambient--${variant}`} aria-hidden>
+    <div
+      className={`page-ambient page-ambient--${variant} pointer-events-none select-none absolute inset-0 z-0 overflow-hidden`}
+      aria-hidden
+    >
       <div className="page-ambient-aurora page-ambient-aurora--1" />
       <div className="page-ambient-aurora page-ambient-aurora--2" />
       <div className="page-ambient-aurora page-ambient-aurora--3" />

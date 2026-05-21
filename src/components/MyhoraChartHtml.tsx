@@ -73,7 +73,7 @@ export function MyhoraChartHtml({
       ) : null}
       {failed && !loading ? (
         <p className="myhora-chart-html-error text-center text-sm text-hora-muted py-12">
-          โหลดกราฟจาก myhora ไม่สำเร็จ
+          โหลดกราฟไม่สำเร็จ
         </p>
       ) : null}
       <div
