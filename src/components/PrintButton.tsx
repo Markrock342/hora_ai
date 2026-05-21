@@ -7,7 +7,10 @@ interface PrintButtonProps {
 export function PrintButton({ result }: PrintButtonProps) {
   const handlePrint = () => {
     const prevTitle = document.title
-    const titleName = result.meta.birthDisplay || 'ดวงชะตา'
+    const lagna = result.meta.lagna ?? result.chart?.lagna
+    const titleName = lagna
+      ? `${result.meta.birthDisplay} — ลัคนา ${lagna}`
+      : result.meta.birthDisplay || 'ดวงชะตา'
     document.title = `NewHora — ${titleName}`
     window.print()
     document.title = prevTitle

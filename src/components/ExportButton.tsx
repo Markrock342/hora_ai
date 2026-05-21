@@ -1,4 +1,5 @@
 import type { AstrologyResult } from '../types/astrology'
+import { buildDashboardTables } from './dashboardTableTypes'
 
 interface ExportButtonProps {
   result: AstrologyResult
@@ -10,7 +11,11 @@ export function ExportButton({
   filenamePrefix = 'newhora-chart',
 }: ExportButtonProps) {
   const handleExportJson = () => {
-    const blob = new Blob([JSON.stringify(result, null, 2)], {
+    const payload = {
+      ...result,
+      dashboardTables: buildDashboardTables(result),
+    }
+    const blob = new Blob([JSON.stringify(payload, null, 2)], {
       type: 'application/json',
     })
     const url = URL.createObjectURL(blob)

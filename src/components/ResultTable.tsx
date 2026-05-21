@@ -1,5 +1,4 @@
 import type { CSSProperties, ReactNode } from 'react'
-import { SignBadge } from './SignBadge'
 
 export interface Column<T> {
   key: keyof T | string
@@ -18,7 +17,6 @@ interface ResultTableProps<T extends object> {
   printSection?: boolean
   variant?: 'default' | 'chart'
   rowNumber?: boolean
-  /** หน่วง animation เข้าทีละตาราง */
   staggerIndex?: number
 }
 
@@ -121,7 +119,7 @@ export function ResultTable<T extends object>({
                 <tr
                   key={rowIndex}
                   className="result-table-row"
-                  style={{ '--row-i': rowIndex } as React.CSSProperties}
+                  style={{ '--row-i': rowIndex } as CSSProperties}
                 >
                   {allColumns.map((col) => (
                     <td
@@ -147,33 +145,9 @@ export function ResultTable<T extends object>({
   )
 }
 
-/** ตารางดาว — ดาว / สถิตราศี */
-export { PLANET_SIGN_COLUMNS } from './resultTableColumns'
-
-/** ตารางทักษา */
-export const TAKSA_COLUMNS = [
-  { key: 'taksa', header: 'ทักษา' },
-  { key: 'countFrom', header: 'นับจาก' },
-  { key: 'position', header: 'ตำแหน่ง' },
-  {
-    key: 'sign',
-    header: 'ราศี',
-    render: (row: { sign: string }) => <SignBadge sign={row.sign} />,
-  },
-] as const
-
-/** ตารางราศี / ภพ / เรือน */
-export const RASHI_BHAVA_COLUMNS = [
-  { key: 'bhava', header: 'ภพ', className: 'w-16 text-center tabular-nums', align: 'center' as const },
-  {
-    key: 'sign',
-    header: 'ราศี',
-    render: (row: { sign: string }) => <SignBadge sign={row.sign} />,
-  },
-  { key: 'house', header: 'เรือน' },
-  { key: 'lord', header: 'เจ้าเรือน' },
-] as const
-
-export type PlanetSignRow = { planet: string; siderealSign: string }
-export type TaksaRow = { taksa: string; countFrom: string; position: string; sign: string }
-export type RashiBhavaRow = { bhava: string; sign: string; house: string; lord: string }
+export {
+  PLANET_SIGN_COLUMNS,
+  PLANET_TABLE_COLUMNS,
+  TAKSA_TABLE_COLUMNS,
+  HOUSE_TABLE_COLUMNS,
+} from './resultTableColumns'
