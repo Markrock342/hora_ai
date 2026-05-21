@@ -1,0 +1,24 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "env": {
+    "VITE_MYHORA_ORIGIN": "/api/myhora",
+    "VITE_MYHORA_NET_ORIGIN": "/api/myhora-net"
+  },
+  "rewrites": [
+    {
+      "source": "/api/myhora-net/:path*",
+      "destination": "https://myhora.net/:path*"
+    },
+    {
+      "source": "/api/myhora/:path*",
+      "destination": "https://myhora.com/:path*"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
+    }
+  ]
+}

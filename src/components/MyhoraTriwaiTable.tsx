@@ -1,14 +1,11 @@
-import { MYHORA_PLANET_NUM } from '../data/myhoraSignCodes'
 import type { MyhoraTriwaiCell } from '../types/myhora'
+import { myhoraTriwaiBg } from '../utils/myhora/assetUrls'
+import { MyhoraStarIcon } from './MyhoraStarIcon'
 
 interface MyhoraTriwaiTableProps {
   title: string
   subtitle?: string
   grid: (MyhoraTriwaiCell | null)[][]
-}
-
-function planetLabel(num: number): string {
-  return MYHORA_PLANET_NUM[num] ?? String(num)
 }
 
 export function MyhoraTriwaiTable({ title, subtitle, grid }: MyhoraTriwaiTableProps) {
@@ -23,7 +20,7 @@ export function MyhoraTriwaiTable({ title, subtitle, grid }: MyhoraTriwaiTablePr
         ) : null}
       </header>
       <div className="myhora-triwai-wrap">
-        <table className="myhora-triwai-grid">
+        <table className="myhora-triwai-grid myhora-triwai-grid--native">
           <tbody>
             {grid.map((row, ri) => (
               <tr key={ri}>
@@ -35,11 +32,16 @@ export function MyhoraTriwaiTable({ title, subtitle, grid }: MyhoraTriwaiTablePr
                         ? 'myhora-triwai-cell myhora-triwai-cell--active'
                         : 'myhora-triwai-cell'
                     }
+                    style={
+                      cell
+                        ? { backgroundImage: `url('${myhoraTriwaiBg(cell.highlighted)}')` }
+                        : undefined
+                    }
                   >
                     {cell ? (
                       <>
                         <span className="myhora-triwai-house">{cell.house}</span>
-                        <span className="myhora-triwai-planet">{planetLabel(cell.planetNum)}</span>
+                        <MyhoraStarIcon planetNum={cell.planetNum} className="myhora-triwai-star" />
                         <span className="myhora-triwai-age">{cell.ageRange}</span>
                       </>
                     ) : null}

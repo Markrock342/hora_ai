@@ -5,7 +5,13 @@ import { useNavigate } from 'react-router-dom'
 import { CALCULATION_SETTINGS_LABELS } from '../data/calculationSettings'
 import { useAstrology } from '../context/AstrologyContext'
 import type { BirthFormErrors, BirthInput } from '../types/astrology'
-import { daysInMonth } from '../utils/dateTimeUtils'
+import {
+  BIRTH_YEAR_MAX,
+  BIRTH_YEAR_MIN,
+  daysInMonth,
+  hasValidationErrors,
+  validateBirthInput,
+} from '../utils/dateTimeUtils'
 import { FormSection } from './FormSection'
 import { InputField } from './InputField'
 import { LocationSelect } from './LocationSelect'
@@ -121,10 +127,19 @@ export function BirthForm() {
     setSubmitAttempted(false)
   }
 
+  const validationErrors = useMemo(() => validateBirthInput(input), [input])
   const hasErrors = Object.keys(errors).length > 0
-  const filledCount = CHECKLIST.filter(({ key }) => isFieldFilled(input, key)).length
-  const progress = Math.round((filledCount / CHECKLIST.length) * 100)
-  const allFilled = filledCount === CHECKLIST.length
+  const isFormValid = !hasValidationErrors(validationErrors)
+
+  const checklistDone = (key: keyof BirthInput) => {
+    if (!isFieldFilled(input, key)) return false
+    if (validationErrors[key]) return false
+    return true
+  }
+
+  const doneCount = CHECKLIST.filter(({ key }) => checklistDone(key)).length
+  const progress = Math.round((doneCount / CHECKLIST.length) * 100)
+  const allFilled = doneCount === CHECKLIST.length
 
   const buddhistYear =
     input.year >= 1900 ? input.year + 543 : null
@@ -210,7 +225,7 @@ export function BirthForm() {
                 </div>
                 <div className="birth-form-progress-meta">
                   <span className="birth-form-progress-label">
-                    {allFilled ? '✦ พร้อมคำนวณดวง' : `กรอกแล้ว ${filledCount} จาก ${CHECKLIST.length} ช่อง`}
+                    {allFilled ? '✦ พร้อมคำนวณดวง' : `กรอกแล้ว ${doneCount} จาก ${CHECKLIST.length} ช่อง`}
                   </span>
                   <div className="birth-form-progress-track">
                     <div
@@ -225,8 +240,10 @@ export function BirthForm() {
                 <p className="birth-form-checklist-title">ความครบถ้วน</p>
                 <ul className="birth-form-checklist" aria-label="รายการที่ต้องกรอก">
                 {CHECKLIST.map(({ key, label }) => {
-                  const done = isFieldFilled(input, key)
-                  const err = Boolean(errors[key])
+                  const done = checklistDone(key)
+                  const err = Boolean(
+                    (submitAttempted ? errors : validationErrors)[key],
+                  )
                   return (
                     <li
                       key={key}
@@ -260,7 +277,7 @@ export function BirthForm() {
                     label="วัน"
                     required
                     filled={Boolean(input.day)}
-                    error={errors.day}
+                    error={errors.day ?? validationErrors.day}
                     errorFlashKey={errorFlashKey}
                     icon="①"
                     control="select"
@@ -291,7 +308,7 @@ export function BirthForm() {
                     label="เดือน"
                     required
                     filled={Boolean(input.month)}
-                    error={errors.month}
+                    error={errors.month ?? validationErrors.month}
                     errorFlashKey={errorFlashKey}
                     icon="②"
                     control="select"
@@ -323,7 +340,7 @@ export function BirthForm() {
                     label="ปี (ค.ศ.)"
                     required
                     filled={Boolean(input.year)}
-                    error={errors.year}
+                    error={errors.year ?? validationErrors.year}
                     errorFlashKey={errorFlashKey}
                     icon="③"
                     className="datetime-grid-year"
@@ -337,13 +354,14 @@ export function BirthForm() {
                       id="year"
                       type="number"
                       inputMode="numeric"
-                      min={1900}
-                      max={2100}
+                      min={BIRTH_YEAR_MIN}
+                      max={BIRTH_YEAR_MAX}
                       className="hora-input hora-input-3d"
                       placeholder="เช่น 1990"
                       value={input.year || ''}
                       onChange={(e) => {
-                        const year = Number(e.target.value)
+                        const raw = e.target.value.replace(/\D/g, '').slice(0, 4)
+                        const year = raw === '' ? 0 : Number(raw)
                         const max = input.month ? daysInMonth(input.month, year) : 31
                         patchInput({
                           year,
@@ -358,7 +376,7 @@ export function BirthForm() {
                     label="เวลาเกิด"
                     required
                     filled={Boolean(input.time)}
-                    error={errors.time}
+                    error={errors.time ?? validationErrors.time}
                     errorFlashKey={errorFlashKey}
                     icon="🕐"
                     hint="รูปแบบ 24 ชม. HH:mm"
@@ -383,7 +401,11 @@ export function BirthForm() {
                 country={input.country}
                 province={input.province}
                 district={input.district}
-                errors={errors}
+                errors={{
+                  country: errors.country ?? validationErrors.country,
+                  province: errors.province ?? validationErrors.province,
+                  district: errors.district ?? validationErrors.district,
+                }}
                 errorFlashKey={errorFlashKey}
                 onChange={(patch) => patchInput(patch)}
               />
@@ -431,8 +453,8 @@ export function BirthForm() {
               </button>
               <button
                 type="submit"
-                className={`btn-primary btn-primary-3d btn-primary-cosmic w-full sm:w-auto sm:min-w-[240px] ${calculating ? 'btn-primary-3d--loading' : ''} ${allFilled ? 'btn-primary--ready' : ''}`}
-                disabled={calculating}
+                className={`btn-primary btn-primary-3d btn-primary-cosmic w-full sm:w-auto sm:min-w-[240px] ${calculating ? 'btn-primary-3d--loading' : ''} ${allFilled && isFormValid ? 'btn-primary--ready' : ''}`}
+                disabled={calculating || !isFormValid}
               >
                 <span className="btn-primary-shine" aria-hidden />
                 <span className="btn-primary-orbit" aria-hidden />

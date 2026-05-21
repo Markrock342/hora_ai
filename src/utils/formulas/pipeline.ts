@@ -27,11 +27,19 @@ export interface PipelineResult {
   source: PipelineSource
 }
 
-function signsToRows(signs: Record<string, string>): PlanetSignRow[] {
-  return PLANETS.map((planet) => ({
-    planet,
-    siderealSign: signs[planet] ?? '—',
-  }))
+function signsToRows(signs: Record<string, { sign: string; degreeInSign?: number; degreeText?: string } | string>): PlanetSignRow[] {
+  return PLANETS.map((planet) => {
+    const v = signs[planet]
+    if (typeof v === 'string') {
+      return { planet, siderealSign: v }
+    }
+    return {
+      planet,
+      siderealSign: v?.sign ?? '—',
+      degreeInSign: v?.degreeInSign,
+      degreeText: v?.degreeText,
+    }
+  })
 }
 
 function fromFormulaPipeline(input: BirthInput, place: PlaceCoords): {

@@ -18,11 +18,18 @@ function polar(cx: number, cy: number, r: number, deg: number) {
 
 interface RasiChakraChartProps {
   result: AstrologyResult
+  title?: string
+  subtitle?: string
   /** เปิดแอนิเมชันวงล้อ + ดาวทีละดวง (หลังคำนวณ) */
   animateOnEnter?: boolean
 }
 
-export function RasiChakraChart({ result, animateOnEnter = false }: RasiChakraChartProps) {
+export function RasiChakraChart({
+  result,
+  title = 'ราศีจักร',
+  subtitle,
+  animateOnEnter = false,
+}: RasiChakraChartProps) {
   const lagna = result.chart?.lagna ?? result.meta.lagna ?? 'เมษ'
   const lagnaIdx = signIndex(lagna)
   const [chartRevealed, setChartRevealed] = useState(!animateOnEnter)
@@ -68,7 +75,9 @@ export function RasiChakraChart({ result, animateOnEnter = false }: RasiChakraCh
       midDeg: number
       idx: number
       row: (typeof result.planets)[number]
+      planetIndex: number
     }[] = []
+    let planetIndex = 0
     for (const { sign, midDeg } of segments) {
       const rows = planetsBySign.get(sign) ?? []
       rows.forEach((row, idx) => {
@@ -78,23 +87,25 @@ export function RasiChakraChart({ result, animateOnEnter = false }: RasiChakraCh
           midDeg,
           idx,
           row,
+          planetIndex: planetIndex++,
         })
       })
     }
-    return items.map((item, i) => ({ ...item, planetIndex: i }))
+    return items
   }, [segments, planetsBySign])
 
   return (
     <section
       className={`rasi-chakra-section gold-glow relative overflow-hidden rounded-2xl border border-hora-gold/25 bg-hora-panel/80 backdrop-blur-md print:border-gray-300 print:bg-white${chartRevealed ? ' is-chart-revealed' : ''}`}
-      aria-label="กราฟราศีจักร"
+      aria-label={title}
     >
       <header className="border-b border-hora-gold/20 px-5 py-4 print:border-gray-300">
         <h3 className="font-display text-xl font-medium text-gradient-gold print:text-black">
-          ราศีจักร
+          {title}
         </h3>
         <p className="text-xs text-hora-muted print:text-gray-600">
-          ลัคนา {lagna} · เรือน Whole Sign · ทักษานับตากลาง
+          {subtitle ??
+            `ลัคนา ${lagna} · เรือน Whole Sign · ทักษานับตากลาง${result.meta.calculationSource === 'myhora-scrape' ? ' · ตรง myhora.com' : ''}`}
         </p>
       </header>
 
@@ -181,9 +192,10 @@ export function RasiChakraChart({ result, animateOnEnter = false }: RasiChakraCh
               {lagna}
             </text>
 
-            {planetGlyphs.map(({ key, sign, midDeg, idx, row, planetIndex }) => {
-              const rows = planetsBySign.get(sign) ?? []
-              const offset = (idx - (rows.length - 1) / 2) * 8
+            {planetGlyphs.map(({ key, midDeg, idx, row, planetIndex }) => {
+              const rows = planetsBySign.get(row.siderealSign) ?? []
+              const degreeOffset = (row.degreeInSign ?? 15) - 15
+              const offset = degreeOffset * 1.2 + (idx - (rows.length - 1) / 2) * 8
               const pos = polar(CX, CY, R_PLANET + offset, midDeg)
               const theme = getPlanetTheme(row.planet)
               return (
@@ -220,7 +232,9 @@ export function RasiChakraChart({ result, animateOnEnter = false }: RasiChakraCh
           </svg>
         </div>
 
-        {result.chart?.taksa && result.chart.taksa.length > 0 && (
+        {result.chart?.taksa &&
+          result.chart.taksa.length > 0 &&
+          !result.myhora?.taksa?.length && (
           <div className="rasi-chakra-taksa w-full min-w-0 md:max-w-[220px]">
             <p className="mb-2 text-xs font-medium uppercase tracking-wider text-hora-gold-dim">
               ทักษา (กลาง = ลัคนา)

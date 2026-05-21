@@ -19,6 +19,7 @@ const THAI_DISTRICTS: Record<string, Record<string, PlaceCoords>> = {
     วัฒนา: { lat: 13.737364, lon: 100.579832, utcOffsetMinutes: THAILAND_UTC },
     คลองเตย: { lat: 13.722684, lon: 100.559063, utcOffsetMinutes: THAILAND_UTC },
     สาทร: { lat: 13.718334, lon: 100.529097, utcOffsetMinutes: THAILAND_UTC },
+    บางแค: { lat: 13.6918, lon: 100.407, utcOffsetMinutes: THAILAND_UTC },
     _default: { lat: 13.756331, lon: 100.501762, utcOffsetMinutes: THAILAND_UTC },
   },
   เชียงใหม่: {
