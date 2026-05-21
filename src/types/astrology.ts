@@ -12,7 +12,6 @@ export interface BirthInput {
   year: number
   /** HH:mm 24h */
   time: string
-  country: string
   province: string
   district: string
 }

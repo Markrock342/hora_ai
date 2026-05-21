@@ -23,7 +23,6 @@ const emptyInput: BirthInput = {
   month: 0,
   year: 0,
   time: '',
-  country: 'ไทย',
   province: '',
   district: '',
 }

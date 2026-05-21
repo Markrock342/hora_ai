@@ -31,7 +31,7 @@ export function formatBirthDisplay(input: BirthInput): string {
 }
 
 export function formatLocationDisplay(input: BirthInput): string {
-  const parts = [input.district, input.province, input.country].filter(Boolean)
+  const parts = [input.district, input.province].filter(Boolean)
   return parts.join(', ')
 }
 
@@ -59,8 +59,7 @@ export function validateBirthInput(input: BirthInput): BirthFormErrors {
     errors.time = 'รูปแบบเวลาไม่ถูกต้อง (ใช้ HH:mm)'
   }
 
-  if (!input.country.trim()) errors.country = 'กรุณาเลือกประเทศ'
-  if (!input.province.trim()) errors.province = 'กรุณากรอกจังหวัด/รัฐ'
+  if (!input.province.trim()) errors.province = 'กรุณาเลือกจังหวัด'
   if (!input.district.trim()) errors.district = 'กรุณากรอกอำเภอ/เมือง'
 
   return errors

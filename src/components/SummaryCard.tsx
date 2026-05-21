@@ -63,7 +63,7 @@ export function SummaryCard({ result }: SummaryCardProps) {
           <dd className="mt-1 text-sm leading-relaxed text-hora-cream print:text-black">
             {input.day}/{input.month}/{input.year} เวลา {input.time || '—'}
             <span className="mx-1 text-hora-muted print:text-gray-500">·</span>
-            {input.district}, {input.province}, {input.country}
+            {input.district}, {input.province}
           </dd>
         </div>
       </dl>

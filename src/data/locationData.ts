@@ -1,10 +1,6 @@
 /** ข้อมูลสถานที่สำหรับฟอร์ม — ขยาย/เชื่อม API ได้ภายหลัง */
 
-export const COUNTRIES = ['ไทย', 'ลาว', 'มาเลเซีย', 'อื่นๆ'] as const
-
-export type CountryOption = (typeof COUNTRIES)[number]
-
-/** จังหวัดไทย (สำหรับ dropdown — ประเทศอื่นใช้พิมพ์เอง) */
+/** จังหวัดไทย (dropdown) */
 export const THAI_PROVINCES = [
   'กรุงเทพมหานคร',
   'กระบี่',

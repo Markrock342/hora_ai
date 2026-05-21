@@ -32,7 +32,6 @@ const CHECKLIST: { key: keyof BirthInput; label: string }[] = [
   { key: 'month', label: 'เดือน' },
   { key: 'year', label: 'ปี' },
   { key: 'time', label: 'เวลา' },
-  { key: 'country', label: 'ประเทศ' },
   { key: 'province', label: 'จังหวัด' },
   { key: 'district', label: 'อำเภอ' },
 ]
@@ -383,7 +382,6 @@ export function BirthForm() {
 
             <FormSection id="section-location" title="สถานที่เกิด" icon="⌖" step={3} delay={120}>
               <LocationSelect
-                country={input.country}
                 province={input.province}
                 district={input.district}
                 errors={errors}

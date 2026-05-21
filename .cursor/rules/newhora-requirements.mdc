@@ -8,7 +8,7 @@ alwaysApply: true
 ## Input only
 - Subject name (ชื่อเจ้าชะตา)
 - Day, month, year, time (HH:mm)
-- Birth place: country, province/state, district/city
+- Birth place: province, district/city
 
 ## Fixed calculation systems (user cannot toggle others)
 - สุริยยาตร์ (suryayat)
