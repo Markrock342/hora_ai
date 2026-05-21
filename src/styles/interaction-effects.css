@@ -372,7 +372,13 @@ html.calc-transition-outro .birth-form-card-inner--outro {
 }
 
 .page-transition.page-enter--from-calc.page-enter--active {
-  transition-duration: 0.95s;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+  transition:
+    opacity 0.95s var(--fx-ease),
+    transform 0.95s var(--fx-ease),
+    filter 0.95s var(--fx-ease);
 }
 
 .result-page-mystic.result-page--from-calc .result-page-header.scroll-reveal.is-revealed .result-page-title {

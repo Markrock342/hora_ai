@@ -6,17 +6,12 @@ export function PageTransition({ children }: { children: ReactNode }) {
   const location = useLocation()
   const { pathname } = location
   const fromCalc = Boolean((location.state as CalcNavState | null)?.fromCalc)
-  const [active, setActive] = useState(fromCalc)
+  const [active, setActive] = useState(false)
 
   useLayoutEffect(() => {
     window.scrollTo(0, 0)
     let cancelled = false
     let innerFrame = 0
-
-    if (fromCalc) {
-      setActive(true)
-      return
-    }
 
     setActive(false)
     const outerFrame = requestAnimationFrame(() => {
@@ -26,7 +21,7 @@ export function PageTransition({ children }: { children: ReactNode }) {
     })
     const fallback = window.setTimeout(() => {
       if (!cancelled) setActive(true)
-    }, 150)
+    }, fromCalc ? 200 : 150)
 
     return () => {
       cancelled = true
