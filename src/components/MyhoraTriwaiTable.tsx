@@ -39,11 +39,17 @@ export function MyhoraTriwaiTable({ title, subtitle, grid }: MyhoraTriwaiTablePr
                     }
                   >
                     {cell ? (
-                      <>
-                        <span className="myhora-triwai-house">{cell.house}</span>
-                        <MyhoraStarIcon planetNum={cell.planetNum} className="myhora-triwai-star" />
-                        <span className="myhora-triwai-age">{cell.ageRange}</span>
-                      </>
+                      <div className="myhora-grid-cell-inner">
+                        <span className="myhora-triwai-house myhora-grid-cell-top">{cell.house}</span>
+                        <span className="myhora-grid-cell-mid">
+                          <MyhoraStarIcon
+                            planetNum={cell.planetNum}
+                            className="myhora-triwai-star"
+                            size={17}
+                          />
+                        </span>
+                        <span className="myhora-triwai-age myhora-grid-cell-bottom">{cell.ageRange}</span>
+                      </div>
                     ) : null}
                   </td>
                 ))}

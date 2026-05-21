@@ -985,13 +985,21 @@
 /* ทักษา + ตรีวัย ซ้าย–ขวา แบบ myhora */
 .myhora-taksa-triwai-row {
   display: grid;
-  gap: 1.25rem;
-  align-items: start;
+  gap: 1.5rem;
+  align-items: stretch;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 768px) {
   .myhora-taksa-triwai-row {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 1100px) {
+  .myhora-taksa-triwai-row {
+    grid-template-columns: minmax(16rem, 1fr) minmax(20rem, 1.2fr);
+    gap: 1.5rem;
   }
 }
 
@@ -1063,7 +1071,8 @@
 .myhora-triwai-column {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
+  min-width: 0;
 }
 
 .myhora-chart-html-wrap {
@@ -1170,6 +1179,10 @@
 
 .myhora-grid-section {
   @apply rounded-2xl border border-hora-gold/25 bg-hora-panel/80 backdrop-blur-md print:border-gray-300 print:bg-white;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
 }
 
 .myhora-grid-header {
@@ -1285,56 +1298,136 @@
 
 .myhora-taksa-wrap,
 .myhora-triwai-wrap {
-  @apply flex justify-center p-4 md:p-6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  padding: 1.25rem 1rem 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .myhora-taksa-wrap,
+  .myhora-triwai-wrap {
+    padding: 1.5rem 1.25rem 1.75rem;
+  }
 }
 
 .myhora-taksa-grid,
 .myhora-triwai-grid {
   border-collapse: separate;
-  border-spacing: 0;
+  border-spacing: 3px;
+  margin: 0 auto;
 }
 
-.myhora-taksa-cell {
-  width: 4.5rem;
-  height: 3.5rem;
+.myhora-taksa-cell,
+.myhora-triwai-cell {
+  width: 4.75rem;
+  height: 4.25rem;
   vertical-align: middle;
   text-align: center;
-  border: 1px solid rgba(212, 168, 75, 0.25);
-  background: rgba(12, 18, 15, 0.75);
-  padding: 0.35rem;
+  border: 1px solid rgba(212, 168, 75, 0.28);
+  background: rgba(12, 18, 15, 0.82);
+  padding: 0;
   font-size: 0.7rem;
-  line-height: 1.2;
+  line-height: 1.15;
+  border-radius: 6px;
+  overflow: hidden;
 }
 
 .myhora-taksa-grid--native .myhora-taksa-cell,
 .myhora-triwai-grid--native .myhora-triwai-cell {
-  width: 4.375rem;
-  height: 3.3125rem;
-  background-color: rgba(14, 18, 50, 0.92);
-  background-size: 70px auto;
-  background-position: center top;
+  width: 4.85rem;
+  height: 4.35rem;
+  background-color: rgba(14, 18, 50, 0.94);
+  background-size: 72px auto;
+  background-position: center 42%;
   background-repeat: no-repeat;
-  border: 1px solid rgba(212, 168, 75, 0.35);
-  padding: 0.2rem 0.15rem;
+  border: 1px solid rgba(212, 168, 75, 0.32);
+}
+
+/* จัดบน–กลาง–ล่างในช่อง */
+.myhora-grid-cell-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  min-height: 4rem;
+  padding: 0.28rem 0.2rem 0.22rem;
+  box-sizing: border-box;
+}
+
+.myhora-grid-cell-inner--solo {
+  justify-content: center;
+  padding: 0.35rem;
+}
+
+.myhora-grid-cell-top {
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 100%;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.myhora-grid-cell-mid {
+  flex: 1 1 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 1.35rem;
+  margin: 0.05rem 0;
+}
+
+.myhora-grid-cell-bottom {
+  flex: 0 0 auto;
+  width: 100%;
+  max-width: 100%;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .myhora-taksa-cell--center {
-  background-color: rgba(14, 18, 50, 0.92) !important;
-  vertical-align: middle;
+  background-color: rgba(14, 18, 50, 0.94) !important;
+  background-position: center center !important;
 }
 
 .myhora-taksa-ketu {
-  opacity: 0.45;
+  opacity: 0.85;
   display: block;
-  margin: 0.15rem auto 0;
+  margin: 0 auto;
+}
+
+.myhora-taksa-cell--center .myhora-star-img {
+  opacity: 0.9;
 }
 
 .myhora-taksa-star,
 .myhora-triwai-star {
   display: block;
-  margin: 0.1rem auto;
+  margin: 0 auto;
   height: auto;
-  max-width: 16px;
+  width: auto;
+  max-width: 18px;
+  max-height: 18px;
+}
+
+/* รูปดาว myhora เป็นสัญลักษณ์สีดำ — ทำให้ขาวบนพื้นมืด */
+.myhora-taksa-grid--native .myhora-star-img,
+.myhora-triwai-grid--native .myhora-star-img {
+  filter: brightness(0) invert(1);
+  opacity: 0.92;
+}
+
+.myhora-taksa-grid--native .myhora-star-symbol,
+.myhora-triwai-grid--native .myhora-star-symbol {
+  color: #f5f0e8 !important;
 }
 
 .myhora-taksa-cell--active {
@@ -1344,7 +1437,6 @@
 }
 
 .myhora-taksa-label {
-  display: block;
   font-weight: 600;
   color: var(--color-hora-gold-light);
 }
@@ -1356,20 +1448,9 @@
 }
 
 .myhora-taksa-transit {
-  display: block;
-  font-size: 0.6rem;
-  color: var(--color-hora-muted);
-}
-
-.myhora-triwai-cell {
-  width: 4.75rem;
-  height: 3.75rem;
-  vertical-align: middle;
-  text-align: center;
-  border: 1px solid rgba(212, 168, 75, 0.25);
-  background: rgba(12, 18, 15, 0.75);
-  padding: 0.35rem;
-  font-size: 0.68rem;
+  font-size: 0.58rem;
+  letter-spacing: 0.02em;
+  color: rgba(245, 240, 232, 0.88);
 }
 
 .myhora-taksa-grid--native .myhora-taksa-label,
@@ -1380,13 +1461,14 @@
 
 .myhora-taksa-grid--native .myhora-taksa-transit,
 .myhora-triwai-grid--native .myhora-triwai-age {
-  color: var(--color-hora-muted);
+  color: rgba(245, 240, 232, 0.9);
   font-size: 0.77em;
+  font-weight: 500;
 }
 
 .myhora-star-symbol {
   display: block;
-  margin: 0.1rem auto;
+  margin: 0 auto;
   line-height: 1;
 }
 
@@ -1396,7 +1478,6 @@
 }
 
 .myhora-triwai-house {
-  display: block;
   font-weight: 600;
   color: var(--color-hora-gold-light);
 }
@@ -1407,9 +1488,9 @@
 }
 
 .myhora-triwai-age {
-  display: block;
-  font-size: 0.58rem;
-  color: var(--color-hora-muted);
+  font-size: 0.56rem;
+  letter-spacing: 0.01em;
+  color: rgba(245, 240, 232, 0.88);
 }
 
 @media print {

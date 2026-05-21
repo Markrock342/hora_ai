@@ -36,22 +36,27 @@ export function MyhoraTaksaTable({ tables }: MyhoraTaksaTableProps) {
                       style={bg ? { backgroundImage: `url('${bg}')` } : undefined}
                     >
                       {cell?.isCenter ? (
-                        <MyhoraStarIcon planetNum={9} className="myhora-taksa-ketu" size={16} />
+                        <div className="myhora-grid-cell-inner myhora-grid-cell-inner--solo">
+                          <MyhoraStarIcon planetNum={9} className="myhora-taksa-ketu" size={18} />
+                        </div>
                       ) : cell ? (
-                        <>
-                          {cell.label ? (
-                            <span className="myhora-taksa-label">{cell.label}</span>
-                          ) : null}
-                          {cell.planetNum != null ? (
-                            <MyhoraStarIcon
-                              planetNum={cell.planetNum}
-                              className="myhora-taksa-star"
-                            />
-                          ) : null}
-                          {cell.transitLabel ? (
-                            <span className="myhora-taksa-transit">{cell.transitLabel}</span>
-                          ) : null}
-                        </>
+                        <div className="myhora-grid-cell-inner">
+                          <span className="myhora-taksa-label myhora-grid-cell-top">
+                            {cell.label || '\u00a0'}
+                          </span>
+                          <span className="myhora-grid-cell-mid">
+                            {cell.planetNum != null ? (
+                              <MyhoraStarIcon
+                                planetNum={cell.planetNum}
+                                className="myhora-taksa-star"
+                                size={17}
+                              />
+                            ) : null}
+                          </span>
+                          <span className="myhora-taksa-transit myhora-grid-cell-bottom">
+                            {cell.transitLabel || '\u00a0'}
+                          </span>
+                        </div>
                       ) : null}
                     </td>
                   )
