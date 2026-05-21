@@ -9,7 +9,10 @@ import {
 import { buildMockAstrologyResult } from '../data/mockAstrologyResult'
 import { PLANETS } from '../data/astrologyConstants'
 import type { AstrologyResult, BirthInput } from '../types/astrology'
+import type { TransitInput } from '../types/transit'
 import { calculateAstrologyAsync } from '../utils/astrologyCalculator'
+import { refreshMyhoraTransit } from '../utils/formulas/buildRealAstrologyResult'
+import { isMyhoraScrapeAvailable } from '../utils/myhora/fetchMyhoraThai'
 import {
   formatBirthDisplay,
   formatLocationDisplay,
@@ -36,6 +39,9 @@ interface AstrologyContextValue {
   resetInput: () => void
   calculate: () => Promise<{ ok: boolean; errors: ReturnType<typeof validateBirthInput> }>
   calculating: boolean
+  /** เปลี่ยนวันจรแล้วดึง myhora ใหม่ (เฉพาะผล myhora-scrape) */
+  refreshTransit: (transit: TransitInput) => Promise<boolean>
+  refreshingTransit: boolean
   clearResult: () => void
 }
 
@@ -113,6 +119,7 @@ export function AstrologyProvider({ children }: { children: ReactNode }) {
   const [input, setInputState] = useState<BirthInput>(emptyInput)
   const [result, setResult] = useState<AstrologyResult | null>(loadStoredResult)
   const [calculating, setCalculating] = useState(false)
+  const [refreshingTransit, setRefreshingTransit] = useState(false)
 
   const setInput = useCallback((patch: Partial<BirthInput>) => {
     setInputState((prev) => ({ ...prev, ...patch }))
@@ -145,6 +152,28 @@ export function AstrologyProvider({ children }: { children: ReactNode }) {
     }
   }, [input])
 
+  const refreshTransit = useCallback(
+    async (transit: TransitInput) => {
+      if (!result || result.meta.calculationSource !== 'myhora-scrape') {
+        return false
+      }
+      if (!isMyhoraScrapeAvailable()) return false
+      setRefreshingTransit(true)
+      try {
+        const next = await refreshMyhoraTransit(result.input, transit)
+        setResult(next)
+        sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next))
+        return true
+      } catch (err) {
+        console.warn('[newhora] transit refresh failed', err)
+        return false
+      } finally {
+        setRefreshingTransit(false)
+      }
+    },
+    [result],
+  )
+
   const value = useMemo(
     () => ({
       input,
@@ -153,9 +182,21 @@ export function AstrologyProvider({ children }: { children: ReactNode }) {
       resetInput,
       calculate,
       calculating,
+      refreshTransit,
+      refreshingTransit,
       clearResult,
     }),
-    [input, result, setInput, resetInput, calculate, calculating, clearResult],
+    [
+      input,
+      result,
+      setInput,
+      resetInput,
+      calculate,
+      calculating,
+      refreshTransit,
+      refreshingTransit,
+      clearResult,
+    ],
   )
 
   return (

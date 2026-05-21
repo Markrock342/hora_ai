@@ -1,13 +1,9 @@
-import { MYHORA_PLANET_NUM } from '../data/myhoraSignCodes'
 import type { MyhoraTables } from '../types/myhora'
+import { myhoraTaksaBg } from '../utils/myhora/assetUrls'
+import { MyhoraStarIcon } from './MyhoraStarIcon'
 
 interface MyhoraTaksaTableProps {
   tables: MyhoraTables
-}
-
-function planetLabel(num: number | null): string {
-  if (num == null) return ''
-  return MYHORA_PLANET_NUM[num] ?? String(num)
 }
 
 export function MyhoraTaksaTable({ tables }: MyhoraTaksaTableProps) {
@@ -21,34 +17,45 @@ export function MyhoraTaksaTable({ tables }: MyhoraTaksaTableProps) {
         <p className="text-xs text-hora-muted print:text-gray-600">แบบ myhora · นับตากลาง</p>
       </header>
       <div className="myhora-taksa-wrap">
-        <table className="myhora-taksa-grid">
+        <table className="myhora-taksa-grid myhora-taksa-grid--native">
           <tbody>
             {grid.map((row, ri) => (
               <tr key={ri}>
-                {row.map((cell, ci) => (
-                  <td
-                    key={ci}
-                    className={
-                      cell?.highlighted
-                        ? 'myhora-taksa-cell myhora-taksa-cell--active'
-                        : 'myhora-taksa-cell'
-                    }
-                  >
-                    {cell ? (
-                      <>
-                        {cell.label ? (
-                          <span className="myhora-taksa-label">{cell.label}</span>
-                        ) : null}
-                        {cell.planetNum != null ? (
-                          <span className="myhora-taksa-planet">{planetLabel(cell.planetNum)}</span>
-                        ) : null}
-                        {cell.transitLabel ? (
-                          <span className="myhora-taksa-transit">{cell.transitLabel}</span>
-                        ) : null}
-                      </>
-                    ) : null}
-                  </td>
-                ))}
+                {row.map((cell, ci) => {
+                  const bg = cell && !cell.isCenter ? myhoraTaksaBg(cell.highlighted) : null
+                  return (
+                    <td
+                      key={ci}
+                      className={
+                        cell?.isCenter
+                          ? 'myhora-taksa-cell myhora-taksa-cell--center'
+                          : cell?.highlighted
+                            ? 'myhora-taksa-cell myhora-taksa-cell--active'
+                            : 'myhora-taksa-cell'
+                      }
+                      style={bg ? { backgroundImage: `url('${bg}')` } : undefined}
+                    >
+                      {cell?.isCenter ? (
+                        <MyhoraStarIcon planetNum={9} className="myhora-taksa-ketu" size={16} />
+                      ) : cell ? (
+                        <>
+                          {cell.label ? (
+                            <span className="myhora-taksa-label">{cell.label}</span>
+                          ) : null}
+                          {cell.planetNum != null ? (
+                            <MyhoraStarIcon
+                              planetNum={cell.planetNum}
+                              className="myhora-taksa-star"
+                            />
+                          ) : null}
+                          {cell.transitLabel ? (
+                            <span className="myhora-taksa-transit">{cell.transitLabel}</span>
+                          ) : null}
+                        </>
+                      ) : null}
+                    </td>
+                  )
+                })}
               </tr>
             ))}
           </tbody>

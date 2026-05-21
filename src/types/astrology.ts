@@ -34,6 +34,8 @@ export interface CalculationSettings {
 export interface PlanetSignRow {
   planet: string
   siderealSign: string
+  degreeInSign?: number
+  degreeText?: string
 }
 
 export interface TaksaSlot {

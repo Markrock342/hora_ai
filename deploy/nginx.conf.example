@@ -1,0 +1,37 @@
+# Example: NewHora static + myhora reverse proxy (same paths as Vite dev / Node server).
+# Adjust root, server_name, and SSL paths.
+
+server {
+    listen 80;
+    server_name newhora.example.com;
+    root /var/www/newhora/dist;
+    index index.html;
+
+    # SPA
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api/myhora/ {
+        proxy_pass https://myhora.com/;
+        proxy_ssl_server_name on;
+        proxy_set_header Host myhora.com;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_redirect off;
+    }
+
+    location /api/myhora-net/ {
+        proxy_pass https://myhora.net/;
+        proxy_ssl_server_name on;
+        proxy_set_header Host myhora.net;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_redirect off;
+    }
+}
+
+# Build with:
+#   VITE_MYHORA_ORIGIN=/api/myhora VITE_MYHORA_NET_ORIGIN=/api/myhora-net npm run build

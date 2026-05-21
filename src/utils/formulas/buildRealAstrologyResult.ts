@@ -10,7 +10,13 @@ import {
   formatLocationDisplay,
 } from '../dateTimeUtils'
 import { getCachedChart, setCachedChart } from '../suryayatCache'
-import { fetchMyhoraThaiChart, isMyhoraScrapeAvailable } from '../myhora/fetchMyhoraThai'
+import {
+  fetchMyhoraThaiChart,
+  isMyhoraScrapeAvailable,
+  type MyhoraScrapeResult,
+} from '../myhora/fetchMyhoraThai'
+import type { TransitInput } from '../../types/transit'
+import { defaultTransitInput } from '../../types/transit'
 import { computeFullChartSync } from './pipeline'
 import { lookupSuryayatSync } from './suryayat/lookup'
 
@@ -38,33 +44,43 @@ export function buildRealAstrologyResult(input: BirthInput): AstrologyResult {
   return toResult(input, computeFullChartSync(input, place))
 }
 
+function myhoraScrapeToResult(input: BirthInput, scraped: MyhoraScrapeResult): AstrologyResult {
+  const lagna = scraped.lagna ?? scraped.tables.lagnaSign
+  return {
+    input,
+    calculatedAt: new Date().toISOString(),
+    settings: { ...CALCULATION_SETTINGS },
+    meta: {
+      birthDisplay: formatBirthDisplay(input),
+      locationDisplay: formatLocationDisplay(input),
+      calculationSource: 'myhora-scrape',
+      lagna: lagna ?? undefined,
+    },
+    planets: scraped.planets,
+    chart: lagna ? { lagna, taksa: [] } : undefined,
+    myhora: scraped.tables,
+  }
+}
+
+/** อัปเดตเฉพาะวันจร — ดึง myhora ใหม่ (กราฟ / ทักษา / ตรีวัยจร) */
+export async function refreshMyhoraTransit(
+  input: BirthInput,
+  transit: TransitInput,
+): Promise<AstrologyResult> {
+  const scraped = await fetchMyhoraThaiChart(input, { transit })
+  return myhoraScrapeToResult(input, scraped)
+}
+
 /** โหลดแคช IndexedDB ก่อนคำนวณ — ลองดึง myhora ก่อน (dev + proxy) */
 export async function buildRealAstrologyResultAsync(
   input: BirthInput,
 ): Promise<AstrologyResult> {
   if (isMyhoraScrapeAvailable()) {
     try {
-      const scraped = await fetchMyhoraThaiChart(input)
-      const place = resolvePlaceCoords(input.country, input.province, input.district)
-      const base = computeFullChartSync(input, place)
-      const lagna = scraped.lagna ?? base.lagna
-      return {
-        input,
-        calculatedAt: new Date().toISOString(),
-        settings: { ...CALCULATION_SETTINGS },
-        meta: {
-          birthDisplay: formatBirthDisplay(input),
-          locationDisplay: formatLocationDisplay(input),
-          calculationSource: 'myhora-scrape',
-          lagna: lagna ?? undefined,
-        },
-        planets: scraped.planets,
-        chart: {
-          lagna: lagna ?? base.lagna,
-          taksa: base.taksa,
-        },
-        myhora: scraped.tables,
-      }
+      const scraped = await fetchMyhoraThaiChart(input, {
+        transit: defaultTransitInput(),
+      })
+      return myhoraScrapeToResult(input, scraped)
     } catch (err) {
       console.warn('[newhora] myhora scrape failed, using local formulas', err)
     }

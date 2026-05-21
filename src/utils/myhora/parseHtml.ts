@@ -2,6 +2,7 @@ import { MYHORA_PLANET_NUM, myhoraAbbrToSign } from '../../data/myhoraSignCodes'
 import { PLANETS } from '../../data/astrologyConstants'
 import type { PlanetSignRow } from '../../types/astrology'
 import type { MyhoraTables, MyhoraTaksaCell, MyhoraTriwaiCell } from '../../types/myhora'
+import { parseDateInfoFromMainHtml } from './parseDateDetail'
 
 function planetNumFromImg(html: string): number | null {
   const m = html.match(/\/star\/A(\d)\.png/i) ?? html.match(/\/star\/a(\d)\.png/i)
@@ -76,28 +77,34 @@ export function parsePlanetTable(html: string): {
   return { lagnaSign, planets: ordered }
 }
 
+function loadPath(html: string, chartId: string): string | null {
+  return html.match(new RegExp(`#div_chart_${chartId}'\\)\\.load\\("([^"]+)"`))?.[1] ?? null
+}
+
 export function parseEmbedUrls(html: string): {
   taksa: string | null
   triwai: string | null
   rasi: string | null
+  navamsa: string | null
+  drekkana: string | null
 } {
-  const taksa = html.match(/#div_chart_taksa'\)\.load\("([^"]+)"/)?.[1] ?? null
-  const triwai = html.match(/#div_chart_triwai'\)\.load\("([^"]+)"/)?.[1] ?? null
-  const rasi = html.match(/#div_chart_sign'\)\.load\("([^"]+)"/)?.[1] ?? null
-  return { taksa, triwai, rasi }
+  return {
+    rasi: loadPath(html, 'sign'),
+    navamsa: loadPath(html, 'navang'),
+    drekkana: loadPath(html, 'triyang'),
+    taksa: loadPath(html, 'taksa'),
+    triwai: loadPath(html, 'triwai'),
+  }
 }
 
 export function parseSummaryLines(html: string): {
   natal: string | null
   transit: string | null
 } {
-  const natal = html.match(/id="n_date_info"[^>]*>([\s\S]*?)<\/div>/)?.[1]
-  const transit = html.match(/id="t_date_info"[^>]*>([\s\S]*?)<\/div>/)?.[1]
-  const strip = (s: string) =>
-    s.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+  const { natal: n, transit: t } = parseDateInfoFromMainHtml(html)
   return {
-    natal: natal ? strip(natal) : null,
-    transit: transit ? strip(transit) : null,
+    natal: n?.raw ?? null,
+    transit: t?.raw ?? null,
   }
 }
 
@@ -197,16 +204,36 @@ export function mergeMyhoraTables(
   mainHtml: string,
   taksaHtml: string,
   triwaiHtml: string,
+  extra?: Pick<MyhoraTables, 'chartEmbeds' | 'transit'>,
 ): MyhoraTables {
   const { lagnaSign } = parsePlanetTable(mainHtml)
   const summaries = parseSummaryLines(mainHtml)
+  const dateDetails = parseDateInfoFromMainHtml(mainHtml)
   const taksa = parseTaksaHtml(taksaHtml)
   const triwai = parseTriwaiHtml(triwaiHtml)
+  const embeds = parseEmbedUrls(mainHtml)
 
   return {
     lagnaSign: lagnaSign ?? null,
     summaryNatal: summaries.natal,
     summaryTransit: summaries.transit,
+    dateDetailNatal: dateDetails.natal,
+    dateDetailTransit: dateDetails.transit,
+    chartEmbeds: extra?.chartEmbeds ?? {
+      rasi: embeds.rasi,
+      navamsa: embeds.navamsa,
+      drekkana: embeds.drekkana,
+    },
+    widgetEmbeds: {
+      taksa: embeds.taksa,
+      triwai: embeds.triwai,
+    },
+    transit: extra?.transit ?? {
+      day: new Date().getDate(),
+      month: new Date().getMonth() + 1,
+      year: new Date().getFullYear(),
+      time: '12:00',
+    },
     taksa,
     triwaiNatal: triwai.natal,
     triwaiTransit: triwai.transit,

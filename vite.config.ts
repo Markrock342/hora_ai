@@ -13,6 +13,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api\/myhora/, ''),
       },
+      '/api/myhora-net': {
+        target: 'https://myhora.net',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/myhora-net/, ''),
+      },
     },
   },
 })

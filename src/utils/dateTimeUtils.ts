@@ -8,8 +8,15 @@ export function parseTime(time: string): { hours: number; minutes: number } | nu
   return { hours: Number(match[1]), minutes: Number(match[2]) }
 }
 
+export const BIRTH_YEAR_MIN = 1900
+export const BIRTH_YEAR_MAX = 2100
+
+export function isValidBirthYear(year: number): boolean {
+  return Number.isInteger(year) && year >= BIRTH_YEAR_MIN && year <= BIRTH_YEAR_MAX
+}
+
 export function daysInMonth(month: number, year: number): number {
-  if (month < 1 || month > 12 || year < 1900 || year > 2100) return 31
+  if (month < 1 || month > 12 || !isValidBirthYear(year)) return 31
   return new Date(year, month, 0).getDate()
 }
 
@@ -18,7 +25,8 @@ export function isValidDate(day: number, month: number, year: number): boolean {
     return false
   }
   if (month < 1 || month > 12 || day < 1) return false
-  return day <= daysInMonth(month, year) && year >= 1900 && year <= 2100
+  if (!isValidBirthYear(year)) return false
+  return day <= daysInMonth(month, year)
 }
 
 export function formatBirthDisplay(input: BirthInput): string {
@@ -34,12 +42,18 @@ export function formatLocationDisplay(input: BirthInput): string {
 export function validateBirthInput(input: BirthInput): BirthFormErrors {
   const errors: BirthFormErrors = {}
 
-  if (!input.day || !input.month || !input.year) {
-    if (!input.day) errors.day = 'กรุณาเลือกวัน'
-    if (!input.month) errors.month = 'กรุณาเลือกเดือน'
-    if (!input.year) errors.year = 'กรุณากรอกปี'
-  } else if (!isValidDate(input.day, input.month, input.year)) {
-    errors.day = 'วันที่ไม่ถูกต้อง'
+  const yearText = input.year > 0 ? String(input.year) : ''
+
+  if (!input.day) errors.day = 'กรุณาเลือกวัน'
+  if (!input.month) errors.month = 'กรุณาเลือกเดือน'
+  if (!input.year) {
+    errors.year = 'กรุณากรอกปี'
+  } else if (yearText.length < 4) {
+    errors.year = 'กรุณากรอกปีให้ครบ 4 หลัก (ค.ศ.)'
+  } else if (!isValidBirthYear(input.year)) {
+    errors.year = `ปีต้องอยู่ระหว่าง ${BIRTH_YEAR_MIN}–${BIRTH_YEAR_MAX} (ค.ศ.)`
+  } else if (input.day && input.month && input.day > daysInMonth(input.month, input.year)) {
+    errors.day = 'วันไม่ตรงกับเดือน/ปีที่เลือก'
   }
 
   if (!input.time.trim()) {

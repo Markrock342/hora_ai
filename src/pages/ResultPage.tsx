@@ -1,11 +1,28 @@
+import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { ResultDashboard } from '../components/ResultDashboard'
+import { BirthInfoBanner } from '../components/BirthInfoBanner'
+import { CalculationSettingsBadge } from '../components/CalculationSettingsBadge'
+import { DivisionalChakraChart } from '../components/DivisionalChakraChart'
+import { TransitDateControls } from '../components/TransitDateControls'
+import { PrintButton } from '../components/PrintButton'
+import { ReportHeader } from '../components/ReportHeader'
+import { PLANET_SIGN_COLUMNS } from '../components/resultTableColumns'
+import { MyhoraDetailPanel } from '../components/MyhoraDetailPanel'
+import { MyhoraTaksaTriwaiRow } from '../components/MyhoraTaksaTriwaiRow'
+import { RasiChakraChart } from '../components/RasiChakraChart'
+import { ResultTable } from '../components/ResultTable'
 import { useAstrology } from '../context/AstrologyContext'
+import { resolvePlaceCoords } from '../data/placeCoordinates'
 import { GlassCard } from '../components/ui/GlassCard'
 import { PageAmbient } from '../components/ui/PageAmbient'
+import { defaultTransitInput } from '../types/transit'
+import type { TransitInput } from '../types/transit'
+import { buildLocalNatalDetail, buildLocalTransitDetail } from '../utils/formulas/buildDateDetail'
+import { computeDivisionalRows } from '../utils/formulas/divisionalFromBirth'
+import { isMyhoraScrapeAvailable } from '../utils/myhora/fetchMyhoraThai'
 
 export function ResultPage() {
-  const { result } = useAstrology()
+  const { result, refreshTransit, refreshingTransit } = useAstrology()
 
   if (!result) {
     return (
@@ -24,10 +41,181 @@ export function ResultPage() {
     )
   }
 
+  const { meta, planets, input } = result
+  const isMyhora = meta.calculationSource === 'myhora-scrape' && result.myhora
+  const transit = result.myhora?.transit ?? defaultTransitInput()
+
+  const place = useMemo(
+    () => resolvePlaceCoords(input.country, input.province, input.district),
+    [input],
+  )
+
+  const d1ForDivisional = useMemo(
+    () =>
+      isMyhora
+        ? {
+            lagna: result.meta.lagna ?? result.chart?.lagna ?? 'เมษ',
+            planets: result.planets,
+          }
+        : undefined,
+    [isMyhora, result],
+  )
+
+  const navamsaLocal = useMemo(
+    () => computeDivisionalRows(input, place, 'navamsa', d1ForDivisional),
+    [input, place, d1ForDivisional],
+  )
+  const drekkanaLocal = useMemo(
+    () => computeDivisionalRows(input, place, 'drekkana', d1ForDivisional),
+    [input, place, d1ForDivisional],
+  )
+
+  const canRefreshTransit = isMyhoraScrapeAvailable() && isMyhora
+
+  const dateDetails = useMemo(() => {
+    if (result.myhora?.dateDetailNatal || result.myhora?.dateDetailTransit) {
+      return {
+        natal: result.myhora.dateDetailNatal ?? null,
+        transit: result.myhora.dateDetailTransit ?? null,
+        fromMyhora: true,
+      }
+    }
+    return {
+      natal: buildLocalNatalDetail(input, place, {
+        lagna: result.meta.lagna ?? result.chart?.lagna,
+        navamsaLagna: navamsaLocal.lagna,
+        drekkanaLagna: drekkanaLocal.lagna,
+      }),
+      transit: isMyhora
+        ? buildLocalTransitDetail(transit, input, place)
+        : null,
+      fromMyhora: false,
+    }
+  }, [result, input, place, isMyhora, transit, navamsaLocal.lagna, drekkanaLocal.lagna])
+
+  const sourceLabel =
+    meta.calculationSource === 'myhora-scrape'
+      ? 'ดึงจาก myhora.com — กราฟราศีจักร / นวางศ์ / ตรียางศ์ / ทักษา / ตรีวัย'
+      : meta.calculationSource === 'suryayat-100-reference' ||
+          meta.calculationSource === 'suryayat-100-year'
+        ? 'ปฏิทินร้อยปี สุริยยาตร์ (ตรง myhora)'
+        : meta.calculationSource === 'suryayat-cached'
+          ? 'แคชในเครื่อง (คำนวณ/นำเข้าแล้ว)'
+          : meta.calculationSource === 'formula-pipeline'
+            ? 'สูตร: อันโตนาที + ลาหิรี + ราหู 8 + ทักษา (เทียบ myhora ต่อ)'
+            : meta.calculationSource === 'ephemeris-fallback'
+              ? 'ประมาณ (ephemeris)'
+              : null
+
   return (
     <div className="mystic-page result-page-mystic relative space-y-8 print:space-y-5">
       <PageAmbient variant="result" />
-      <ResultDashboard result={result} />
+      <div className="relative z-[1] flex flex-wrap items-start justify-between gap-4 no-print">
+        <header className="result-page-header">
+          <p className="result-page-eyebrow font-display text-sm tracking-[0.15em] text-hora-gold uppercase">
+            <span className="result-page-eyebrow-icon" aria-hidden>
+              ✦
+            </span>{' '}
+            ผลการคำนวณ
+          </p>
+          <h2 className="result-page-title font-display text-4xl font-medium text-hora-cream">
+            สถิตร<span className="text-gradient-gold">ราศี</span>
+          </h2>
+          <p className="mt-2 text-sm text-hora-muted">
+            {new Date(result.calculatedAt).toLocaleString('th-TH')}
+            {' · '}
+            {planets.length} ดาว
+          </p>
+        </header>
+        <PrintButton result={result} />
+      </div>
+
+      <article
+        id="astrology-report"
+        className="astrology-report relative z-[1] space-y-6 print:space-y-5"
+        aria-label="ตารางดาวสถิตรราศี"
+      >
+        <ReportHeader result={result} />
+
+        <div className="result-info-stack no-print">
+          <BirthInfoBanner birth={meta.birthDisplay} location={meta.locationDisplay} />
+          <CalculationSettingsBadge />
+          {sourceLabel && <p className="text-xs text-hora-gold-dim">{sourceLabel}</p>}
+        </div>
+
+        {canRefreshTransit && (
+          <TransitDateControls
+            transit={transit}
+            loading={refreshingTransit}
+            onApply={(next: TransitInput) => void refreshTransit(next)}
+          />
+        )}
+
+        <MyhoraDetailPanel
+          natal={dateDetails.natal}
+          transit={dateDetails.transit}
+          fromMyhora={dateDetails.fromMyhora}
+        />
+
+        <div className="result-charts-block space-y-6">
+          <div
+            className="result-charts-grid result-charts-grid--local"
+          >
+            <div className="result-rasi-chart-slot">
+              <RasiChakraChart
+                result={result}
+                subtitle={
+                  isMyhora
+                    ? 'ตำแหน่งดาวจาก myhora · วงจรในเครื่อง (Whole Sign)'
+                    : undefined
+                }
+              />
+            </div>
+
+            <DivisionalChakraChart
+              result={result}
+              title="นวางศ์จักร"
+              subtitle={`ลัคนา ${navamsaLocal.lagna} · ปรชายาจารี + ลาหิรี`}
+              planets={navamsaLocal.planets}
+              lagna={navamsaLocal.lagna}
+            />
+
+            <DivisionalChakraChart
+              result={result}
+              title="ตรียางศ์จักร"
+              subtitle={`ลัคนา ${drekkanaLocal.lagna} · ปรชายาจารี + ลาหิรี`}
+              planets={drekkanaLocal.planets}
+              lagna={drekkanaLocal.lagna}
+            />
+          </div>
+        </div>
+
+        {result.myhora ? <MyhoraTaksaTriwaiRow tables={result.myhora} /> : null}
+
+        {meta.calculationSource !== 'myhora-scrape' && (
+          <p className="text-xs text-hora-muted no-print">
+            ผลดาวจากสูตรในเครื่อง — อาจไม่ตรง myhora จนกว่าจะดึงข้อมูลสำเร็จ (รัน{' '}
+            <code className="text-hora-gold-dim">npm run dev</code> หรือ{' '}
+            <code className="text-hora-gold-dim">npm run start</code> พร้อม proxy /api/myhora)
+          </p>
+        )}
+
+        {!result.myhora && (
+          <ResultTable
+            title="ดาวสถิตรราศี"
+            subtitle="สุริยยาตร์ · ลาหิรี · อันโตนาทีฯ · ราหู ๘ กุมภ์ · ทักษา (คงที่)"
+            columns={PLANET_SIGN_COLUMNS}
+            rows={planets}
+            variant="chart"
+            staggerIndex={1}
+          />
+        )}
+
+        <footer className="hidden border-t border-gray-300 pt-4 text-center text-xs text-gray-500 print:block">
+          NewHora — {meta.birthDisplay} — {meta.locationDisplay}
+        </footer>
+      </article>
+
       <p className="relative z-[1] text-center no-print">
         <Link
           to="/"
