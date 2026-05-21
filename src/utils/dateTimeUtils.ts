@@ -8,13 +8,21 @@ export function parseTime(time: string): { hours: number; minutes: number } | nu
   return { hours: Number(match[1]), minutes: Number(match[2]) }
 }
 
+export function daysInMonth(month: number, year: number): number {
+  if (month < 1 || month > 12 || year < 1900 || year > 2100) return 31
+  return new Date(year, month, 0).getDate()
+}
+
 export function isValidDate(day: number, month: number, year: number): boolean {
   if (!Number.isInteger(day) || !Number.isInteger(month) || !Number.isInteger(year)) {
     return false
   }
   if (month < 1 || month > 12 || day < 1) return false
-  const lastDay = new Date(year, month, 0).getDate()
-  return day <= lastDay && year >= 1900 && year <= 2100
+  return day <= daysInMonth(month, year) && year >= 1900 && year <= 2100
+}
+
+export function formatSubjectName(input: BirthInput): string {
+  return input.name.trim()
 }
 
 export function formatBirthDisplay(input: BirthInput): string {
@@ -29,6 +37,13 @@ export function formatLocationDisplay(input: BirthInput): string {
 
 export function validateBirthInput(input: BirthInput): BirthFormErrors {
   const errors: BirthFormErrors = {}
+
+  const name = input.name.trim()
+  if (!name) {
+    errors.name = 'กรุณากรอกชื่อเจ้าชะตา'
+  } else if (name.length < 2) {
+    errors.name = 'ชื่อต้องมีอย่างน้อย 2 ตัวอักษร'
+  }
 
   if (!input.day || !input.month || !input.year) {
     if (!input.day) errors.day = 'กรุณาเลือกวัน'
@@ -59,7 +74,7 @@ export function birthDataSeed(input: BirthInput): number {
   const time = parseTime(input.time)
   const h = time?.hours ?? 0
   const m = time?.minutes ?? 0
-  const str = `${input.year}${input.month}${input.day}${h}${m}${input.province}`
+  const str = `${input.name}${input.year}${input.month}${input.day}${h}${m}${input.province}${input.district}`
   let hash = 0
   for (let i = 0; i < str.length; i++) {
     hash = (hash * 31 + str.charCodeAt(i)) >>> 0

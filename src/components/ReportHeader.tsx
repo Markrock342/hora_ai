@@ -29,6 +29,12 @@ export function ReportHeader({ result }: ReportHeaderProps) {
       </div>
 
       <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
+        {meta.subjectName && (
+          <div className="col-span-2">
+            <dt className="font-medium text-gray-600">เจ้าชะตา</dt>
+            <dd className="text-lg font-semibold text-black">{meta.subjectName}</dd>
+          </div>
+        )}
         <div>
           <dt className="font-medium text-gray-600">วันเวลาเกิด</dt>
           <dd className="text-black">{meta.birthDisplay}</dd>

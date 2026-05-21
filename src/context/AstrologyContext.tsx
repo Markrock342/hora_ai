@@ -6,16 +6,19 @@ import {
   useState,
   type ReactNode,
 } from 'react'
-import type { AstrologyResult, BirthInput } from '../types/astrology'
+import { buildMockAstrologyResult } from '../data/mockAstrologyResult'
+import type { AstrologyResult, BirthInput, PlanetSignRow } from '../types/astrology'
+import { TABLE_ROW_COUNT } from '../types/astrology'
 import { calculateAstrology } from '../utils/astrologyCalculator'
 import {
   hasValidationErrors,
   validateBirthInput,
 } from '../utils/dateTimeUtils'
 
-const STORAGE_KEY = 'newhora-astrology-v2'
+const STORAGE_KEY = 'newhora-astrology-v3'
 
 const emptyInput: BirthInput = {
+  name: '',
   day: 0,
   month: 0,
   year: 0,
@@ -36,16 +39,39 @@ interface AstrologyContextValue {
 
 const AstrologyContext = createContext<AstrologyContextValue | null>(null)
 
-function loadStoredResult(): AstrologyResult | null {
+function isValidResult(parsed: AstrologyResult): boolean {
+  return (
+    Boolean(parsed?.tables?.planets?.length === TABLE_ROW_COUNT) &&
+    Boolean(parsed?.planets?.length)
+  )
+}
+
+function migrateV2(raw: string): AstrologyResult | null {
   try {
-    const raw = sessionStorage.getItem(STORAGE_KEY)
-    if (!raw) return null
-    const parsed = JSON.parse(raw) as AstrologyResult
-    if (!parsed?.planets?.length) return null
-    return parsed
+    const parsed = JSON.parse(raw) as {
+      input?: BirthInput
+      planets?: PlanetSignRow[]
+    }
+    if (!parsed.input) return null
+    return buildMockAstrologyResult(parsed.input)
   } catch {
     return null
   }
+}
+
+function loadStoredResult(): AstrologyResult | null {
+  try {
+    const v3 = sessionStorage.getItem(STORAGE_KEY)
+    if (v3) {
+      const parsed = JSON.parse(v3) as AstrologyResult
+      if (isValidResult(parsed)) return parsed
+    }
+    const v2 = sessionStorage.getItem('newhora-astrology-v2')
+    if (v2) return migrateV2(v2)
+  } catch {
+    /* ignore */
+  }
+  return null
 }
 
 export function AstrologyProvider({ children }: { children: ReactNode }) {
@@ -63,6 +89,7 @@ export function AstrologyProvider({ children }: { children: ReactNode }) {
   const clearResult = useCallback(() => {
     setResult(null)
     sessionStorage.removeItem(STORAGE_KEY)
+    sessionStorage.removeItem('newhora-astrology-v2')
   }, [])
 
   const calculate = useCallback(() => {

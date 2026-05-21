@@ -1,33 +1,46 @@
-import { GlassCard } from './ui/GlassCard'
-
 interface BirthInfoBannerProps {
+  subjectName?: string
   birth: string
   location: string
 }
 
-export function BirthInfoBanner({ birth, location }: BirthInfoBannerProps) {
+export function BirthInfoBanner({ subjectName, birth, location }: BirthInfoBannerProps) {
   return (
-    <GlassCard glow={false} className="!p-5">
-      <dl className="grid gap-6 sm:grid-cols-2">
-        <div className="flex gap-3">
-          <span className="text-2xl text-hora-gold/60">☉</span>
+    <section className="result-hero-strip" aria-label="สรุปข้อมูลเกิด">
+      <div className="result-hero-strip-glow" aria-hidden />
+      {subjectName && (
+        <div className="result-hero-strip-name">
+          <span className="result-hero-strip-icon" aria-hidden>
+            ✦
+          </span>
           <div>
-            <dt className="text-xs font-medium tracking-wide text-hora-gold-dim uppercase">
-              วันเวลาเกิด
-            </dt>
-            <dd className="mt-1 font-display text-lg text-hora-accent">{birth}</dd>
+            <p className="result-hero-strip-label">เจ้าชะตา</p>
+            <p className="result-hero-strip-value result-hero-strip-value--title">
+              {subjectName}
+            </p>
           </div>
         </div>
-        <div className="flex gap-3">
-          <span className="text-2xl text-hora-gold/60">⌖</span>
+      )}
+      <div className="result-hero-strip-grid">
+        <div className="result-hero-strip-item">
+          <span className="result-hero-strip-icon" aria-hidden>
+            ☉
+          </span>
           <div>
-            <dt className="text-xs font-medium tracking-wide text-hora-gold-dim uppercase">
-              สถานที่เกิด
-            </dt>
-            <dd className="mt-1 text-base text-hora-cream">{location}</dd>
+            <p className="result-hero-strip-label">วันเวลาเกิด</p>
+            <p className="result-hero-strip-value">{birth}</p>
           </div>
         </div>
-      </dl>
-    </GlassCard>
+        <div className="result-hero-strip-item">
+          <span className="result-hero-strip-icon" aria-hidden>
+            ⌖
+          </span>
+          <div>
+            <p className="result-hero-strip-label">สถานที่เกิด</p>
+            <p className="result-hero-strip-value">{location}</p>
+          </div>
+        </div>
+      </div>
+    </section>
   )
 }

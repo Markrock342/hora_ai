@@ -1,0 +1,550 @@
+/* ——— Polish layer — transitions, scroll, chips, reveals ——— */
+
+/* Page transition */
+.page-transition {
+  will-change: opacity, transform;
+}
+
+.page-transition--in {
+  animation: page-enter 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.page-transition--out {
+  opacity: 0;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scroll progress */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  z-index: 30;
+  pointer-events: none;
+  background: rgba(6, 8, 24, 0.4);
+}
+
+.scroll-progress-bar {
+  height: 100%;
+  width: var(--scroll-pct, 0%);
+  background: linear-gradient(
+    90deg,
+    rgba(90, 50, 140, 0.8),
+    rgba(212, 168, 75, 0.95),
+    rgba(240, 208, 120, 1)
+  );
+  box-shadow: 0 0 12px rgba(212, 168, 75, 0.6);
+  transition: width 0.12s ease-out;
+}
+
+/* Nav icons */
+.mystic-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.mystic-nav-icon {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.mystic-nav-link--active .mystic-nav-icon,
+.mystic-nav-link:hover .mystic-nav-icon {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Footer */
+.mystic-footer-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.mystic-footer-tagline {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(139, 146, 184, 0.6);
+}
+
+/* Home scroll cue */
+.home-scroll-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 1.5rem;
+  padding-bottom: 0.5rem;
+  color: var(--color-hora-gold-dim);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  animation: scroll-cue-bounce 2.5s ease-in-out infinite;
+}
+
+.home-scroll-cue-line {
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(180deg, rgba(212, 168, 75, 0.6), transparent);
+  border-radius: 1px;
+}
+
+@keyframes scroll-cue-bounce {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(6px);
+  }
+}
+
+.home-hero-features li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  animation: feature-pop 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.home-hero-feature-dot {
+  font-size: 0.55rem;
+  color: var(--color-hora-gold);
+  opacity: 0.8;
+}
+
+@keyframes feature-pop {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Result stats row */
+.result-stats-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.result-stat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--color-hora-muted);
+  border: 1px solid rgba(212, 168, 75, 0.15);
+  background: linear-gradient(
+    145deg,
+    rgba(20, 26, 62, 0.6),
+    rgba(10, 14, 38, 0.45)
+  );
+  animation: chip-enter 0.5s ease both;
+  transition:
+    border-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.result-stat-chip--gold {
+  color: var(--color-hora-gold-light);
+  border-color: rgba(212, 168, 75, 0.35);
+  background: linear-gradient(
+    145deg,
+    rgba(212, 168, 75, 0.15),
+    rgba(14, 18, 50, 0.5)
+  );
+}
+
+.result-stat-chip-icon {
+  font-size: 0.65rem;
+  opacity: 0.85;
+}
+
+.result-table-stagger {
+  animation-delay: calc(var(--stagger-i, 0) * 100ms);
+}
+
+/* Summary card mystic */
+.summary-card-mystic {
+  position: relative;
+  overflow: hidden;
+}
+
+.summary-card-mystic::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(240, 208, 120, 0.5),
+    transparent
+  );
+}
+
+.summary-card-mystic .summary-card-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(145deg, rgba(212, 168, 75, 0.2), rgba(90, 50, 140, 0.12));
+  border: 1px solid rgba(212, 168, 75, 0.25);
+  animation: emblem-float 4s ease-in-out infinite;
+}
+
+.summary-card-field {
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: rgba(6, 8, 24, 0.35);
+  border: 1px solid rgba(212, 168, 75, 0.08);
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.summary-card-field:hover {
+  border-color: rgba(212, 168, 75, 0.2);
+  box-shadow: 0 0 24px rgba(90, 50, 140, 0.1);
+}
+
+/* Section divider on result */
+.result-section-divider {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+  color: var(--color-hora-gold-dim);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.result-section-divider::before,
+.result-section-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 168, 75, 0.25), transparent);
+}
+
+/* Admin polish */
+.admin-page-mystic .glass-card-mystic {
+  animation-delay: calc(var(--admin-card-i, 0) * 80ms);
+}
+
+.admin-hero-orbs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.admin-hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: admin-orb-float 12s ease-in-out infinite;
+}
+
+.admin-hero-orb--1 {
+  width: 120px;
+  height: 120px;
+  top: -20%;
+  right: 10%;
+  background: rgba(90, 50, 140, 0.2);
+}
+
+.admin-hero-orb--2 {
+  width: 80px;
+  height: 80px;
+  bottom: 0;
+  left: 5%;
+  background: rgba(212, 168, 75, 0.12);
+  animation-delay: -4s;
+}
+
+@keyframes admin-orb-float {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(10px, -15px);
+  }
+}
+
+/* Glass card hover lift */
+.glass-card:not(.birth-form-card):hover {
+  transform: translateY(-2px);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Link back mystic */
+.mystic-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease,
+    text-shadow 0.3s ease;
+}
+
+.mystic-back-link:hover {
+  border-color: rgba(212, 168, 75, 0.25);
+  background: rgba(212, 168, 75, 0.06);
+}
+
+/* Empty state enhanced */
+.mystic-empty-card {
+  padding: 3rem 2rem !important;
+}
+
+/* Form section connector glow */
+.form-section-connector {
+  box-shadow: 0 0 20px rgba(212, 168, 75, 0.15);
+}
+
+/* Result hero strip */
+.result-info-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+}
+
+.result-hero-strip {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(18, 24, 58, 0.85) 0%,
+      rgba(12, 16, 42, 0.7) 50%,
+      rgba(20, 26, 62, 0.8) 100%
+    )
+    padding-box,
+    linear-gradient(
+      135deg,
+      rgba(212, 168, 75, 0.35),
+      rgba(90, 50, 140, 0.2),
+      rgba(212, 168, 75, 0.25)
+    )
+    border-box;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 12px 40px rgba(0, 0, 0, 0.25);
+}
+
+.result-hero-strip-glow {
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 50%;
+  height: 120%;
+  background: radial-gradient(ellipse, rgba(212, 168, 75, 0.12), transparent 70%);
+  pointer-events: none;
+}
+
+.result-hero-strip-name {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(212, 168, 75, 0.12);
+}
+
+.result-hero-strip-grid {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .result-hero-strip-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+  }
+}
+
+.result-hero-strip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.result-hero-strip-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.65rem;
+  font-size: 1rem;
+  background: linear-gradient(145deg, rgba(212, 168, 75, 0.15), rgba(90, 50, 140, 0.1));
+  border: 1px solid rgba(212, 168, 75, 0.2);
+}
+
+.result-hero-strip-label {
+  margin: 0;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-hora-gold-dim);
+}
+
+.result-hero-strip-value {
+  margin: 0.2rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--color-hora-cream);
+}
+
+.result-hero-strip-value--title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  color: var(--color-hora-gold-light);
+  text-shadow: 0 0 24px rgba(212, 168, 75, 0.2);
+}
+
+.mystic-mock-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.65rem 1rem;
+  border-radius: 0.65rem;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--color-hora-muted);
+  border: 1px solid rgba(139, 146, 184, 0.2);
+  background: linear-gradient(
+    90deg,
+    rgba(14, 18, 50, 0.5),
+    rgba(10, 14, 38, 0.35)
+  );
+}
+
+.mystic-mock-banner code {
+  font-size: 0.68rem;
+  color: var(--color-hora-gold-dim);
+}
+
+/* Summary tags */
+.summary-card-tag {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  color: var(--color-hora-muted);
+  border: 1px solid rgba(212, 168, 75, 0.12);
+  background: rgba(14, 18, 50, 0.5);
+}
+
+.summary-card-footer {
+  padding-top: 0.75rem !important;
+}
+
+/* Tables — zebra + hover */
+.report-table tbody tr:nth-child(even) {
+  background: rgba(6, 8, 24, 0.25);
+}
+
+.chart-table tbody tr:nth-child(even) {
+  background: rgba(212, 168, 75, 0.03);
+}
+
+.report-table tbody tr:hover {
+  background: rgba(212, 168, 75, 0.06) !important;
+}
+
+.report-table tbody td:first-child {
+  color: var(--color-hora-gold-dim);
+}
+
+/* Form sections — นุ่มขึ้น */
+.form-section-panel {
+  background: linear-gradient(
+    165deg,
+    rgba(20, 26, 62, 0.75) 0%,
+    rgba(12, 16, 42, 0.65) 100%
+  ) !important;
+}
+
+.form-section-body {
+  padding-top: 0.25rem;
+}
+
+.form-section-aurora {
+  opacity: 0.35;
+}
+
+.birth-form-fields {
+  gap: 1.75rem !important;
+}
+
+.birth-form-header {
+  background: linear-gradient(180deg, rgba(212, 168, 75, 0.04), transparent);
+  border-radius: 1rem 1rem 0 0;
+  margin: -0.5rem -0.5rem 0;
+  padding: 0.5rem 0.5rem 2rem !important;
+}
+
+/* Calculation badge in result stack */
+.result-info-stack .calculation-settings-mystic {
+  border-radius: 0.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition--in,
+  .home-scroll-cue,
+  .home-hero-features li,
+  .result-table-stagger,
+  .summary-card-mystic .summary-card-icon,
+  .admin-hero-orb {
+    animation: none !important;
+  }
+
+  .glass-card:not(.birth-form-card):hover {
+    transform: none;
+  }
+}

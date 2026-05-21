@@ -1,12 +1,13 @@
 # NewHora — Requirements (บันทึกถาวร)
 
-## ข้อมูลนำเข้า (เท่านี้เท่านั้น)
+## ข้อมูลนำเข้า
 
-- วัน / เดือน / ปี เกิด
+- ชื่อเจ้าชะตา
+- วัน / เดือน / ปี เกิด (ค.ศ.)
 - เวลาเกิด `HH:mm`
 - สถานที่เกิด: ประเทศ, จังหวัด/รัฐ, อำเภอ/เมือง
 
-**ไม่มี** ชื่อเจ้าชะตา หรือฟิลด์อื่นนอกเหนือจากนี้
+ฟอร์ม: `BirthForm.tsx`, `InputField.tsx`, `LocationSelect.tsx`
 
 ---
 
@@ -38,17 +39,22 @@
 
 ---
 
-## ผลลัพธ์ (เท่านี้เท่านั้น)
+## ผลลัพธ์ (โครงข้อมูล)
 
-**ตารางเดียว — 2 คอลัมน์:**
+**3 ตาราง × 25 แถว** + สรุปดาว 10 ดวง (2 คอลัมน์)
 
-| ดาว | สถิตราศี |
-|-----|----------|
+| ชุด | ไฟล์ type |
+|-----|-----------|
+| `tables.planets` | `PlanetTableRow` |
+| `tables.taksa` | `TaksaTableRow` |
+| `tables.houses` | `HouseTableRow` |
+| `planets` | `PlanetSignRow[]` (derive จากตารางดาว) |
 
-**ไม่แสดง** เรือน, องศา, เกษตร/อุจจ์/นิจ, ทักษาแยกตาราง, ความหมาย, ตารางเรือนชะตา หรือคอลัมน์อื่น
+Mock: `src/data/mockAstrologyResult.ts`  
+Orchestrator: `src/utils/astrologyCalculator.ts`
 
 ---
 
-## สูตรจริง (อนาคต)
+## สูตรจริง — หาจากไหน?
 
-แทนที่ mock ใน `src/utils/astrologyCalculator.ts` โดยคง output เป็น `{ planet, siderealSign }[]` เท่านั้น
+อ่าน **`docs/FORMULA_SOURCES.md`** (ลูกค้า / เทียบ myhora / ephemeris + ชั้นไทย)
