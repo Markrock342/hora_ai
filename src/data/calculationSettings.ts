@@ -28,9 +28,9 @@ export const CALCULATION_SETTINGS_LABELS: { key: keyof CalculationSettings; labe
     { key: 'calendar', label: 'สุริยยาตร์' },
     { key: 'ayanamsa', label: 'ลาหิรี' },
     { key: 'timeMethod', label: 'อันโตนาทีสามัญ สมผุสอาทิตย์อุทัย ปรับเวลาท้องถิ่น' },
-    { key: 'rahuRule', label: 'ราหู (๘) ราศีกุมภ์' },
-    { key: 'taksaRahuLord', label: 'ทักษา ราหู (๘) = พุธกลางคืน' },
-    { key: 'taksaCountFrom', label: 'ทักษานับตากลาง (๙)' },
+    { key: 'rahuRule', label: 'ราหู ๘ ราศีกุมภ์' },
+    { key: 'taksaRahuLord', label: 'ทักษา ราหู = พุธกลางคืน' },
+    { key: 'taksaCountFrom', label: 'ทักษานับตากลาง' },
   ]
 
 /** สิ่งใน myhora ที่ไม่เอา — ห้ามเพิ่มใน UI จนกว่า user สั่ง */

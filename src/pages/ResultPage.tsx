@@ -4,6 +4,9 @@ import { CalculationSettingsBadge } from '../components/CalculationSettingsBadge
 import { PrintButton } from '../components/PrintButton'
 import { ReportHeader } from '../components/ReportHeader'
 import { PLANET_SIGN_COLUMNS } from '../components/resultTableColumns'
+import { MyhoraSummaryBanner } from '../components/MyhoraSummaryBanner'
+import { MyhoraTaksaTable } from '../components/MyhoraTaksaTable'
+import { MyhoraTriwaiTable } from '../components/MyhoraTriwaiTable'
 import { RasiChakraChart } from '../components/RasiChakraChart'
 import { ResultTable } from '../components/ResultTable'
 import { useAstrology } from '../context/AstrologyContext'
@@ -32,10 +35,12 @@ export function ResultPage() {
 
   const { meta, planets } = result
   const sourceLabel =
-    meta.calculationSource === 'suryayat-100-reference' ||
-    meta.calculationSource === 'suryayat-100-year'
-      ? 'ปฏิทินร้อยปี สุริยยาตร์ (ตรง myhora)'
-      : meta.calculationSource === 'suryayat-cached'
+    meta.calculationSource === 'myhora-scrape'
+      ? 'ดึงจาก myhora.com (thai.aspx) — ตารางทักษา/ตรีวัย/ดาว'
+      : meta.calculationSource === 'suryayat-100-reference' ||
+          meta.calculationSource === 'suryayat-100-year'
+        ? 'ปฏิทินร้อยปี สุริยยาตร์ (ตรง myhora)'
+        : meta.calculationSource === 'suryayat-cached'
         ? 'แคชในเครื่อง (คำนวณ/นำเข้าแล้ว)'
         : meta.calculationSource === 'formula-pipeline'
           ? 'สูตร: อันโตนาที + ลาหิรี + ราหู 8 + ทักษา (เทียบ myhora ต่อ)'
@@ -81,7 +86,29 @@ export function ResultPage() {
           )}
         </div>
 
+        {result.myhora && <MyhoraSummaryBanner tables={result.myhora} />}
+
         {result.chart && <RasiChakraChart result={result} />}
+
+        {result.myhora && (
+          <div className="myhora-tables-row grid gap-6 lg:grid-cols-2">
+            <MyhoraTaksaTable tables={result.myhora} />
+            <div className="space-y-6">
+              <MyhoraTriwaiTable
+                title="ตรีวัย"
+                subtitle="ดวงกำเนิด"
+                grid={result.myhora.triwaiNatal}
+              />
+              {result.myhora.triwaiTransit.length > 0 && (
+                <MyhoraTriwaiTable
+                  title="ตรีวัย"
+                  subtitle="ดวงจร (วันจร)"
+                  grid={result.myhora.triwaiTransit}
+                />
+              )}
+            </div>
+          </div>
+        )}
 
         <ResultTable
           title="ดาวสถิตรราศี"

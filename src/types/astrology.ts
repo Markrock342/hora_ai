@@ -3,7 +3,7 @@
  * @see REQUIREMENTS.md
  */
 
-// ——— Input (เท่านี้เท่านั้น) ———
+// ——— Input ———
 
 export interface BirthInput {
   day: number
@@ -48,6 +48,7 @@ export interface ChartSnapshot {
 }
 
 export type CalculationSource =
+  | 'myhora-scrape'
   | 'suryayat-100-reference'
   | 'suryayat-100-year'
   | 'suryayat-cached'
@@ -70,4 +71,6 @@ export interface AstrologyResult {
   planets: PlanetSignRow[]
   /** กราฟราศีจักร (ราศีจักร) */
   chart?: ChartSnapshot
+  /** ตารางทักษา / ตรีวัย แบบ myhora (เมื่อดึงสำเร็จ) */
+  myhora?: import('./myhora').MyhoraTables
 }

@@ -49,11 +49,11 @@ function isValidResult(parsed: AstrologyResult): boolean {
   )
 }
 
-/** ข้อมูลเก่าใน session อาจไม่มี country หรือมี name — ปรับให้ตรง BirthInput ปัจจุบัน */
+/** ข้อมูลเก่าใน session อาจมี name / ไม่มี country — ตัดออก */
 export function normalizeBirthInput(
-  raw: Partial<BirthInput> & { name?: string },
+  raw: Partial<BirthInput> & { name?: string; firstName?: string; lastName?: string },
 ): BirthInput {
-  const { name: _n, ...rest } = raw
+  const { name: _n, firstName: _fn, lastName: _ln, ...rest } = raw
   return {
     day: Number(rest.day) || 0,
     month: Number(rest.month) || 0,

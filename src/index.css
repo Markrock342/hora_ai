@@ -923,3 +923,110 @@
     border-color: #ccc !important;
   }
 }
+
+/* ——— ตารางทักษา / ตรีวัย แบบ myhora ——— */
+
+.myhora-grid-section {
+  @apply rounded-2xl border border-hora-gold/25 bg-hora-panel/80 backdrop-blur-md print:border-gray-300 print:bg-white;
+}
+
+.myhora-grid-header {
+  @apply border-b border-hora-gold/20 px-5 py-4 print:border-gray-300;
+}
+
+.myhora-summary {
+  @apply print:text-sm;
+}
+
+.myhora-taksa-wrap,
+.myhora-triwai-wrap {
+  @apply flex justify-center p-4 md:p-6;
+}
+
+.myhora-taksa-grid,
+.myhora-triwai-grid {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.myhora-taksa-cell {
+  width: 4.5rem;
+  height: 3.5rem;
+  vertical-align: middle;
+  text-align: center;
+  border: 1px solid rgba(212, 168, 75, 0.25);
+  background: rgba(14, 18, 50, 0.6);
+  padding: 0.35rem;
+  font-size: 0.7rem;
+  line-height: 1.2;
+}
+
+.myhora-taksa-cell--active {
+  background: rgba(232, 93, 90, 0.2);
+  border-color: var(--color-hora-accent);
+  box-shadow: inset 0 0 0 1px rgba(232, 93, 90, 0.45);
+}
+
+.myhora-taksa-label {
+  display: block;
+  font-weight: 600;
+  color: var(--color-hora-gold-light);
+}
+
+.myhora-taksa-planet {
+  display: block;
+  font-size: 0.65rem;
+  color: var(--color-hora-cream);
+}
+
+.myhora-taksa-transit {
+  display: block;
+  font-size: 0.6rem;
+  color: var(--color-hora-muted);
+}
+
+.myhora-triwai-cell {
+  width: 4.75rem;
+  height: 3.75rem;
+  vertical-align: middle;
+  text-align: center;
+  border: 1px solid rgba(212, 168, 75, 0.25);
+  background: rgba(14, 18, 50, 0.6);
+  padding: 0.35rem;
+  font-size: 0.68rem;
+}
+
+.myhora-triwai-cell--active {
+  background: rgba(232, 93, 90, 0.22);
+  border-color: var(--color-hora-accent);
+}
+
+.myhora-triwai-house {
+  display: block;
+  font-weight: 600;
+  color: var(--color-hora-gold-light);
+}
+
+.myhora-triwai-planet {
+  display: block;
+  color: var(--color-hora-cream);
+}
+
+.myhora-triwai-age {
+  display: block;
+  font-size: 0.58rem;
+  color: var(--color-hora-muted);
+}
+
+@media print {
+  .myhora-taksa-cell,
+  .myhora-triwai-cell {
+    border-color: #ccc;
+    background: #f8f8f8;
+  }
+
+  .myhora-taksa-label,
+  .myhora-triwai-house {
+    color: #333;
+  }
+}

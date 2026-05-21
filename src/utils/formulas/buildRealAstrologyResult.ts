@@ -10,6 +10,7 @@ import {
   formatLocationDisplay,
 } from '../dateTimeUtils'
 import { getCachedChart, setCachedChart } from '../suryayatCache'
+import { fetchMyhoraThaiChart, isMyhoraScrapeAvailable } from '../myhora/fetchMyhoraThai'
 import { computeFullChartSync } from './pipeline'
 import { lookupSuryayatSync } from './suryayat/lookup'
 
@@ -37,10 +38,38 @@ export function buildRealAstrologyResult(input: BirthInput): AstrologyResult {
   return toResult(input, computeFullChartSync(input, place))
 }
 
-/** โหลดแคช IndexedDB ก่อนคำนวณ */
+/** โหลดแคช IndexedDB ก่อนคำนวณ — ลองดึง myhora ก่อน (dev + proxy) */
 export async function buildRealAstrologyResultAsync(
   input: BirthInput,
 ): Promise<AstrologyResult> {
+  if (isMyhoraScrapeAvailable()) {
+    try {
+      const scraped = await fetchMyhoraThaiChart(input)
+      const place = resolvePlaceCoords(input.country, input.province, input.district)
+      const base = computeFullChartSync(input, place)
+      const lagna = scraped.lagna ?? base.lagna
+      return {
+        input,
+        calculatedAt: new Date().toISOString(),
+        settings: { ...CALCULATION_SETTINGS },
+        meta: {
+          birthDisplay: formatBirthDisplay(input),
+          locationDisplay: formatLocationDisplay(input),
+          calculationSource: 'myhora-scrape',
+          lagna: lagna ?? undefined,
+        },
+        planets: scraped.planets,
+        chart: {
+          lagna: lagna ?? base.lagna,
+          taksa: base.taksa,
+        },
+        myhora: scraped.tables,
+      }
+    } catch (err) {
+      console.warn('[newhora] myhora scrape failed, using local formulas', err)
+    }
+  }
+
   const place = resolvePlaceCoords(input.country, input.province, input.district)
   const cached = await getCachedChart(input, place)
   const lookup = lookupSuryayatSync(input, place)

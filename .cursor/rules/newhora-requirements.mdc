@@ -6,7 +6,6 @@ alwaysApply: true
 # NewHora Requirements
 
 ## Input only
-- Subject name (ชื่อเจ้าชะตา)
 - Day, month, year, time (HH:mm)
 - Birth place: country, province/state, district/city
 

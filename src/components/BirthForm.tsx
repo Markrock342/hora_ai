@@ -166,7 +166,7 @@ export function BirthForm() {
               </p>
               <h2 className="birth-form-title">ข้อมูลเกิด</h2>
               <p className="birth-form-subtitle">
-                ชื่อเจ้าชะตา · วันเวลา · สถานที่ — สุริยยาตร์ · ลาหิรี
+                วันเวลา · สถานที่ — ระบบคำนวณคงที่ (สุริยยาตร์ · ลาหิรี)
               </p>
 
               <div

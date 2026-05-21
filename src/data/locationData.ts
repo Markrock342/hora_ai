@@ -88,6 +88,7 @@ export const THAI_PROVINCES = [
 export const SAMPLE_DISTRICTS: Record<string, string[]> = {
   กรุงเทพมหานคร: [
     'พระนคร',
+    'เขตพระนคร',
     'ดุสิต',
     'หนองจอก',
     'บางรัก',

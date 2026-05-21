@@ -7,5 +7,12 @@ export default defineConfig({
   server: {
     host: true,
     allowedHosts: true,
+    proxy: {
+      '/api/myhora': {
+        target: 'https://myhora.com',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/myhora/, ''),
+      },
+    },
   },
 })
