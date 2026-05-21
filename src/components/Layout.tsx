@@ -1,5 +1,5 @@
-import { useEffect } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { useEffect, useRef } from 'react'
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAppIntro } from '../hooks/useAppIntro'
 import { useClickEffects } from '../hooks/useClickEffects'
 import { useScrollMotion } from '../hooks/useScrollMotion'
@@ -16,11 +16,30 @@ const navItems = [
 ]
 
 export function Layout() {
+  const navigate = useNavigate()
+  const location = useLocation()
   const { active: introActive, leaving: introLeaving, progress: introProgress, statusText: introStatus, skip: skipIntro } =
     useAppIntro()
+  const introPlayedRef = useRef(false)
 
   useScrollMotion()
   useClickEffects()
+
+  useEffect(() => {
+    if (introActive) {
+      introPlayedRef.current = true
+    }
+  }, [introActive])
+
+  /** หลังสแปชเปิดแอป — ไปหน้ากรอกข้อมูล (ไม่ค้างที่ /result จากรอบก่อน) */
+  useEffect(() => {
+    if (introActive) return
+    if (!introPlayedRef.current) return
+    introPlayedRef.current = false
+    if (location.pathname !== '/') {
+      navigate('/', { replace: true })
+    }
+  }, [introActive, location.pathname, navigate])
 
   useEffect(() => {
     if (introActive) return
