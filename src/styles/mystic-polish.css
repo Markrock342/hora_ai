@@ -41,7 +41,7 @@
   width: var(--scroll-pct, 0%);
   background: linear-gradient(
     90deg,
-    rgba(90, 50, 140, 0.8),
+    rgba(60, 100, 75, 0.7),
     rgba(212, 168, 75, 0.95),
     rgba(240, 208, 120, 1)
   );
@@ -218,7 +218,7 @@
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 0.75rem;
-  background: linear-gradient(145deg, rgba(212, 168, 75, 0.2), rgba(90, 50, 140, 0.12));
+  background: linear-gradient(145deg, rgba(212, 168, 75, 0.2), rgba(40, 80, 60, 0.12));
   border: 1px solid rgba(212, 168, 75, 0.25);
   animation: emblem-float 4s ease-in-out infinite;
 }
@@ -226,7 +226,7 @@
 .summary-card-field {
   padding: 0.75rem 1rem;
   border-radius: 0.75rem;
-  background: rgba(6, 8, 24, 0.35);
+  background: rgba(10, 16, 13, 0.45);
   border: 1px solid rgba(212, 168, 75, 0.08);
   transition:
     border-color 0.3s ease,
@@ -235,7 +235,7 @@
 
 .summary-card-field:hover {
   border-color: rgba(212, 168, 75, 0.2);
-  box-shadow: 0 0 24px rgba(90, 50, 140, 0.1);
+  box-shadow: 0 0 20px rgba(40, 80, 60, 0.12);
 }
 
 /* Section divider on result */

@@ -1,5 +1,5 @@
 import { BirthForm } from '../components/BirthForm'
-import heroImage from '../assets/hero.png'
+import heroImage from '../assets/cosmic-bg-16x9.png'
 
 export function HomePage() {
   return (

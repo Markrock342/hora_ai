@@ -1,18 +1,19 @@
 @import 'tailwindcss';
 
 @theme {
-  --color-hora-bg: #060818;
-  --color-hora-panel: #0e1232;
-  --color-hora-panel-light: #151b42;
-  --color-hora-green: #1a2a4a;
-  --color-hora-green-light: #243660;
+  /* เข้ากับ cosmic-bg — มรกต + ทอง */
+  --color-hora-bg: #0a100e;
+  --color-hora-panel: #141c18;
+  --color-hora-panel-light: #1c2620;
+  --color-hora-green: #1a2e24;
+  --color-hora-green-light: #243830;
   --color-hora-gold: #d4a84b;
   --color-hora-gold-light: #f0d078;
   --color-hora-gold-dim: #9a7a3a;
   --color-hora-cream: #f0ebe3;
-  --color-hora-muted: #8b92b8;
-  --color-hora-accent: #e85d5a;
-  --color-cosmic-blue: #1e3a6e;
+  --color-hora-muted: #9a9688;
+  --color-hora-accent: #e08a8a;
+  --color-cosmic-blue: #1a2e24;
 
   --font-display: 'Pridi', 'Sarabun', system-ui, sans-serif;
   --font-serif: 'Sarabun', 'Segoe UI', system-ui, sans-serif;
@@ -24,9 +25,10 @@
   }
 
   body {
-    @apply bg-hora-bg text-hora-cream antialiased;
+    @apply text-hora-cream antialiased;
     margin: 0;
     min-height: 100vh;
+    background: transparent;
   }
 
   ::selection {
@@ -35,13 +37,21 @@
   }
 }
 
-/* ——— Cosmic background ——— */
+/* ——— Cosmic background (ภาพ + scrim มรกต) ——— */
+.celestial-backdrop__photo {
+  transform: scale(1.02);
+}
+
+.celestial-backdrop__stars {
+  opacity: 0.35;
+  mix-blend-mode: screen;
+}
+
 .cosmic-gradient {
   background:
-    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(60, 80, 180, 0.35), transparent 50%),
-    radial-gradient(ellipse 80% 50% at 100% 50%, rgba(90, 50, 140, 0.2), transparent 45%),
-    radial-gradient(ellipse 60% 40% at 0% 80%, rgba(30, 100, 140, 0.15), transparent 40%),
-    linear-gradient(180deg, #060818 0%, #0a1030 40%, #060818 100%);
+    linear-gradient(180deg, rgba(8, 16, 12, 0.35) 0%, rgba(6, 12, 10, 0.72) 100%),
+    radial-gradient(ellipse 70% 45% at 88% 8%, rgba(196, 165, 100, 0.06), transparent 55%),
+    radial-gradient(ellipse 55% 40% at 8% 92%, rgba(40, 90, 65, 0.12), transparent 50%);
 }
 
 .stars-layer {
@@ -130,7 +140,7 @@
 }
 
 .hora-input option {
-  background: #0e1232;
+  background: #141c18;
   color: #f0ebe3;
 }
 
@@ -407,8 +417,8 @@
   border: 1px solid rgba(212, 168, 75, 0.15);
   background: linear-gradient(
     145deg,
-    rgba(21, 27, 66, 0.85) 0%,
-    rgba(14, 18, 50, 0.75) 100%
+    rgba(24, 34, 28, 0.88) 0%,
+    rgba(14, 22, 18, 0.8) 100%
   );
   padding: 1.25rem 1.25rem 1.5rem;
   box-shadow:
@@ -585,11 +595,11 @@
   @apply rounded-xl p-4 md:p-5;
   border: 1px solid transparent;
   background:
-    linear-gradient(180deg, rgba(14, 18, 50, 0.55) 0%, rgba(10, 14, 38, 0.35) 100%) padding-box,
+    linear-gradient(180deg, rgba(16, 24, 20, 0.7) 0%, rgba(12, 18, 15, 0.5) 100%) padding-box,
     linear-gradient(
       135deg,
       rgba(212, 168, 75, 0.18) 0%,
-      rgba(90, 50, 140, 0.12) 50%,
+      rgba(50, 90, 70, 0.12) 50%,
       rgba(212, 168, 75, 0.14) 100%
     )
     border-box;
@@ -690,8 +700,8 @@
   background: linear-gradient(
     180deg,
     transparent 0%,
-    rgba(14, 18, 50, 0.25) 35%,
-    rgba(10, 14, 40, 0.45) 100%
+    rgba(14, 22, 18, 0.45) 40%,
+    rgba(10, 16, 13, 0.9) 100%
   );
 }
 
@@ -955,16 +965,16 @@
   vertical-align: middle;
   text-align: center;
   border: 1px solid rgba(212, 168, 75, 0.25);
-  background: rgba(14, 18, 50, 0.6);
+  background: rgba(12, 18, 15, 0.75);
   padding: 0.35rem;
   font-size: 0.7rem;
   line-height: 1.2;
 }
 
 .myhora-taksa-cell--active {
-  background: rgba(232, 93, 90, 0.2);
-  border-color: var(--color-hora-accent);
-  box-shadow: inset 0 0 0 1px rgba(232, 93, 90, 0.45);
+  background: rgba(212, 168, 75, 0.15);
+  border-color: rgba(212, 168, 75, 0.55);
+  box-shadow: inset 0 0 0 1px rgba(212, 168, 75, 0.3);
 }
 
 .myhora-taksa-label {
@@ -991,14 +1001,14 @@
   vertical-align: middle;
   text-align: center;
   border: 1px solid rgba(212, 168, 75, 0.25);
-  background: rgba(14, 18, 50, 0.6);
+  background: rgba(12, 18, 15, 0.75);
   padding: 0.35rem;
   font-size: 0.68rem;
 }
 
 .myhora-triwai-cell--active {
-  background: rgba(232, 93, 90, 0.22);
-  border-color: var(--color-hora-accent);
+  background: rgba(212, 168, 75, 0.15);
+  border-color: rgba(212, 168, 75, 0.55);
 }
 
 .myhora-triwai-house {
