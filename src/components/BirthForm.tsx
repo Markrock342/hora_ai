@@ -131,6 +131,11 @@ export function BirthForm() {
   const hasErrors = Object.keys(errors).length > 0
   const isFormValid = !hasValidationErrors(validationErrors)
 
+  const fieldError = (key: keyof BirthInput): string | undefined => {
+    if (!submitAttempted) return undefined
+    return errors[key] ?? validationErrors[key]
+  }
+
   const checklistDone = (key: keyof BirthInput) => {
     if (!isFieldFilled(input, key)) return false
     if (validationErrors[key]) return false
@@ -241,9 +246,7 @@ export function BirthForm() {
                 <ul className="birth-form-checklist" aria-label="รายการที่ต้องกรอก">
                 {CHECKLIST.map(({ key, label }) => {
                   const done = checklistDone(key)
-                  const err = Boolean(
-                    (submitAttempted ? errors : validationErrors)[key],
-                  )
+                  const err = Boolean(fieldError(key))
                   return (
                     <li
                       key={key}
@@ -277,7 +280,7 @@ export function BirthForm() {
                     label="วัน"
                     required
                     filled={Boolean(input.day)}
-                    error={errors.day ?? validationErrors.day}
+                    error={fieldError('day')}
                     errorFlashKey={errorFlashKey}
                     icon="①"
                     control="select"
@@ -308,7 +311,7 @@ export function BirthForm() {
                     label="เดือน"
                     required
                     filled={Boolean(input.month)}
-                    error={errors.month ?? validationErrors.month}
+                    error={fieldError('month')}
                     errorFlashKey={errorFlashKey}
                     icon="②"
                     control="select"
@@ -340,7 +343,7 @@ export function BirthForm() {
                     label="ปี (ค.ศ.)"
                     required
                     filled={Boolean(input.year)}
-                    error={errors.year ?? validationErrors.year}
+                    error={fieldError('year')}
                     errorFlashKey={errorFlashKey}
                     icon="③"
                     className="datetime-grid-year"
@@ -376,7 +379,7 @@ export function BirthForm() {
                     label="เวลาเกิด"
                     required
                     filled={Boolean(input.time)}
-                    error={errors.time ?? validationErrors.time}
+                    error={fieldError('time')}
                     errorFlashKey={errorFlashKey}
                     icon="🕐"
                     hint="รูปแบบ 24 ชม. HH:mm"
@@ -402,9 +405,9 @@ export function BirthForm() {
                 province={input.province}
                 district={input.district}
                 errors={{
-                  country: errors.country ?? validationErrors.country,
-                  province: errors.province ?? validationErrors.province,
-                  district: errors.district ?? validationErrors.district,
+                  country: fieldError('country'),
+                  province: fieldError('province'),
+                  district: fieldError('district'),
                 }}
                 errorFlashKey={errorFlashKey}
                 onChange={(patch) => patchInput(patch)}
@@ -454,7 +457,7 @@ export function BirthForm() {
               <button
                 type="submit"
                 className={`btn-primary btn-primary-3d btn-primary-cosmic w-full sm:w-auto sm:min-w-[240px] ${calculating ? 'btn-primary-3d--loading' : ''} ${allFilled && isFormValid ? 'btn-primary--ready' : ''}`}
-                disabled={calculating || !isFormValid}
+                disabled={calculating}
               >
                 <span className="btn-primary-shine" aria-hidden />
                 <span className="btn-primary-orbit" aria-hidden />
