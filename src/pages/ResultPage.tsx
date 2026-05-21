@@ -98,7 +98,7 @@ export function ResultPage() {
 
   const sourceLabel =
     meta.calculationSource === 'myhora-scrape'
-      ? 'ดึงจาก myhora.com — กราฟราศีจักร / นวางศ์ / ตรียางศ์ / ทักษา / ตรีวัย'
+      ? 'ดึงข้อมูลออนไลน์ — ราศีจักร / นวางศ์ / ตรียางศ์ / ทักษา / ตรีวัย'
       : meta.calculationSource === 'suryayat-100-reference' ||
           meta.calculationSource === 'suryayat-100-year'
         ? 'ปฏิทินร้อยปี สุริยยาตร์ (ตรง myhora)'
@@ -143,7 +143,9 @@ export function ResultPage() {
         <div className="result-info-stack no-print">
           <BirthInfoBanner birth={meta.birthDisplay} location={meta.locationDisplay} />
           <CalculationSettingsBadge />
-          {sourceLabel && <p className="text-xs text-hora-gold-dim">{sourceLabel}</p>}
+          {sourceLabel ? (
+            <p className="result-source-label text-xs text-hora-gold-dim">{sourceLabel}</p>
+          ) : null}
         </div>
 
         {canRefreshTransit && (
@@ -170,7 +172,7 @@ export function ResultPage() {
                 animateOnEnter
                 subtitle={
                   isMyhora
-                    ? 'ตำแหน่งดาวจาก myhora · วงจรในเครื่อง (Whole Sign)'
+                    ? 'ตำแหน่งดาวออนไลน์ · วงจรในเครื่อง (Whole Sign)'
                     : undefined
                 }
               />

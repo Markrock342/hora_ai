@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import type { TransitInput } from '../types/transit'
 import { TRANSIT_DATE_PRESETS } from '../types/transit'
 import { defaultTransitInput } from '../types/transit'
-import { BIRTH_YEAR_MAX, BIRTH_YEAR_MIN } from '../utils/dateTimeUtils'
 
 const MONTHS = [
   { value: 1, label: 'มกราคม' },
@@ -52,11 +51,14 @@ export function TransitDateControls({
           วันนี้ / ตอนนี้
         </button>
       </div>
-      <div className="transit-controls-grid">
-        <label className="transit-field transit-field--wide">
+
+      <div
+        className={`transit-controls-grid${customDate ? ' transit-controls-grid--custom' : ' transit-controls-grid--preset-only'}`}
+      >
+        <label className="transit-field transit-field--preset">
           <span className="transit-label">ช่วงดวงจร</span>
           <select
-            className="hora-input hora-select"
+            className="hora-input hora-input-3d hora-select transit-control-input"
             value={draft.preset ?? ''}
             onChange={(e) =>
               setDraft((d) => ({
@@ -72,12 +74,13 @@ export function TransitDateControls({
             ))}
           </select>
         </label>
+
         {customDate ? (
           <>
-            <label className="transit-field">
+            <label className="transit-field transit-field--day">
               <span className="transit-label">วัน</span>
               <select
-                className="hora-input hora-select"
+                className="hora-input hora-input-3d hora-select transit-control-input"
                 value={draft.day}
                 onChange={(e) => setDraft((d) => ({ ...d, day: Number(e.target.value) }))}
               >
@@ -88,10 +91,11 @@ export function TransitDateControls({
                 ))}
               </select>
             </label>
-            <label className="transit-field">
+
+            <label className="transit-field transit-field--month">
               <span className="transit-label">เดือน</span>
               <select
-                className="hora-input hora-select"
+                className="hora-input hora-input-3d hora-select transit-control-input"
                 value={draft.month}
                 onChange={(e) => setDraft((d) => ({ ...d, month: Number(e.target.value) }))}
               >
@@ -102,28 +106,35 @@ export function TransitDateControls({
                 ))}
               </select>
             </label>
-            <label className="transit-field">
+
+            <label className="transit-field transit-field--year">
               <span className="transit-label">ปี (ค.ศ.)</span>
-              <input
-                type="number"
-                className="hora-input"
-                min={BIRTH_YEAR_MIN}
-                max={BIRTH_YEAR_MAX}
-                value={draft.year}
-                onChange={(e) => {
-                  const raw = e.target.value.replace(/\D/g, '').slice(0, 4)
-                  setDraft((d) => ({ ...d, year: raw === '' ? d.year : Number(raw) }))
-                }}
-              />
-              {buddhistYear ? (
-                <span className="text-[10px] text-hora-muted">พ.ศ. {buddhistYear}</span>
-              ) : null}
+              <div className="transit-year-row">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  className="hora-input hora-input-3d transit-control-input transit-year-input"
+                  placeholder="2026"
+                  value={draft.year || ''}
+                  onChange={(e) => {
+                    const raw = e.target.value.replace(/\D/g, '').slice(0, 4)
+                    setDraft((d) => ({
+                      ...d,
+                      year: raw === '' ? 0 : Number(raw),
+                    }))
+                  }}
+                />
+                {buddhistYear ? (
+                  <span className="transit-year-be">พ.ศ. {buddhistYear}</span>
+                ) : null}
+              </div>
             </label>
-            <label className="transit-field">
+
+            <label className="transit-field transit-field--time">
               <span className="transit-label">เวลา</span>
               <input
                 type="time"
-                className="hora-input hora-input-time"
+                className="hora-input hora-input-3d hora-input-time transit-control-input"
                 value={draft.time}
                 step={60}
                 onChange={(e) => setDraft((d) => ({ ...d, time: e.target.value }))}
@@ -131,6 +142,7 @@ export function TransitDateControls({
             </label>
           </>
         ) : null}
+
         <button
           type="button"
           className="btn-primary btn-primary-3d transit-apply-btn"

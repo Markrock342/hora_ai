@@ -347,6 +347,17 @@
   gap: 0.875rem;
 }
 
+.result-source-label {
+  margin: 0;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+}
+
 .result-hero-strip {
   position: relative;
   overflow: hidden;

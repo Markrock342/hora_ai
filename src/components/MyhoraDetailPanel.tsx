@@ -99,7 +99,7 @@ export function MyhoraDetailPanel({
 
       {fromMyhora ? (
         <p className="myhora-detail-footnote text-xs text-hora-muted">
-          ปฏิทินจันทรคติ · ลัคนาอันโตนาที — ดึงจาก myhora.com
+          ปฏิทินจันทรคติ · ลัคนาอันโตนาที
         </p>
       ) : (
         <p className="myhora-detail-footnote text-xs text-hora-muted">

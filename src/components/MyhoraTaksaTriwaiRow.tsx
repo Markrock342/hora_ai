@@ -12,7 +12,7 @@ export function MyhoraTaksaTriwaiRow({ tables }: MyhoraTaksaTriwaiRowProps) {
   if (!taksa.length && !triwaiNatal.length) return null
 
   return (
-    <div className="myhora-taksa-triwai-row">
+    <div className="myhora-taksa-triwai-row" aria-label="ทักษาและตรีวัย">
       {taksa.length > 0 ? <MyhoraTaksaTable tables={tables} /> : null}
       <div className="myhora-triwai-column">
         {triwaiNatal.length > 0 ? (

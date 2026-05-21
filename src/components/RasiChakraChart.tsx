@@ -105,7 +105,7 @@ export function RasiChakraChart({
         </h3>
         <p className="text-xs text-hora-muted print:text-gray-600">
           {subtitle ??
-            `ลัคนา ${lagna} · เรือน Whole Sign · ทักษานับตากลาง${result.meta.calculationSource === 'myhora-scrape' ? ' · ตรง myhora.com' : ''}`}
+            `ลัคนา ${lagna} · เรือน Whole Sign · ทักษานับตากลาง`}
         </p>
       </header>
 

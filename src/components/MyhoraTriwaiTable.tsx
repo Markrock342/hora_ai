@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import type { MyhoraTriwaiCell } from '../types/myhora'
 import { myhoraTriwaiBg } from '../utils/myhora/assetUrls'
 import { MyhoraStarIcon } from './MyhoraStarIcon'
@@ -8,11 +9,29 @@ interface MyhoraTriwaiTableProps {
   grid: (MyhoraTriwaiCell | null)[][]
 }
 
+/** ตัดแถวว่างทั้งแถว และคอลัมน์ว่างท้ายตาราง (placeholder จากต้นทาง) */
+function compactTriwaiGrid(grid: (MyhoraTriwaiCell | null)[][]): (MyhoraTriwaiCell | null)[][] {
+  const rows = grid.filter((row) => row.some((cell) => cell != null))
+  if (!rows.length) return []
+
+  let lastCol = 0
+  for (const row of rows) {
+    for (let i = row.length - 1; i >= 0; i--) {
+      if (row[i] != null) {
+        lastCol = Math.max(lastCol, i + 1)
+        break
+      }
+    }
+  }
+  return rows.map((row) => row.slice(0, lastCol))
+}
+
 export function MyhoraTriwaiTable({ title, subtitle, grid }: MyhoraTriwaiTableProps) {
-  if (!grid.length) return null
+  const compactGrid = useMemo(() => compactTriwaiGrid(grid), [grid])
+  if (!compactGrid.length) return null
 
   return (
-    <section className="myhora-grid-section" aria-label={title}>
+    <section className="myhora-grid-section myhora-grid-section--triwai" aria-label={title}>
       <header className="myhora-grid-header">
         <h3 className="font-display text-lg text-gradient-gold print:text-black">{title}</h3>
         {subtitle ? (
@@ -22,7 +41,7 @@ export function MyhoraTriwaiTable({ title, subtitle, grid }: MyhoraTriwaiTablePr
       <div className="myhora-triwai-wrap">
         <table className="myhora-triwai-grid myhora-triwai-grid--native">
           <tbody>
-            {grid.map((row, ri) => (
+            {compactGrid.map((row, ri) => (
               <tr key={ri}>
                 {row.map((cell, ci) => (
                   <td
