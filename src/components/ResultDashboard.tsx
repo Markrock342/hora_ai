@@ -1,5 +1,8 @@
 import { useMemo } from 'react'
+import { useLocation } from 'react-router-dom'
+import type { CalcNavState } from '../constants/calcTransition'
 import type { AstrologyResult } from '../types/astrology'
+import { RasiChakraChart } from './RasiChakraChart'
 import { TABLE_ROW_COUNT, buildDashboardTables } from './dashboardTableTypes'
 import { SummaryCard } from './SummaryCard'
 import { PrintButton } from './PrintButton'
@@ -11,12 +14,15 @@ import {
   PLANET_TABLE_COLUMNS,
   TAKSA_TABLE_COLUMNS,
 } from './resultTableColumns'
+import { ScrollReveal } from './ui/ScrollReveal'
 
 interface ResultDashboardProps {
   result: AstrologyResult
 }
 
 export function ResultDashboard({ result }: ResultDashboardProps) {
+  const location = useLocation()
+  const fromCalc = Boolean((location.state as CalcNavState | null)?.fromCalc)
   const { meta } = result
   const lagna = meta.lagna ?? result.chart?.lagna
   const tables = useMemo(() => buildDashboardTables(result), [result])
@@ -25,7 +31,7 @@ export function ResultDashboard({ result }: ResultDashboardProps) {
   return (
     <>
       <div className="relative z-[1] flex flex-wrap items-start justify-between gap-4 no-print">
-        <header className="result-page-header">
+        <ScrollReveal as="header" variant="up" className="result-page-header">
           <p className="result-page-eyebrow font-display text-sm tracking-[0.15em] text-hora-gold uppercase">
             <span className="result-page-eyebrow-icon" aria-hidden>
               ✦
@@ -56,11 +62,11 @@ export function ResultDashboard({ result }: ResultDashboardProps) {
               </span>
             </div>
           )}
-        </header>
-        <div className="print-actions-mystic flex flex-wrap gap-2">
+        </ScrollReveal>
+        <ScrollReveal variant="right" delay={80} className="print-actions-mystic flex flex-wrap gap-2">
           <ExportButton result={result} />
           <PrintButton result={result} />
-        </div>
+        </ScrollReveal>
       </div>
 
       <article
@@ -68,40 +74,58 @@ export function ResultDashboard({ result }: ResultDashboardProps) {
         className="astrology-report relative z-[1] flex flex-col gap-6 print:gap-5"
         aria-label="รายงานโหราศาสตร์"
       >
-        <ReportHeader result={result} />
+        <ScrollReveal variant="up" delay={60}>
+          <ReportHeader result={result} />
+        </ScrollReveal>
 
-        <SummaryCard result={result} />
+        {fromCalc ? (
+          <RasiChakraChart result={result} animateOnEnter />
+        ) : (
+          <ScrollReveal variant="scale" delay={80}>
+            <RasiChakraChart result={result} />
+          </ScrollReveal>
+        )}
+
+        <ScrollReveal variant="scale" delay={120}>
+          <SummaryCard result={result} />
+        </ScrollReveal>
 
         <div className="result-section-divider no-print" aria-hidden>
           ตารางดวงชะตา
         </div>
 
-        <ResultTable
-          title="ตารางที่ 1 — ดาว"
-          subtitle={`${TABLE_ROW_COUNT} แถว`}
-          columns={PLANET_TABLE_COLUMNS}
-          rows={tables.planets}
-          variant="chart"
-          staggerIndex={0}
-        />
+        <ScrollReveal variant="up" delay={0}>
+          <ResultTable
+            title="ตารางที่ 1 — ดาว"
+            subtitle={`${TABLE_ROW_COUNT} แถว`}
+            columns={PLANET_TABLE_COLUMNS}
+            rows={tables.planets}
+            variant="chart"
+            staggerIndex={0}
+          />
+        </ScrollReveal>
 
-        <ResultTable
-          title="ตารางที่ 2 — ทักษา"
-          subtitle={`${TABLE_ROW_COUNT} แถว`}
-          columns={TAKSA_TABLE_COLUMNS}
-          rows={tables.taksa}
-          variant="chart"
-          staggerIndex={1}
-        />
+        <ScrollReveal variant="up" delay={100}>
+          <ResultTable
+            title="ตารางที่ 2 — ทักษา"
+            subtitle={`${TABLE_ROW_COUNT} แถว`}
+            columns={TAKSA_TABLE_COLUMNS}
+            rows={tables.taksa}
+            variant="chart"
+            staggerIndex={1}
+          />
+        </ScrollReveal>
 
-        <ResultTable
-          title="ตารางที่ 3 — ราศี / ภพ / เรือน"
-          subtitle={`${TABLE_ROW_COUNT} แถว`}
-          columns={HOUSE_TABLE_COLUMNS}
-          rows={tables.houses}
-          variant="chart"
-          staggerIndex={2}
-        />
+        <ScrollReveal variant="up" delay={200}>
+          <ResultTable
+            title="ตารางที่ 3 — ราศี / ภพ / เรือน"
+            subtitle={`${TABLE_ROW_COUNT} แถว`}
+            columns={HOUSE_TABLE_COLUMNS}
+            rows={tables.houses}
+            variant="chart"
+            staggerIndex={2}
+          />
+        </ScrollReveal>
 
         <footer className="hidden border-t border-gray-300 pt-4 text-center text-xs text-gray-500 print:block">
           NewHora — {totalRows} แถว · {meta.birthDisplay}

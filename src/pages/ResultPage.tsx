@@ -3,6 +3,7 @@ import { ResultDashboard } from '../components/ResultDashboard'
 import { useAstrology } from '../context/AstrologyContext'
 import { GlassCard } from '../components/ui/GlassCard'
 import { PageAmbient } from '../components/ui/PageAmbient'
+import { ScrollReveal } from '../components/ui/ScrollReveal'
 
 export function ResultPage() {
   const { result } = useAstrology()
@@ -11,6 +12,7 @@ export function ResultPage() {
     return (
       <div className="mystic-page result-page-mystic result-page-mystic--empty relative">
         <PageAmbient variant="result" />
+        <ScrollReveal variant="scale">
         <GlassCard mystic className="mystic-empty-card text-center">
           <div className="mystic-empty-mandala" aria-hidden />
           <p className="mystic-empty-moon text-5xl text-hora-gold/60">☽</p>
@@ -20,6 +22,7 @@ export function ResultPage() {
             กรอกข้อมูลเกิด
           </Link>
         </GlassCard>
+        </ScrollReveal>
       </div>
     )
   }

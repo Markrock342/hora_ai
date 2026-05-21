@@ -1,0 +1,497 @@
+/**
+ * เอฟเฟกต์โต้ตอบ — เข้าเว็บ · เลื่อน · กด · reveal
+ */
+
+:root {
+  --fx-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --fx-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* intro ฟิล → cinematic-intro.css */
+
+/* ——— Page transition (route) ——— */
+.page-transition.page-enter {
+  opacity: 0;
+  transform: translateY(28px) scale(0.985);
+  filter: blur(12px);
+}
+
+.page-transition.page-enter--active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+  transition:
+    opacity 0.7s var(--fx-ease),
+    transform 0.7s var(--fx-ease),
+    filter 0.7s var(--fx-ease);
+}
+
+/* ——— Scroll: header ——— */
+html.is-scrolled .mystic-header {
+  background: rgba(8, 12, 10, 0.92) !important;
+  box-shadow:
+    0 1px 0 rgba(212, 168, 75, 0.12),
+    0 12px 40px rgba(0, 0, 0, 0.45) !important;
+  transition:
+    background 0.35s var(--fx-ease),
+    box-shadow 0.35s var(--fx-ease),
+    padding 0.35s var(--fx-ease);
+}
+
+html.is-scrolled-deep .mystic-header .mystic-logo-emblem {
+  transform: scale(0.92);
+  transition: transform 0.35s var(--fx-ease);
+}
+
+html.is-scrolled .scroll-progress-bar {
+  box-shadow:
+    0 0 16px rgba(212, 168, 75, 0.7),
+    0 0 32px rgba(240, 208, 120, 0.35);
+}
+
+/* ——— Parallax พื้นหลัง + hero ——— */
+.celestial-backdrop__photo {
+  transform: scale(1.02) translateY(calc(var(--scroll-parallax, 0px) * -0.04));
+  transition: transform 0.1s linear;
+  will-change: transform;
+}
+
+.home-hero-split__visual .home-hero-image,
+.home-hero-split--bg-mock .home-hero-split__bg {
+  transform: translateY(calc(var(--scroll-parallax, 0px) * 0.06)) scale(1.03);
+  transition: transform 0.12s linear;
+}
+
+/* clean hero ใช้ breathe ใน home-hero-polish.css — ไม่ parallax */
+.home-hero-split--clean .home-hero-split__img {
+  transition: none;
+}
+
+.home-hero-split.is-revealed .home-hero-split__frame {
+  animation: hero-frame-glow 4s ease-in-out infinite;
+}
+
+@keyframes hero-frame-glow {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 0 0 1px rgba(212, 168, 75, 0.25),
+      inset 0 0 60px rgba(212, 168, 75, 0.04);
+  }
+  50% {
+    box-shadow:
+      inset 0 0 0 1px rgba(240, 208, 120, 0.4),
+      inset 0 0 80px rgba(212, 168, 75, 0.1);
+  }
+}
+
+/* ——— Scroll reveal ——— */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  filter: blur(10px);
+  transition:
+    opacity 0.75s var(--fx-ease),
+    transform 0.75s var(--fx-ease),
+    filter 0.75s var(--fx-ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.scroll-reveal.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.scroll-reveal--left {
+  transform: translateX(-32px);
+}
+
+.scroll-reveal--left.is-revealed {
+  transform: translateX(0);
+}
+
+.scroll-reveal--right {
+  transform: translateX(32px);
+}
+
+.scroll-reveal--right.is-revealed {
+  transform: translateX(0);
+}
+
+.scroll-reveal--scale {
+  transform: scale(0.94);
+}
+
+.scroll-reveal--scale.is-revealed {
+  transform: scale(1);
+}
+
+.scroll-reveal--fade {
+  transform: none;
+  filter: blur(8px);
+}
+
+.scroll-reveal--fade.is-revealed {
+  filter: blur(0);
+}
+
+/* ฟอร์ม: section เพิ่มเมื่อเลื่อนถึง */
+.form-section.scroll-reveal:not(.is-revealed) .form-section-panel {
+  box-shadow: none;
+}
+
+.form-section.scroll-reveal.is-revealed .form-section-panel {
+  animation: section-panel-pop 0.55s var(--fx-ease) both;
+}
+
+@keyframes section-panel-pop {
+  from {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+  to {
+    box-shadow:
+      inset 3px 0 0 rgba(212, 168, 75, 0.55),
+      0 12px 36px rgba(0, 0, 0, 0.32);
+  }
+}
+
+/* Footer เลื่อนถึง */
+.mystic-footer.scroll-reveal.is-revealed .mystic-footer-star {
+  animation: star-twinkle 2.5s ease-in-out infinite;
+}
+
+@keyframes star-twinkle {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+/* ——— กด / ripple ——— */
+.click-ripple {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(240, 208, 120, 0.25) 35%,
+    transparent 70%
+  );
+  transform: scale(0);
+  animation: ripple-expand 0.65s var(--fx-ease-out) forwards;
+  z-index: 20;
+}
+
+@keyframes ripple-expand {
+  to {
+    transform: scale(1);
+    opacity: 0;
+  }
+}
+
+.btn-primary.is-pressing:not(:disabled),
+.btn-ghost.is-pressing:not(:disabled) {
+  transform: scale(0.97) !important;
+  transition: transform 0.12s var(--fx-ease) !important;
+}
+
+.mystic-nav-link.is-pressing {
+  transform: scale(0.94);
+}
+
+.country-pill.is-pressing:not(.country-pill--active) {
+  transform: scale(0.96);
+}
+
+.mystic-logo-emblem.is-pressing {
+  transform: scale(0.9);
+}
+
+.hora-input:focus,
+.hora-select:focus {
+  animation: input-focus-glow 0.45s var(--fx-ease) both;
+}
+
+@keyframes input-focus-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 168, 75, 0);
+  }
+  40% {
+    box-shadow:
+      0 0 0 4px rgba(212, 168, 75, 0.18),
+      0 0 24px rgba(212, 168, 75, 0.2);
+  }
+  100% {
+    box-shadow:
+      0 0 0 3px rgba(212, 168, 75, 0.12),
+      0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Nav เปลี่ยนหน้า — flash */
+.mystic-nav-link.mystic-nav-link--active {
+  animation: nav-active-pulse 0.5s var(--fx-ease) both;
+}
+
+@keyframes nav-active-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(212, 168, 75, 0.5);
+  }
+  100% {
+    box-shadow: inset 0 0 0 1px rgba(212, 168, 75, 0.35);
+  }
+}
+
+/* การ์ดฟอร์มเมื่อเลื่อนถึง */
+.scroll-reveal.is-revealed .birth-form-card {
+  animation: card-reveal-glow 1.2s var(--fx-ease) both;
+}
+
+@keyframes card-reveal-glow {
+  0% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  }
+  50% {
+    box-shadow:
+      0 16px 48px rgba(0, 0, 0, 0.42),
+      0 0 48px rgba(212, 168, 75, 0.12);
+  }
+  100% {
+    box-shadow:
+      0 12px 40px rgba(0, 0, 0, 0.38),
+      0 0 40px rgba(212, 168, 75, 0.08);
+  }
+}
+
+/* ผลลัพธ์ */
+.result-page-header.scroll-reveal.is-revealed .result-page-title {
+  animation: title-shimmer-once 1.2s var(--fx-ease) 0.2s both;
+}
+
+@keyframes title-shimmer-once {
+  from {
+    letter-spacing: 0.02em;
+    filter: brightness(0.85);
+  }
+  to {
+    letter-spacing: 0.01em;
+    filter: brightness(1);
+  }
+}
+
+.scroll-reveal.is-revealed .result-table-mystic {
+  animation: table-slide-in 0.65s var(--fx-ease) both;
+}
+
+@keyframes table-slide-in {
+  from {
+    transform: translateY(20px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.birth-form-wrapper.is-motion-ready .settings-capsules {
+  animation: capsules-rise 0.6s var(--fx-ease) 0.35s both;
+}
+
+@keyframes capsules-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ——— ฟอร์ม → ผลลัพธ์ (ritual outro + page enter) ——— */
+html.calc-transition-outro {
+  overflow: hidden;
+}
+
+html.calc-transition-outro .birth-form-wrapper {
+  pointer-events: none;
+}
+
+html.calc-transition-outro .birth-form-card {
+  animation: calc-form-outro 0.9s var(--fx-ease) forwards;
+}
+
+html.calc-transition-outro .calc-ritual-overlay--outro {
+  animation: calc-ritual-outro 0.9s var(--fx-ease) forwards;
+}
+
+html.calc-transition-outro .birth-form-card-inner--outro {
+  opacity: 0.35;
+  transition: opacity 0.35s ease;
+}
+
+@keyframes calc-form-outro {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.97) translateY(-20px);
+    filter: blur(10px);
+  }
+}
+
+@keyframes calc-ritual-outro {
+  0% {
+    opacity: 1;
+    backdrop-filter: blur(8px);
+  }
+  35% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.06);
+    backdrop-filter: blur(16px);
+  }
+}
+
+.page-transition.page-enter--from-calc.page-enter {
+  opacity: 0;
+  transform: translateY(32px) scale(0.98);
+  filter: blur(10px);
+}
+
+.page-transition.page-enter--from-calc.page-enter--active {
+  transition-duration: 0.95s;
+}
+
+.result-page-mystic.result-page--from-calc .result-page-header.scroll-reveal.is-revealed .result-page-title {
+  animation-duration: 1.4s;
+}
+
+/* ——— ราศีจักร: วงล้อ + ดาวทีละดวง ——— */
+.rasi-chakra-wheel-wrap {
+  transform-origin: center center;
+}
+
+.rasi-chakra-section:not(.is-chart-revealed) .rasi-chakra-wheel {
+  opacity: 0.4;
+  transform: rotate(-22deg) scale(0.9);
+}
+
+.rasi-chakra-section.is-chart-revealed .rasi-chakra-wheel {
+  animation: rasi-wheel-settle 1.05s var(--fx-ease) both;
+}
+
+@keyframes rasi-wheel-settle {
+  from {
+    opacity: 0.35;
+    transform: rotate(-22deg) scale(0.88);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0deg) scale(1);
+  }
+}
+
+.rasi-chakra-section:not(.is-chart-revealed) .rasi-chakra-planet {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.rasi-chakra-section.is-chart-revealed .rasi-chakra-planet {
+  animation: rasi-planet-pop 0.48s var(--fx-ease) both;
+  animation-delay: calc(0.42s + var(--planet-i, 0) * 0.065s);
+  transform-origin: center;
+}
+
+@keyframes rasi-planet-pop {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.12);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.rasi-chakra-section.is-chart-revealed .rasi-chakra-taksa-item {
+  animation: rasi-taksa-rise 0.45s var(--fx-ease) both;
+  animation-delay: calc(0.75s + var(--taksa-i, 0) * 0.05s);
+}
+
+@keyframes rasi-taksa-rise {
+  from {
+    opacity: 0;
+    transform: translateX(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* scroll cue */
+.home-scroll-cue {
+  animation: scroll-cue-bounce 2.5s ease-in-out infinite;
+}
+
+html.is-scrolled .home-scroll-cue {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cine-intro,
+  .scroll-reveal,
+  .click-ripple,
+  .celestial-backdrop__photo,
+  .home-hero-split__visual .home-hero-image,
+  .home-hero-split--bg-mock .home-hero-split__bg,
+  .home-hero-split--clean .home-hero-split__img {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .scroll-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  .page-transition.page-enter,
+  .page-transition.page-enter--active {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+
+  .rasi-chakra-section .rasi-chakra-wheel,
+  .rasi-chakra-section .rasi-chakra-planet,
+  .rasi-chakra-section .rasi-chakra-taksa-item {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  html.calc-transition-outro .birth-form-card {
+    animation: none !important;
+  }
+}

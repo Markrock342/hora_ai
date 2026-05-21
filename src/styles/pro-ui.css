@@ -1,0 +1,1206 @@
+/**
+ * Pro UI — ความสะอาด hierarchy ชัด ลด animation เกิน
+ * โหลดหลัง cosmic-theme เพื่อ override สุดท้าย
+ */
+
+/* ——— ลด visual noise รอบฟอร์ม ——— */
+.birth-form-particles,
+.birth-form-energy-ring,
+.birth-form-orbit {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.birth-form-card-border-glow {
+  opacity: 0.28 !important;
+  animation-duration: 24s !important;
+}
+
+.form-section-aurora,
+.input-field-mystic-spark {
+  display: none !important;
+}
+
+.form-section-border-shine {
+  opacity: 0.25 !important;
+}
+
+/* ปิด animation วนซ้ำ (ไม่กระทบ page-enter / motion-item) */
+.birth-form-title,
+.form-section-panel,
+.birth-form-mandala,
+.birth-form-emblem-core,
+.birth-form-emblem-pulse,
+.birth-form-emblem-ring--outer,
+.birth-form-emblem-ring--mid,
+.glass-card-corner,
+.form-section-icon-glow,
+.input-field-shell:focus-within .input-field-mystic-spark {
+  animation: none !important;
+}
+
+.btn-primary-cosmic.btn-primary--ready {
+  animation: btn-ready-glow 3s ease-in-out infinite !important;
+}
+
+.text-gradient-gold {
+  animation: gold-text-shimmer 14s ease-in-out infinite !important;
+}
+
+.birth-form-wrapper .glass-card.gold-glow {
+  animation: none !important;
+}
+
+/* ——— แก้โทนสีน้ำเงินที่เหลือ ——— */
+.form-section-panel {
+  background: linear-gradient(
+    180deg,
+    rgba(24, 34, 28, 0.96) 0%,
+    rgba(14, 20, 17, 0.92) 100%
+  ) !important;
+  border: 1px solid rgba(122, 154, 138, 0.22) !important;
+  border-radius: 1rem !important;
+  padding: 1.35rem 1.5rem 1.5rem !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 4px 24px rgba(0, 0, 0, 0.22) !important;
+}
+
+.form-section-panel:hover {
+  transform: translateY(-1px) !important;
+  border-color: rgba(212, 168, 75, 0.28) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 8px 32px rgba(0, 0, 0, 0.28) !important;
+}
+
+.settings-capsule {
+  background: linear-gradient(
+    145deg,
+    rgba(22, 32, 26, 0.9) 0%,
+    rgba(14, 20, 17, 0.85) 100%
+  ) !important;
+  border-color: rgba(122, 154, 138, 0.25) !important;
+}
+
+.calc-ritual-overlay {
+  background: rgba(8, 12, 10, 0.9) !important;
+}
+
+.calc-ritual-mandala {
+  border-color: rgba(212, 168, 75, 0.3) !important;
+  box-shadow: 0 0 48px rgba(212, 168, 75, 0.15) !important;
+}
+
+/* ——— Layout หน้าแรก ——— */
+.home-page--pro {
+  max-width: 72rem;
+  padding-left: clamp(1rem, 3vw, 1.5rem);
+  padding-right: clamp(1rem, 3vw, 1.5rem);
+  padding-bottom: 4rem;
+}
+
+.home-page--pro .birth-form-wrapper--centered {
+  width: 100%;
+  max-width: 44rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.home-page--pro .birth-form-wrapper::before {
+  content: '';
+  display: block;
+  width: min(140px, 28%);
+  height: 1px;
+  margin: 0 auto 2.25rem;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 168, 75, 0.5),
+    transparent
+  );
+}
+
+/* ——— Hero split-screen ——— */
+.home-hero-split {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto;
+  margin: 0 0 2.5rem;
+  min-height: 0;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(212, 168, 75, 0.22);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.05) inset,
+    0 20px 50px rgba(0, 0, 0, 0.45);
+}
+
+/* Hero ปกติ: ซ้ายรูป (crop) · ขวา UI — ไม่มี veil/ดาวทับ */
+.home-hero-split--clean {
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(200px, 40vw) auto;
+  isolation: isolate;
+  z-index: 1;
+  background: #0c1210;
+}
+
+.home-hero-split--clean .home-hero-split__visual {
+  position: relative;
+  overflow: hidden;
+  min-height: clamp(200px, 40vw, 300px);
+  background: #0a100e;
+  border-radius: 1.25rem 1.25rem 0 0;
+}
+
+.home-hero-split--clean .home-hero-split__img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* กัน gradient legacy ทับคอลัมน์รูป */
+.home-hero-split--clean .home-hero-split__visual::before,
+.home-hero-split--clean .home-hero-split__visual::after {
+  display: none !important;
+  content: none !important;
+}
+
+.home-hero-split--clean .home-hero-split__content {
+  position: relative;
+  z-index: 2;
+  grid-column: 1;
+  grid-row: 2;
+  background: #0c1210;
+  border-radius: 0 0 1.25rem 1.25rem;
+}
+
+@media (min-width: 900px) {
+  .home-hero-split--clean {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    grid-template-rows: 1fr;
+    min-height: clamp(400px, 48vh, 500px);
+  }
+
+  .home-hero-split--clean .home-hero-split__visual {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 100%;
+    border-radius: 1.25rem 0 0 1.25rem;
+    border-right: 1px solid rgba(212, 168, 75, 0.1);
+  }
+
+  .home-hero-split--clean .home-hero-split__img {
+    width: 100%;
+    object-position: center center;
+  }
+
+  .home-hero-split--clean .home-hero-split__content {
+    grid-column: 2;
+    grid-row: 1;
+    border-radius: 0 1.25rem 1.25rem 0;
+    border-left: none;
+  }
+
+  .home-hero-split--clean.home-hero-split--refined::after {
+    display: block;
+    left: 52.5%;
+    opacity: 0.35;
+  }
+}
+
+/* ลดดาวพื้นหลังทับ hero บนหน้าแรก */
+.home-page--pro .celestial-backdrop__stars {
+  opacity: 0.08 !important;
+}
+
+.home-page--pro .celestial-backdrop__photo {
+  opacity: 0.82;
+}
+
+/* พื้นหลัง mock ทั้งใบ (legacy) */
+.home-hero-split--bg-mock {
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(200px, 42vw) auto;
+  isolation: isolate;
+}
+
+.home-hero-split--bg-mock .home-hero-split__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 40% center;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.home-hero-split--bg-mock .home-hero-split__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 38%,
+    rgba(12, 18, 15, 0.55) 58%,
+    #0c1210 72%
+  );
+}
+
+.home-hero-split--bg-mock .home-hero-split__content {
+  position: relative;
+  z-index: 2;
+  grid-column: 1;
+  grid-row: 2;
+  background: #0c1210;
+}
+
+@media (min-width: 900px) {
+  .home-hero-split--bg-mock {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    min-height: clamp(440px, 52vh, 540px);
+  }
+
+  .home-hero-split--bg-mock .home-hero-split__bg {
+    object-position: center center;
+  }
+
+  .home-hero-split--bg-mock .home-hero-split__veil {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(12, 18, 15, 0.08) 44%,
+      rgba(12, 18, 15, 0.88) 50%,
+      #0c1210 54%,
+      #0c1210 100%
+    );
+  }
+
+  .home-hero-split--bg-mock .home-hero-split__content {
+    grid-column: 2;
+    grid-row: 1;
+    align-self: stretch;
+    margin-left: 0;
+    border-left: 1px solid rgba(212, 168, 75, 0.08);
+    background: #0c1210;
+    box-shadow: -48px 0 72px rgba(12, 18, 15, 0.98);
+  }
+
+  .home-hero-split--bg-mock.home-hero-split--refined::after {
+    left: 50%;
+    opacity: 0.45;
+  }
+}
+
+.home-hero-split--refined .home-hero-split__visual .home-hero-image {
+  transform: scale(1.03);
+  filter: saturate(0.9) contrast(1.05) brightness(0.94) sepia(0.14) hue-rotate(-12deg);
+}
+
+@media (min-width: 768px) {
+  .home-hero-split {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+@media (min-width: 900px) {
+  .home-hero-split {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    grid-template-rows: 1fr;
+    min-height: clamp(420px, 50vh, 520px);
+    margin-bottom: 3rem;
+  }
+
+  .home-page--pro .birth-form-wrapper::before {
+    margin-bottom: 2.5rem;
+  }
+
+  .home-hero-split .home-scroll-cue {
+    display: none;
+  }
+}
+
+.home-hero-split__visual {
+  position: relative;
+  min-height: clamp(200px, 36vw, 280px);
+  overflow: hidden;
+  border-radius: 1.25rem 1.25rem 0 0;
+  background: #0c1210;
+}
+
+@media (min-width: 900px) {
+  .home-hero-split__visual {
+    min-height: 100%;
+    border-radius: 1.25rem 0 0 1.25rem;
+  }
+}
+
+.home-hero-split__visual .home-hero-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 24% 46%;
+  transform: scale(1.03);
+  filter: saturate(0.9) contrast(1.05) brightness(0.94) sepia(0.14) hue-rotate(-12deg);
+  animation: none;
+}
+
+/* รวมโทนภาพให้เข้ากับ panel ขวา (#0c1210) */
+.home-hero-visual-grade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(12, 18, 15, 0.35) 0%,
+      transparent 38%,
+      rgba(10, 16, 13, 0.55) 100%
+    ),
+    linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(12, 18, 15, 0.25) 48%,
+      rgba(12, 18, 15, 0.72) 68%,
+      #0c1210 82%
+    );
+  mix-blend-mode: multiply;
+}
+
+.home-hero-seam {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(12, 18, 15, 0.15) 55%,
+    rgba(12, 18, 15, 0.92) 76%,
+    #0c1210 88%
+  );
+}
+
+.home-hero-split__visual .home-hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+
+.home-hero-scrim--split {
+  background:
+    linear-gradient(180deg, transparent 50%, rgba(6, 10, 8, 0.55) 100%),
+    linear-gradient(90deg, transparent 42%, rgba(12, 18, 15, 0.45) 72%, #0c1210 92%) !important;
+}
+
+@media (min-width: 900px) {
+  .home-hero-split__visual .home-hero-image {
+    object-position: 20% center;
+    width: 118%;
+    max-width: none;
+    left: -4%;
+  }
+
+  .home-hero-visual-grade {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(12, 18, 15, 0.2) 0%,
+        transparent 42%,
+        rgba(10, 16, 13, 0.4) 100%
+      ),
+      linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(12, 18, 15, 0.2) 52%,
+        rgba(12, 18, 15, 0.85) 72%,
+        #0c1210 84%
+      );
+  }
+
+  .home-hero-seam {
+    left: auto;
+    right: 0;
+    width: 42%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(12, 18, 15, 0.55) 28%,
+      #0c1210 62%
+    );
+  }
+
+  .home-hero-scrim--split {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(12, 18, 15, 0.2) 54%,
+      rgba(12, 18, 15, 0.95) 76%,
+      #0c1210 90%
+    ) !important;
+  }
+}
+
+.home-hero-split__frame {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px rgba(212, 168, 75, 0.25),
+    inset 0 0 80px rgba(212, 168, 75, 0.06);
+}
+
+@media (min-width: 900px) {
+  .home-hero-split__frame {
+    border-right: 1px solid rgba(212, 168, 75, 0.15);
+  }
+}
+
+.home-hero-split__content {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.25rem;
+  overflow: hidden;
+  isolation: isolate;
+  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1.25rem, 4vw, 2.75rem);
+  max-width: none;
+  border-radius: 0 0 1.25rem 1.25rem;
+  background: #0c1210;
+}
+
+@media (min-width: 900px) {
+  .home-hero-split__content {
+    padding: clamp(2rem, 3.5vw, 3rem) clamp(2rem, 4vw, 3.25rem);
+    margin-left: -1px;
+    border-radius: 0 1.25rem 1.25rem 0;
+    border-left: 1px solid rgba(212, 168, 75, 0.1);
+    background: linear-gradient(
+      105deg,
+      #0c1210 0%,
+      #0e1613 18%,
+      #101a16 55%,
+      #0c1210 100%
+    );
+    box-shadow: -20px 0 40px rgba(12, 18, 15, 0.75);
+  }
+
+  .home-hero-split--refined::after {
+    content: '';
+    position: absolute;
+    top: 12%;
+    bottom: 12%;
+    left: 50%;
+    z-index: 6;
+    width: 1px;
+    transform: translateX(-50%);
+    background: linear-gradient(
+      180deg,
+      transparent,
+      rgba(212, 168, 75, 0.35) 45%,
+      rgba(212, 168, 75, 0.35) 55%,
+      transparent
+    );
+    pointer-events: none;
+    opacity: 0.7;
+  }
+}
+
+.home-hero-split .home-hero-orbit-ring {
+  display: none;
+}
+
+.home-hero-split::before {
+  display: none;
+}
+
+.home-page--pro .home-hero-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.2em 0.35em;
+}
+
+.home-hero-split--lux .home-hero-title {
+  display: block;
+}
+
+.home-page--pro .home-hero-lead {
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: rgba(240, 235, 227, 0.88);
+  max-width: 28rem;
+  margin-top: 1.125rem;
+}
+
+.home-page--pro .home-hero-badge {
+  position: relative;
+  z-index: 1;
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  padding: 0.4rem 1rem;
+  border-color: rgba(212, 168, 75, 0.45) !important;
+  background: rgba(8, 12, 10, 0.75) !important;
+  box-shadow:
+    0 0 20px rgba(212, 168, 75, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.home-hero-split .home-hero-features {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+  max-width: 22rem;
+}
+
+@media (min-width: 640px) and (max-width: 899px) {
+  .home-hero-split .home-hero-features {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    max-width: none;
+  }
+}
+
+@media (min-width: 900px) {
+  .home-hero-split .home-hero-features {
+    max-width: 100%;
+  }
+}
+
+.home-hero-split .home-scroll-cue {
+  margin-top: auto;
+  padding-top: 1.5rem;
+  align-self: flex-start;
+}
+
+/* ปิด tilt ทั้งหมด */
+.birth-form-card-inner {
+  transform: none !important;
+  transition: opacity 0.4s ease, filter 0.4s ease !important;
+}
+
+/* ——— Header / Nav ——— */
+.mystic-header {
+  box-shadow: 0 1px 0 rgba(212, 168, 75, 0.08), 0 8px 32px rgba(0, 0, 0, 0.25) !important;
+}
+
+.mystic-nav {
+  padding: 0.2rem !important;
+  gap: 0.125rem;
+}
+
+.mystic-nav-link {
+  font-size: 0.8125rem;
+  letter-spacing: 0.03em;
+  padding: 0.5rem 1rem !important;
+}
+
+.mystic-nav-link--active,
+.nav-pill-active {
+  font-weight: 600;
+}
+
+/* ——— การ์ดฟอร์มหลัก ——— */
+.birth-form-wrapper {
+  position: relative;
+  margin-top: 0.5rem;
+}
+
+.birth-form-wrapper .birth-form-card.glass-card {
+  border-radius: 1.25rem !important;
+  border: 1px solid rgba(196, 165, 100, 0.2) !important;
+  background: linear-gradient(
+    180deg,
+    rgba(22, 32, 26, 0.97) 0%,
+    rgba(12, 18, 15, 0.94) 100%
+  ) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.07) inset,
+    0 28px 72px rgba(0, 0, 0, 0.48),
+    0 0 0 1px rgba(0, 0, 0, 0.15) !important;
+}
+
+.birth-form-wrapper .glass-card-mystic-border {
+  opacity: 0.65;
+  animation-duration: 18s !important;
+}
+
+.glass-card-corner {
+  opacity: 0.45 !important;
+  font-size: 0.55rem !important;
+}
+
+.birth-form-card-inner {
+  padding: 1.5rem !important;
+}
+
+@media (min-width: 768px) {
+  .birth-form-card-inner {
+    padding: 2.25rem !important;
+  }
+}
+
+/* ——— Header ฟอร์ม ——— */
+.birth-form-header {
+  display: grid !important;
+  grid-template-columns: auto 1fr;
+  gap: 1.25rem 1.75rem !important;
+  align-items: start !important;
+  flex-direction: unset !important;
+  margin: 0 0 2rem !important;
+  padding: 0 0 2rem !important;
+  border-bottom: 1px solid rgba(212, 168, 75, 0.14) !important;
+  background: none !important;
+  border-radius: 0 !important;
+}
+
+.birth-form-emblem {
+  width: 3.75rem;
+  height: 3.75rem;
+}
+
+.birth-form-emblem-core {
+  font-size: 1.5rem;
+  text-shadow: 0 0 16px rgba(212, 168, 75, 0.35);
+}
+
+.birth-form-eyebrow {
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  color: var(--color-hora-gold-dim);
+  margin-bottom: 0.35rem;
+}
+
+.birth-form-title {
+  font-size: clamp(1.5rem, 2.5vw, 1.875rem) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  background: linear-gradient(135deg, #f8ecd0 0%, #e8c878 40%, #d4a84b 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  filter: none !important;
+}
+
+.birth-form-subtitle {
+  font-size: 0.8125rem;
+  margin-top: 0.5rem;
+  max-width: 32rem;
+  color: rgba(154, 150, 136, 0.95);
+}
+
+/* Progress */
+.birth-form-progress-wrap {
+  margin-top: 1.25rem;
+  gap: 1rem;
+}
+
+.birth-form-progress-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-hora-gold-light);
+}
+
+.birth-form-progress-track {
+  height: 0.375rem;
+  border-radius: 999px;
+}
+
+.birth-form-checklist-wrap {
+  margin-top: 1rem;
+  padding: 0.875rem 1rem;
+}
+
+.birth-form-checklist {
+  gap: 0.4rem 0.65rem;
+}
+
+.birth-form-checklist-item {
+  font-size: 0.6875rem;
+}
+
+/* ——— Form sections (timeline) ——— */
+.birth-form-fields {
+  gap: 2rem !important;
+}
+
+.form-section {
+  gap: 1rem 1.25rem !important;
+}
+
+.form-section-connector {
+  padding-top: 1.5rem;
+}
+
+.form-section-connector::after {
+  content: '';
+  flex: 1;
+  width: 1px;
+  min-height: 2rem;
+  margin-top: 0.5rem;
+  background: linear-gradient(
+    180deg,
+    rgba(212, 168, 75, 0.35),
+    rgba(122, 154, 138, 0.12)
+  );
+}
+
+.form-section:last-of-type .form-section-connector::after {
+  opacity: 0.35;
+  min-height: 1rem;
+}
+
+.form-section-step {
+  width: 2.125rem;
+  height: 2.125rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border-width: 1px;
+}
+
+.form-section-header {
+  margin-bottom: 1.25rem !important;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(122, 154, 138, 0.14);
+}
+
+.form-section-icon {
+  width: 2.5rem !important;
+  height: 2.5rem !important;
+  border-radius: 0.625rem !important;
+  font-size: 1.125rem !important;
+  background: linear-gradient(
+    145deg,
+    rgba(212, 168, 75, 0.22),
+    rgba(40, 65, 52, 0.35)
+  ) !important;
+}
+
+.form-section-kicker {
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
+  color: rgba(154, 122, 58, 0.9);
+}
+
+.form-section-title {
+  font-size: 0.8125rem !important;
+  letter-spacing: 0.12em !important;
+  margin-top: 0.15rem;
+}
+
+/* ——— Inputs ——— */
+.input-field-label {
+  margin-bottom: 0.4rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.input-field-shell {
+  border-radius: 0.625rem;
+  background: rgba(8, 12, 10, 0.55);
+  transition: box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.hora-input-3d,
+.datetime-grid .hora-picker-wrap .hora-input {
+  min-height: 3rem;
+  font-size: 0.9375rem;
+  border-radius: 0.625rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.hora-input-3d:focus {
+  transform: none !important;
+}
+
+.input-field-group--filled .input-field-label-text {
+  color: var(--color-hora-gold-light);
+}
+
+.input-field-check {
+  font-size: 0.6875rem;
+  opacity: 0.85;
+}
+
+.datetime-grid {
+  gap: 1rem !important;
+}
+
+@media (min-width: 1024px) {
+  .datetime-grid {
+    max-width: none !important;
+  }
+}
+
+/* ——— Location ——— */
+.location-panel {
+  margin-top: 0.25rem;
+}
+
+.country-pill {
+  min-height: 3rem;
+  border-radius: 0.75rem;
+  font-size: 0.8125rem;
+}
+
+.country-pill::before {
+  opacity: 0.6;
+}
+
+.country-pill-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.location-ready-badge {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  padding: 0.625rem 1rem;
+  border-radius: 0.625rem;
+}
+
+/* ——— Settings row ——— */
+.settings-capsules {
+  border-radius: 1rem !important;
+  padding: 1.25rem 1.5rem !important;
+}
+
+.settings-capsules-title {
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+}
+
+.settings-capsule {
+  font-size: 0.6875rem;
+  padding: 0.35rem 0.75rem;
+}
+
+/* ——— Actions ——— */
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+  padding-top: 1.75rem !important;
+  border-top: 1px solid rgba(212, 168, 75, 0.12);
+}
+
+.btn-primary-cosmic {
+  min-height: 3rem;
+  padding: 0.75rem 2.25rem !important;
+  font-size: 0.9375rem !important;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  border-radius: 0.75rem !important;
+  text-transform: none;
+}
+
+.btn-primary-text {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-ghost-3d {
+  min-height: 3rem;
+  padding: 0.65rem 1.25rem;
+  font-size: 0.875rem;
+  border-radius: 0.75rem;
+}
+
+.form-alert {
+  border-radius: 0.75rem;
+}
+
+/* ——— Hero typography ——— */
+.home-page--pro .home-hero-title {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  filter: none !important;
+}
+
+.home-page--pro .home-hero-title-line {
+  color: #fff;
+  text-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(255, 255, 255, 0.08);
+}
+
+.home-page--pro .home-hero-title-gold.text-gradient-gold {
+  filter: drop-shadow(0 2px 16px rgba(212, 168, 75, 0.55)) !important;
+}
+
+.home-page--pro .home-hero-lead {
+  position: relative;
+  z-index: 1;
+}
+
+.home-hero-split--refined .home-hero-features li {
+  position: relative;
+  z-index: 1;
+  font-size: 0.8125rem;
+  padding: 0.5rem 0.75rem;
+  justify-content: flex-start;
+  text-align: left;
+  border-color: rgba(212, 168, 75, 0.28) !important;
+  background: rgba(12, 18, 15, 0.65) !important;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.home-hero-split--refined .home-hero-features li:hover {
+  border-color: rgba(212, 168, 75, 0.45) !important;
+  background: rgba(212, 168, 75, 0.1) !important;
+}
+
+/* ——— Site-wide motion & backdrop ——— */
+@keyframes pro-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* page-transition — ดู motion-fonts.css */
+
+.celestial-backdrop__stars {
+  opacity: 0.22 !important;
+}
+
+.celestial-backdrop__photo {
+  animation: none !important;
+  transform: scale(1.03);
+}
+
+/* birth-form stagger — ดู motion-fonts.css */
+
+/* ——— Form: ช่องวันเวลาให้สูงเท่ากัน ——— */
+.datetime-grid .input-field-group {
+  position: relative;
+  padding-bottom: 1.35rem;
+}
+
+.datetime-grid .input-field-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  font-size: 0.65rem;
+  line-height: 1.25;
+}
+
+.datetime-grid .input-field-shell,
+.datetime-grid .hora-picker-wrap {
+  min-height: 3rem;
+}
+
+.datetime-grid .hora-input,
+.datetime-grid .hora-input-3d,
+.datetime-grid select.hora-select,
+.datetime-grid input.hora-input-3d {
+  height: 3rem;
+  min-height: 3rem;
+  box-sizing: border-box;
+}
+
+.datetime-grid input[type='number'].hora-input-3d {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.datetime-grid input[type='number'].hora-input-3d::-webkit-inner-spin-button,
+.datetime-grid input[type='number'].hora-input-3d::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* ——— Form sections โปร ——— */
+.form-section {
+  align-items: stretch !important;
+}
+
+.form-section-connector {
+  position: relative;
+  padding-top: 1.35rem !important;
+}
+
+.form-section-connector::after {
+  position: absolute;
+  top: 3.25rem;
+  bottom: -1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  min-height: 0;
+  flex: none;
+  margin: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(212, 168, 75, 0.45),
+    rgba(122, 154, 138, 0.15)
+  ) !important;
+}
+
+.form-section:last-of-type .form-section-connector::after {
+  display: none;
+}
+
+.form-section-step {
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 0 0 4px rgba(10, 16, 13, 0.9);
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+
+.form-section:hover .form-section-step {
+  box-shadow:
+    0 0 0 4px rgba(10, 16, 13, 0.9),
+    0 0 20px rgba(212, 168, 75, 0.25);
+}
+
+.form-section-panel {
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+.form-section-body {
+  padding-top: 0.125rem;
+}
+
+/* ——— Location ลดกล่องซ้อน ——— */
+.location-block--country {
+  border: none !important;
+  background: rgba(8, 12, 10, 0.35) !important;
+  box-shadow: inset 0 0 0 1px rgba(122, 154, 138, 0.2) !important;
+  padding: 1rem !important;
+}
+
+.location-address-grid {
+  gap: 1.125rem !important;
+}
+
+/* ——— Inputs focus โปร ——— */
+.input-field-shell {
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.input-field-shell:focus-within {
+  box-shadow:
+    0 0 0 1px rgba(212, 168, 75, 0.35),
+    0 0 20px rgba(212, 168, 75, 0.08);
+}
+
+.input-field-border-glow {
+  display: block !important;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.input-field-shell:focus-within .input-field-border-glow,
+.input-field-group--filled .input-field-border-glow {
+  opacity: 0.85 !important;
+}
+
+/* ——— ปุ่ม & nav ——— */
+.btn-primary-cosmic {
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.25s ease,
+    filter 0.2s ease;
+}
+
+.btn-primary-cosmic:hover:not(:disabled) {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+.btn-ghost-3d {
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.mystic-nav-link {
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+/* ——— หน้าผลลัพธ์ ——— */
+.result-page-header,
+.result-dashboard {
+  animation: pro-fade-up 0.5s ease both;
+}
+
+.glass-card,
+.summary-card,
+.result-table-mystic {
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.3s ease;
+}
+
+.report-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-gradient-gold,
+  .btn-primary-cosmic.btn-primary--ready,
+  .home-hero-image,
+  .home-hero-split,
+  .birth-form-wrapper--centered,
+  .page-transition--in,
+  .result-page-header {
+    animation: none !important;
+  }
+
+  .home-hero-split--refined .home-hero-features li:hover,
+  .btn-primary-cosmic:hover:not(:disabled) {
+    transform: none;
+  }
+}

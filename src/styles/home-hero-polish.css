@@ -1,0 +1,257 @@
+/**
+ * Hero + หน้าแรก — polish (ไม่ fade ขวารูป)
+ */
+
+/* ——— รูปวงล้อ: โทน + แสง + ขอบ ——— */
+.home-hero-split--clean .home-hero-split__visual {
+  background: radial-gradient(ellipse 80% 70% at 50% 45%, #1a2820 0%, #0a100e 100%);
+}
+
+.home-hero-split--clean .home-hero-split__img {
+  filter: saturate(1.08) contrast(1.05) brightness(1.04);
+  transform: scale(1.02);
+  animation: hero-img-breathe 28s ease-in-out infinite alternate;
+}
+
+@keyframes hero-img-breathe {
+  from {
+    transform: scale(1.02);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+
+.home-hero-visual-glow {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 55% 50% at 50% 48%,
+      rgba(212, 168, 75, 0.18) 0%,
+      rgba(212, 168, 75, 0.06) 35%,
+      transparent 68%
+    ),
+    radial-gradient(ellipse 90% 80% at 50% 100%, rgba(40, 90, 65, 0.12), transparent 55%);
+  mix-blend-mode: screen;
+  opacity: 0.85;
+}
+
+.home-hero-visual-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  box-shadow:
+    inset 0 0 80px rgba(0, 0, 0, 0.35),
+    inset 0 0 120px rgba(6, 10, 8, 0.25);
+  border-radius: inherit;
+}
+
+.home-hero-visual-frame {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px rgba(212, 168, 75, 0.28),
+    inset 0 0 48px rgba(212, 168, 75, 0.06);
+}
+
+@media (min-width: 900px) {
+  .home-hero-visual-frame {
+    box-shadow:
+      inset 0 0 0 1px rgba(212, 168, 75, 0.28),
+      inset -1px 0 0 rgba(212, 168, 75, 0.12),
+      inset 0 0 56px rgba(212, 168, 75, 0.08);
+  }
+}
+
+/* ——— การ์ด hero รวม ——— */
+.home-hero-split--clean.home-hero-split--lux {
+  border: 1px solid rgba(212, 168, 75, 0.28);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.06) inset,
+    0 4px 0 rgba(212, 168, 75, 0.04),
+    0 24px 64px rgba(0, 0, 0, 0.5),
+    0 0 80px rgba(212, 168, 75, 0.06);
+}
+
+.home-hero-split--clean.home-hero-split--refined::after {
+  width: 2px;
+  opacity: 0.55;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(212, 168, 75, 0.15) 15%,
+    rgba(240, 208, 120, 0.55) 50%,
+    rgba(212, 168, 75, 0.15) 85%,
+    transparent 100%
+  );
+  box-shadow: 0 0 20px rgba(212, 168, 75, 0.25);
+}
+
+/* ——— panel ขวา ——— */
+.home-hero-split--clean .home-hero-split__content {
+  background: linear-gradient(165deg, #101a16 0%, #0c1210 45%, #0a0f0d 100%);
+}
+
+.home-hero-split--clean .home-hero-split__content::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -15%;
+  width: min(280px, 70%);
+  height: min(280px, 70%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212, 168, 75, 0.09), transparent 68%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.home-hero-split--clean .home-hero-split__content::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 168, 75, 0.2) 20%,
+    rgba(212, 168, 75, 0.35) 50%,
+    rgba(212, 168, 75, 0.2) 80%,
+    transparent
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.home-hero-split--clean .home-hero-content > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (min-width: 900px) {
+  .home-hero-split--clean .home-hero-split__content {
+    background: linear-gradient(
+      118deg,
+      #0c1210 0%,
+      #0f1814 22%,
+      #121e19 48%,
+      #0e1613 78%,
+      #0c1210 100%
+    );
+    box-shadow: none;
+  }
+}
+
+.home-hero-split--clean .home-hero-badge {
+  backdrop-filter: blur(10px);
+  background: rgba(8, 12, 10, 0.72) !important;
+  border: 1px solid rgba(212, 168, 75, 0.45) !important;
+  box-shadow:
+    0 0 28px rgba(212, 168, 75, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.home-hero-split--clean .home-hero-title-line {
+  text-shadow: 0 2px 24px rgba(0, 0, 0, 0.4);
+  letter-spacing: 0.06em;
+}
+
+.home-hero-split--clean .home-hero-title-gold.text-gradient-gold {
+  filter: drop-shadow(0 4px 24px rgba(212, 168, 75, 0.35));
+  animation: hero-gold-glow 5s ease-in-out infinite;
+}
+
+@keyframes hero-gold-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 4px 20px rgba(212, 168, 75, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 6px 32px rgba(240, 208, 120, 0.45));
+  }
+}
+
+.home-hero-split--clean .home-hero-lead {
+  color: rgba(240, 235, 227, 0.78);
+  line-height: 1.75;
+  max-width: 24rem;
+}
+
+.home-hero-split--clean .home-hero-features li {
+  backdrop-filter: blur(8px);
+  background: linear-gradient(
+    145deg,
+    rgba(22, 32, 26, 0.85) 0%,
+    rgba(10, 16, 13, 0.75) 100%
+  ) !important;
+  border: 1px solid rgba(212, 168, 75, 0.32) !important;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
+}
+
+.home-hero-split--clean .home-hero-features li:hover {
+  border-color: rgba(240, 208, 120, 0.5) !important;
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.32),
+    0 0 20px rgba(212, 168, 75, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+.home-hero-split--clean .home-hero-feature-dot {
+  color: var(--color-hora-gold-light);
+  text-shadow: 0 0 10px rgba(240, 208, 120, 0.6);
+}
+
+.home-hero-split--clean .home-scroll-cue {
+  opacity: 0.7;
+}
+
+.home-hero-split--clean .home-scroll-cue-line {
+  background: linear-gradient(180deg, rgba(212, 168, 75, 0.7), transparent);
+}
+
+/* ฟอร์มใต้ hero */
+.home-page--pro .birth-form-wrapper--lux {
+  margin-top: 0.25rem;
+}
+
+.home-page--pro .birth-form-wrapper--lux .birth-form-card.glass-card {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.07) inset,
+    0 32px 80px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(212, 168, 75, 0.12),
+    0 0 60px rgba(212, 168, 75, 0.04) !important;
+}
+
+/* เชื่อม hero → ฟอร์ม */
+.home-page--pro .birth-form-wrapper::before {
+  width: min(180px, 32%);
+  height: 2px;
+  margin-bottom: 2.5rem;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 168, 75, 0.25) 15%,
+    rgba(240, 208, 120, 0.65) 50%,
+    rgba(212, 168, 75, 0.25) 85%,
+    transparent
+  );
+  box-shadow: 0 0 16px rgba(212, 168, 75, 0.2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero-split--clean .home-hero-split__img,
+  .home-hero-split--clean .home-hero-title-gold.text-gradient-gold {
+    animation: none !important;
+    transform: scale(1.02) !important;
+  }
+}

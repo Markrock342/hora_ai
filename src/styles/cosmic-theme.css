@@ -178,7 +178,7 @@
 }
 
 .birth-form-card-border-glow {
-  opacity: 0.25 !important;
+  opacity: 0.55 !important;
 }
 
 /* ——— Hero ——— */
@@ -209,7 +209,7 @@
 }
 
 .home-hero-title-gold.text-gradient-gold {
-  filter: none;
+  filter: drop-shadow(0 2px 12px rgba(212, 168, 75, 0.35));
 }
 
 /* ——— ผลลัพธ์ / Dashboard ——— */
@@ -345,8 +345,24 @@
 }
 
 .btn-primary-shine {
-  opacity: 0.35;
-  animation: none !important;
+  opacity: 0.5;
+  animation: btn-shine-sweep 4s ease-in-out infinite !important;
+}
+
+@keyframes btn-shine-sweep {
+  0%,
+  100% {
+    transform: translateX(-120%) skewX(-12deg);
+    opacity: 0;
+  }
+  45%,
+  55% {
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateX(120%) skewX(-12deg);
+    opacity: 0.75;
+  }
 }
 
 /* ——— Page ambient (ผลดวง) ——— */
@@ -381,4 +397,134 @@
 .result-table-border-glow {
   animation: none !important;
   opacity: 0.5;
+}
+
+/* ——— Premium polish (หน้าแรก + ฟอร์ม) ——— */
+.text-gradient-gold {
+  background-image: linear-gradient(
+    105deg,
+    #c9a050 0%,
+    #f8e8c0 18%,
+    #f0d078 38%,
+    #d4a84b 55%,
+    #f0d078 72%,
+    #b8923f 100%
+  ) !important;
+  background-size: 220% auto !important;
+  animation: gold-text-shimmer 10s ease-in-out infinite !important;
+}
+
+@keyframes gold-text-shimmer {
+  0%,
+  100% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+}
+
+.birth-form-wrapper:not(.birth-form-wrapper--lux) .glass-card.gold-glow {
+  animation: glass-card-breathe 6s ease-in-out infinite !important;
+}
+
+.home-hero-cinematic {
+  box-shadow:
+    0 0 0 1px rgba(212, 168, 75, 0.12),
+    0 20px 56px rgba(0, 0, 0, 0.55),
+    0 0 80px rgba(40, 90, 65, 0.08) !important;
+}
+
+.home-hero-cinematic:not(.home-hero-split--clean)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 3;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 60px rgba(212, 168, 75, 0.04);
+}
+
+.home-hero-split--clean::after {
+  display: none;
+}
+
+.home-hero-orbit-ring {
+  border-color: rgba(212, 168, 75, 0.18) !important;
+  box-shadow:
+    0 0 0 1px rgba(212, 168, 75, 0.06),
+    inset 0 0 40px rgba(212, 168, 75, 0.04) !important;
+}
+
+.home-hero-features li {
+  color: var(--cosmic-gold-light) !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+.home-hero-feature-dot {
+  text-shadow: 0 0 8px rgba(212, 168, 75, 0.8);
+}
+
+.home-scroll-cue {
+  color: var(--cosmic-gold) !important;
+}
+
+.celestial-backdrop__photo {
+  animation: backdrop-breathe 24s ease-in-out infinite alternate;
+}
+
+@keyframes backdrop-breathe {
+  from {
+    transform: scale(1.02);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+
+.country-pill--active .country-pill-glow {
+  opacity: 1 !important;
+  animation: pill-glow-pulse 3s ease-in-out infinite !important;
+}
+
+.location-block-icon {
+  background: linear-gradient(
+    145deg,
+    rgba(212, 168, 75, 0.22),
+    rgba(40, 70, 55, 0.35)
+  ) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3) !important;
+}
+
+.location-ready-badge {
+  background: linear-gradient(
+    90deg,
+    rgba(212, 168, 75, 0.04),
+    rgba(212, 168, 75, 0.12),
+    rgba(212, 168, 75, 0.04)
+  ) !important;
+  box-shadow: 0 0 24px rgba(212, 168, 75, 0.08) !important;
+}
+
+.form-section-step {
+  background: linear-gradient(
+    145deg,
+    rgba(240, 208, 120, 0.45),
+    rgba(180, 130, 50, 0.35)
+  ) !important;
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.35),
+    0 0 20px rgba(212, 168, 75, 0.15) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .text-gradient-gold,
+  .celestial-backdrop__photo,
+  .btn-primary-shine,
+  .birth-form-wrapper .glass-card.gold-glow,
+  .country-pill--active .country-pill-glow {
+    animation: none !important;
+  }
 }

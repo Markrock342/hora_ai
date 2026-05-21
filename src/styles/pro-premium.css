@@ -1,0 +1,507 @@
+/**
+ * Premium layer — โทนเดียว เงาชั้น ขอบทอง จัดระยะแบบ product
+ */
+
+:root {
+  --lux-radius: 1rem;
+  --lux-radius-lg: 1.25rem;
+  --lux-gold: #d4a84b;
+  --lux-gold-bright: #f0d078;
+  --lux-surface: #121c18;
+  --lux-surface-2: #0e1613;
+  --lux-line: rgba(122, 154, 138, 0.22);
+  --lux-line-gold: rgba(212, 168, 75, 0.28);
+  --lux-shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.28);
+  --lux-shadow-md: 0 12px 40px rgba(0, 0, 0, 0.38);
+  --lux-shadow-gold: 0 0 40px rgba(212, 168, 75, 0.08);
+  --lux-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ——— Shell ——— */
+.app-shell--lux .mystic-header-shimmer {
+  display: none;
+}
+
+.app-shell--lux .mystic-header {
+  background: rgba(10, 16, 14, 0.82) !important;
+  border-bottom: 1px solid var(--lux-line-gold) !important;
+  backdrop-filter: blur(20px) saturate(1.2);
+}
+
+.app-shell--lux .mystic-nav {
+  background: rgba(14, 20, 17, 0.75) !important;
+  border-color: var(--lux-line-gold) !important;
+  box-shadow: var(--lux-shadow-sm);
+}
+
+.app-shell--lux .mystic-nav-link--active,
+.app-shell--lux .nav-pill-active {
+  background: rgba(212, 168, 75, 0.14) !important;
+  box-shadow: inset 0 0 0 1px rgba(212, 168, 75, 0.35) !important;
+}
+
+.app-shell--lux .mystic-logo-emblem {
+  box-shadow:
+    0 0 0 1px rgba(212, 168, 75, 0.25),
+    var(--lux-shadow-sm) !important;
+}
+
+.app-shell--lux main {
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+
+.app-shell--lux .scroll-progress-bar {
+  height: 2px;
+  opacity: 0.9;
+}
+
+.app-shell--lux .mystic-footer {
+  background: linear-gradient(180deg, transparent, rgba(8, 12, 10, 0.6));
+}
+
+/* ——— Hero luxury ——— */
+.home-hero-split--lux {
+  border-radius: var(--lux-radius-lg);
+  border: 1px solid var(--lux-line-gold);
+  box-shadow:
+    var(--lux-shadow-md),
+    var(--lux-shadow-gold),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+@media (min-width: 900px) {
+  .home-hero-split--lux:not(.home-hero-split--bg-mock) {
+    grid-template-columns: 1fr 1fr;
+    min-height: clamp(440px, 52vh, 540px);
+  }
+
+  .home-hero-split--lux.home-hero-split--bg-mock {
+    min-height: clamp(440px, 52vh, 540px);
+  }
+}
+
+.home-hero-split--lux:not(.home-hero-split--bg-mock) .home-hero-split__visual .home-hero-image {
+  object-position: 22% center;
+  filter: saturate(0.88) contrast(1.04) brightness(0.93) sepia(0.12) hue-rotate(-10deg);
+}
+
+.home-hero-split--lux .home-hero-split__content {
+  padding: clamp(2rem, 4vw, 3.25rem);
+  gap: 0.5rem;
+  background: #0c1210;
+}
+
+@media (min-width: 900px) {
+  .home-hero-split--lux:not(.home-hero-split--bg-mock) .home-hero-split__content {
+    background: linear-gradient(105deg, #0c1210 0%, #0f1814 40%, #0c1210 100%);
+  }
+
+  .home-hero-split--lux.home-hero-split--bg-mock .home-hero-split__content {
+    background: #0c1210;
+  }
+}
+
+.home-hero-split--lux .home-hero-badge {
+  margin-bottom: 0.5rem;
+  padding: 0.45rem 1rem;
+  border-color: rgba(212, 168, 75, 0.4) !important;
+  background: rgba(8, 12, 10, 0.6) !important;
+  box-shadow: 0 0 24px rgba(212, 168, 75, 0.1);
+}
+
+.home-hero-split--lux .home-hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6.5vw, 3.75rem) !important;
+  font-weight: 600 !important;
+  line-height: 1.08 !important;
+  letter-spacing: 0.01em;
+}
+
+.home-hero-split--lux .home-hero-title-line {
+  display: block;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+.home-hero-split--lux .home-hero-title-gold {
+  display: block;
+  margin-top: 0.1em;
+  font-weight: 600;
+}
+
+.home-hero-split--lux .home-hero-lead {
+  margin-top: 1.25rem;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: rgba(240, 235, 227, 0.82);
+  max-width: 26rem;
+}
+
+.home-hero-split--lux .home-hero-features {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.625rem;
+  margin-top: 1.75rem;
+  max-width: 100%;
+}
+
+.home-hero-split--lux .home-hero-features li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 0.875rem !important;
+  border-radius: 0.75rem !important;
+  border: 1px solid var(--lux-line-gold) !important;
+  background: rgba(8, 12, 10, 0.55) !important;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--lux-gold-bright);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition:
+    background 0.2s var(--lux-ease),
+    border-color 0.2s var(--lux-ease),
+    transform 0.2s var(--lux-ease);
+}
+
+.home-hero-split--lux .home-hero-features li:hover {
+  background: rgba(212, 168, 75, 0.12) !important;
+  border-color: rgba(240, 208, 120, 0.45) !important;
+  transform: translateY(-1px);
+}
+
+.home-hero-split--lux .home-hero-feature-dot {
+  color: var(--lux-gold);
+  font-size: 0.5rem;
+}
+
+/* ——— Form card luxury ——— */
+.birth-form-wrapper--lux {
+  max-width: 48rem !important;
+}
+
+.birth-form-wrapper--lux .birth-form-card.glass-card {
+  border-radius: var(--lux-radius-lg) !important;
+  border: 1px solid var(--lux-line-gold) !important;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 30, 24, 0.98) 0%,
+    rgba(12, 18, 15, 0.96) 100%
+  ) !important;
+  box-shadow:
+    var(--lux-shadow-md),
+    var(--lux-shadow-gold),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
+  overflow: hidden;
+}
+
+.birth-form-wrapper--lux .birth-form-card.glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  z-index: 10;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--lux-gold) 20%,
+    var(--lux-gold-bright) 50%,
+    var(--lux-gold) 80%,
+    transparent
+  );
+  pointer-events: none;
+}
+
+.birth-form-wrapper--lux .glass-card-mystic-border {
+  opacity: 0.4;
+}
+
+.birth-form-wrapper--lux .birth-form-card-inner {
+  padding: 1.75rem !important;
+}
+
+@media (min-width: 768px) {
+  .birth-form-wrapper--lux .birth-form-card-inner {
+    padding: 2.5rem !important;
+  }
+}
+
+.birth-form-wrapper--lux .birth-form-header {
+  padding-bottom: 1.75rem !important;
+  margin-bottom: 1.75rem !important;
+  border-bottom-color: var(--lux-line-gold) !important;
+}
+
+.birth-form-wrapper--lux .birth-form-emblem {
+  width: 4rem;
+  height: 4rem;
+}
+
+.birth-form-wrapper--lux .birth-form-title {
+  font-size: clamp(1.625rem, 3vw, 2rem) !important;
+}
+
+.birth-form-wrapper--lux .birth-form-checklist-wrap {
+  background: rgba(8, 12, 10, 0.45);
+  border: 1px solid var(--lux-line);
+  border-radius: var(--lux-radius);
+}
+
+.birth-form-wrapper--lux .birth-form-checklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.birth-form-wrapper--lux .birth-form-checklist-item {
+  padding: 0.3rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid transparent;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.birth-form-wrapper--lux .birth-form-checklist-item.is-done {
+  border-color: rgba(212, 168, 75, 0.35);
+  background: rgba(212, 168, 75, 0.1);
+}
+
+.birth-form-wrapper--lux .birth-form-progress-fill {
+  background: linear-gradient(90deg, #8a7340, var(--lux-gold), var(--lux-gold-bright));
+}
+
+/* ——— Form panels ——— */
+.birth-form-wrapper--lux .form-section-panel {
+  border-radius: var(--lux-radius) !important;
+  border: 1px solid var(--lux-line) !important;
+  padding: 1.5rem 1.625rem 1.625rem !important;
+  background: linear-gradient(
+    165deg,
+    rgba(22, 32, 26, 0.95) 0%,
+    rgba(14, 20, 17, 0.9) 100%
+  ) !important;
+  box-shadow:
+    inset 3px 0 0 rgba(212, 168, 75, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    var(--lux-shadow-sm) !important;
+}
+
+.birth-form-wrapper--lux .form-section-panel:hover {
+  border-color: rgba(212, 168, 75, 0.32) !important;
+  box-shadow:
+    inset 3px 0 0 var(--lux-gold),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 12px 36px rgba(0, 0, 0, 0.32) !important;
+  transform: translateY(-2px) !important;
+}
+
+.birth-form-wrapper--lux .form-section-step {
+  width: 2.375rem;
+  height: 2.375rem;
+  font-size: 0.875rem;
+  background: linear-gradient(145deg, rgba(240, 208, 120, 0.35), rgba(160, 120, 50, 0.4)) !important;
+  border-color: rgba(212, 168, 75, 0.5) !important;
+}
+
+.birth-form-wrapper--lux .form-section-title {
+  font-size: 0.875rem !important;
+  letter-spacing: 0.1em !important;
+  color: var(--lux-gold-bright) !important;
+}
+
+.birth-form-wrapper--lux .hora-input-3d,
+.birth-form-wrapper--lux .datetime-grid .hora-input {
+  background: rgba(6, 10, 8, 0.75) !important;
+  border-color: var(--lux-line) !important;
+}
+
+.birth-form-wrapper--lux .hora-input-3d:focus {
+  border-color: rgba(212, 168, 75, 0.55) !important;
+  box-shadow:
+    0 0 0 3px rgba(212, 168, 75, 0.12),
+    0 4px 16px rgba(0, 0, 0, 0.3) !important;
+}
+
+.birth-form-wrapper--lux .country-pill--active {
+  border-color: rgba(240, 208, 120, 0.55) !important;
+  background: linear-gradient(
+    155deg,
+    rgba(212, 168, 75, 0.2),
+    rgba(14, 20, 17, 0.95)
+  ) !important;
+  box-shadow:
+    0 0 20px rgba(212, 168, 75, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+.birth-form-wrapper--lux .settings-capsules {
+  border: 1px solid var(--lux-line-gold) !important;
+  background: rgba(14, 20, 17, 0.7) !important;
+}
+
+/* ——— CTA ——— */
+.birth-form-wrapper--lux .btn-primary-cosmic {
+  min-height: 3.25rem;
+  font-size: 1rem !important;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  border-radius: 0.875rem !important;
+  background: linear-gradient(
+    165deg,
+    #fce8b8 0%,
+    #e8c878 25%,
+    #d4a84b 55%,
+    #a88438 100%
+  ) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.45) inset,
+    0 6px 28px rgba(212, 168, 75, 0.4),
+    0 16px 40px rgba(0, 0, 0, 0.25) !important;
+}
+
+.birth-form-wrapper--lux .btn-primary-cosmic:hover:not(:disabled) {
+  transform: translateY(-2px) !important;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 10px 36px rgba(212, 168, 75, 0.5),
+    0 20px 48px rgba(0, 0, 0, 0.3) !important;
+}
+
+.birth-form-wrapper--lux .btn-ghost-3d {
+  border-color: var(--lux-line-gold) !important;
+  background: rgba(8, 12, 10, 0.5);
+}
+
+.birth-form-wrapper--lux .form-actions {
+  border-top-color: var(--lux-line-gold) !important;
+  padding-top: 2rem !important;
+}
+
+/* ——— Result / tables ——— */
+.app-shell--lux .glass-card,
+.app-shell--lux .summary-card,
+.app-shell--lux .result-table-mystic {
+  border-color: var(--lux-line-gold) !important;
+  box-shadow: var(--lux-shadow-sm) !important;
+}
+
+.app-shell--lux .report-table thead th {
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app-shell--lux .text-gradient-gold {
+  animation: gold-text-shimmer 12s ease-in-out infinite !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-hero-split--lux .home-hero-features li:hover,
+  .birth-form-wrapper--lux .btn-primary-cosmic:hover:not(:disabled),
+  .birth-form-wrapper--lux .form-section-panel:hover {
+    transform: none !important;
+  }
+}
+
+/* ——— Pro calm: ลดเอฟเฟกต์รบกวน ——— */
+.birth-form-wrapper--lux .birth-form-orbit,
+.birth-form-wrapper--lux .birth-form-card-border-glow,
+.birth-form-wrapper--lux .birth-form-energy-ring {
+  display: none !important;
+}
+
+.birth-form-wrapper--lux .glass-card-mystic-border {
+  opacity: 0.2;
+}
+
+.birth-form-particles--subtle .birth-form-particle {
+  opacity: 0.45;
+  width: 2px;
+  height: 2px;
+  box-shadow: 0 0 4px rgba(212, 168, 75, 0.35);
+}
+
+.birth-form-wrapper--lux .birth-form-particles {
+  opacity: 0.55;
+}
+
+.birth-form-wrapper--lux .glass-card.gold-glow {
+  animation: none !important;
+}
+
+.app-shell--lux .text-gradient-gold {
+  animation: none !important;
+}
+
+/* Hero โปร */
+.home-hero-split--lux.home-hero-cinematic:not(.home-hero-split--clean)::after {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* parallax ผ่าน interaction-effects — ไม่ใช้ ken burns */
+
+.home-hero-split--lux:not(.home-hero-split--clean) .home-hero-title-gold.text-gradient-gold {
+  filter: drop-shadow(0 2px 16px rgba(212, 168, 75, 0.25));
+}
+
+.home-hero-split--clean .home-hero-title-gold.text-gradient-gold {
+  filter: drop-shadow(0 2px 12px rgba(212, 168, 75, 0.2));
+  animation: none;
+}
+
+/* ฟอร์ม: จัดหัวการ์ดบน desktop */
+@media (min-width: 768px) {
+  .birth-form-wrapper--lux .birth-form-header > .min-w-0 {
+    display: grid;
+    grid-template-columns: 1fr minmax(11rem, 13.5rem);
+    grid-template-rows: auto auto auto;
+    column-gap: 1.5rem;
+    align-items: start;
+  }
+
+  .birth-form-wrapper--lux .birth-form-eyebrow,
+  .birth-form-wrapper--lux .birth-form-title,
+  .birth-form-wrapper--lux .birth-form-subtitle {
+    grid-column: 1;
+  }
+
+  .birth-form-wrapper--lux .birth-form-progress-wrap {
+    grid-column: 1;
+    margin-top: 1rem;
+  }
+
+  .birth-form-wrapper--lux .birth-form-checklist-wrap {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    margin-top: 0;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .birth-form-wrapper--lux .birth-form-checklist {
+    flex: 1;
+    align-content: flex-start;
+  }
+}
+
+/* Header แอป */
+.app-shell--lux .mystic-header .mx-auto {
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem;
+}
+
+.app-shell--lux .mystic-nav-link:not(.mystic-nav-link--active) {
+  color: rgba(240, 235, 227, 0.72);
+}
+
+.app-shell--lux .mystic-nav-link:not(.mystic-nav-link--active):hover {
+  color: var(--lux-gold-bright);
+  background: rgba(212, 168, 75, 0.06);
+}

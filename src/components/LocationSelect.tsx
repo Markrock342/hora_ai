@@ -12,6 +12,7 @@ import {
 
 import type { BirthFormErrors, BirthInput } from '../types/astrology'
 
+import { useErrorFlash } from '../hooks/useErrorFlash'
 import { InputField } from './InputField'
 
 
@@ -25,6 +26,8 @@ interface LocationSelectProps {
   district: string
 
   errors: Pick<BirthFormErrors, 'country' | 'province' | 'district'>
+
+  errorFlashKey?: number
 
   onChange: (patch: Partial<Pick<BirthInput, 'country' | 'province' | 'district'>>) => void
 
@@ -56,9 +59,13 @@ export function LocationSelect({
 
   errors,
 
+  errorFlashKey = 0,
+
   onChange,
 
 }: LocationSelectProps) {
+
+  const countryErrorFlash = useErrorFlash(Boolean(errors.country), errorFlashKey)
 
   const isThailand = country === 'ไทย'
 
@@ -98,7 +105,7 @@ export function LocationSelect({
 
         <div
 
-          className={`location-block location-block--country ${errors.country ? 'location-block--error' : ''}`}
+          className={`location-block location-block--country ${errors.country ? 'location-block--error' : ''}${countryErrorFlash ? ' location-block--error-flash' : ''}`}
 
         >
 
@@ -210,6 +217,8 @@ export function LocationSelect({
 
             error={errors.province}
 
+            errorFlashKey={errorFlashKey}
+
             hint={isThailand ? 'เลือกจากรายการจังหวัดไทย' : 'พิมพ์ชื่อจังหวัดหรือรัฐ'}
 
             control={isThailand ? 'select' : 'default'}
@@ -281,6 +290,8 @@ export function LocationSelect({
             filled={Boolean(district.trim())}
 
             error={errors.district}
+
+            errorFlashKey={errorFlashKey}
 
             hint={
 

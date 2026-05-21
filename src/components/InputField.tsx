@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useErrorFlash } from '../hooks/useErrorFlash'
 
 /** select/time = ซ่อนไอคอนเบราว์เซอร์ ใช้ลูกศร/นาฬิกา custom แทน */
 export type InputControlKind = 'default' | 'select' | 'time'
@@ -14,6 +15,8 @@ interface InputFieldProps {
   className?: string
   /** ชนิด control — ป้องกันไอคอนทับกัน */
   control?: InputControlKind
+  /** เพิ่มเมื่อ submit ล้มเหลว — กระตุ้น shake ซ้ำ */
+  errorFlashKey?: number
   children: ReactNode
 }
 
@@ -27,8 +30,10 @@ export function InputField({
   icon,
   className = '',
   control = 'default',
+  errorFlashKey = 0,
   children,
 }: InputFieldProps) {
+  const errorFlash = useErrorFlash(Boolean(error), errorFlashKey)
   const errorId = error ? `${id}-error` : undefined
   const hintId = hint && !error ? `${id}-hint` : undefined
   const describedBy = [errorId, hintId].filter(Boolean).join(' ') || undefined
@@ -40,7 +45,9 @@ export function InputField({
       : ''
 
   return (
-    <div className={`input-field-group ${stateClass} ${className}`}>
+    <div
+      className={`input-field-group ${stateClass}${errorFlash ? ' input-field-group--error-flash' : ''} ${className}`}
+    >
       <label htmlFor={id} className="input-field-label">
         {icon && control === 'default' && (
           <span className="input-field-label-icon" aria-hidden>

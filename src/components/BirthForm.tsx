@@ -1,8 +1,9 @@
 import { useMemo, useState, type CSSProperties } from 'react'
+import { CALC_OUTRO_MS, CALC_RITUAL_MIN_MS, sleep, type CalcNavState } from '../constants/calcTransition'
+import { useEnterMotion } from '../hooks/useEnterMotion'
 import { useNavigate } from 'react-router-dom'
 import { CALCULATION_SETTINGS_LABELS } from '../data/calculationSettings'
 import { useAstrology } from '../context/AstrologyContext'
-import { useTiltCard } from '../hooks/useTiltCard'
 import type { BirthFormErrors, BirthInput } from '../types/astrology'
 import { daysInMonth } from '../utils/dateTimeUtils'
 import { FormSection } from './FormSection'
@@ -10,6 +11,7 @@ import { InputField } from './InputField'
 import { LocationSelect } from './LocationSelect'
 import { FormAmbient } from './form/FormAmbient'
 import { GlassCard } from './ui/GlassCard'
+import { ScrollReveal } from './ui/ScrollReveal'
 
 const MONTHS = [
   { value: 1, label: 'มกราคม' },
@@ -56,9 +58,12 @@ function isFieldFilled(input: BirthInput, key: keyof BirthInput): boolean {
 export function BirthForm() {
   const { input, setInput, resetInput, calculate, calculating } = useAstrology()
   const navigate = useNavigate()
-  const tilt = useTiltCard(5)
+  const formMotionReady = useEnterMotion(80)
   const [errors, setErrors] = useState<BirthFormErrors>({})
   const [submitAttempted, setSubmitAttempted] = useState(false)
+  const [errorFlashKey, setErrorFlashKey] = useState(0)
+  const [ritualHold, setRitualHold] = useState(false)
+  const [calcOutro, setCalcOutro] = useState(false)
 
   const maxDay = useMemo(
     () => (input.month && input.year ? daysInMonth(input.month, input.year) : 31),
@@ -85,13 +90,30 @@ export function BirthForm() {
 
   const handleCalculate = async () => {
     setSubmitAttempted(true)
+    const started = performance.now()
     const { ok, errors: nextErrors } = await calculate()
     setErrors(nextErrors)
-    if (ok) {
-      await new Promise((r) => setTimeout(r, 400))
-      navigate('/result')
+
+    if (!ok) {
+      setErrorFlashKey((k) => k + 1)
+      return
     }
+
+    setRitualHold(true)
+    const ritualRemain = Math.max(0, CALC_RITUAL_MIN_MS - (performance.now() - started))
+    await sleep(ritualRemain)
+
+    setCalcOutro(true)
+    document.documentElement.classList.add('calc-transition-outro')
+    await sleep(CALC_OUTRO_MS)
+
+    document.documentElement.classList.remove('calc-transition-outro')
+    setCalcOutro(false)
+    setRitualHold(false)
+    navigate('/result', { state: { fromCalc: true } satisfies CalcNavState })
   }
+
+  const showCalcOverlay = calculating || ritualHold || calcOutro
 
   const handleReset = () => {
     resetInput()
@@ -108,25 +130,27 @@ export function BirthForm() {
     input.year >= 1900 ? input.year + 543 : null
 
   return (
-    <div className="birth-form-wrapper">
+    <div
+      className={`birth-form-wrapper birth-form-wrapper--centered birth-form-wrapper--lux${formMotionReady ? ' is-motion-ready' : ''}${calcOutro ? ' birth-form-wrapper--outro' : ''}`}
+    >
       <FormAmbient />
-      <div className="birth-form-particles" aria-hidden>
-        {Array.from({ length: 36 }, (_, i) => (
+      <div className="birth-form-particles birth-form-particles--subtle" aria-hidden>
+        {Array.from({ length: 10 }, (_, i) => (
           <span key={i} className="birth-form-particle" style={{ '--i': i } as CSSProperties} />
         ))}
       </div>
-      <div className="birth-form-energy-ring" aria-hidden />
-      <div className="birth-form-card-border-glow" aria-hidden />
-      <div className="birth-form-orbit birth-form-orbit--1" aria-hidden />
-      <div className="birth-form-orbit birth-form-orbit--2" aria-hidden />
-      <div className="birth-form-orbit birth-form-orbit--3" aria-hidden />
 
+      <ScrollReveal variant="scale" delay={120} className="w-full max-w-4xl mx-auto">
       <GlassCard
-        className="birth-form-card birth-form-card--tilt max-w-4xl"
+        className="birth-form-card mx-auto w-full max-w-4xl"
         glow
+        mystic
       >
-        {calculating && (
-          <div className="calc-ritual-overlay" aria-live="polite">
+        {showCalcOverlay && (
+          <div
+            className={`calc-ritual-overlay${calcOutro ? ' calc-ritual-overlay--outro' : ''}`}
+            aria-live="polite"
+          >
             <div className="calc-ritual-mandala" aria-hidden />
             <div className="calc-ritual-mandala calc-ritual-mandala--reverse" aria-hidden />
             <p className="calc-ritual-text">
@@ -144,10 +168,7 @@ export function BirthForm() {
         )}
 
         <div
-          ref={tilt.ref}
-          className={`birth-form-card-inner ${calculating ? 'birth-form-card-inner--dim' : ''}`}
-          onMouseMove={tilt.onMove}
-          onMouseLeave={tilt.onLeave}
+          className={`birth-form-card-inner${showCalcOverlay ? ' birth-form-card-inner--dim' : ''}${calcOutro ? ' birth-form-card-inner--outro' : ''}`}
         >
           <header className="birth-form-header">
           <div className="birth-form-emblem" aria-hidden>
@@ -231,7 +252,7 @@ export function BirthForm() {
             }}
             noValidate
           >
-            <FormSection id="section-datetime" title="วันเวลาเกิด" icon="☽" step={1} delay={0}>
+            <FormSection id="section-datetime" title="วันเวลาเกิด" icon="☽" step={1} delay={420}>
               <div className="datetime-panel">
                 <div className="datetime-grid">
                   <InputField
@@ -240,6 +261,7 @@ export function BirthForm() {
                     required
                     filled={Boolean(input.day)}
                     error={errors.day}
+                    errorFlashKey={errorFlashKey}
                     icon="①"
                     control="select"
                   >
@@ -270,6 +292,7 @@ export function BirthForm() {
                     required
                     filled={Boolean(input.month)}
                     error={errors.month}
+                    errorFlashKey={errorFlashKey}
                     icon="②"
                     control="select"
                   >
@@ -301,6 +324,7 @@ export function BirthForm() {
                     required
                     filled={Boolean(input.year)}
                     error={errors.year}
+                    errorFlashKey={errorFlashKey}
                     icon="③"
                     className="datetime-grid-year"
                     hint={
@@ -335,6 +359,7 @@ export function BirthForm() {
                     required
                     filled={Boolean(input.time)}
                     error={errors.time}
+                    errorFlashKey={errorFlashKey}
                     icon="🕐"
                     hint="รูปแบบ 24 ชม. HH:mm"
                     className="datetime-grid-time"
@@ -353,12 +378,13 @@ export function BirthForm() {
               </div>
             </FormSection>
 
-            <FormSection id="section-location" title="สถานที่เกิด" icon="⌖" step={2} delay={60}>
+            <FormSection id="section-location" title="สถานที่เกิด" icon="⌖" step={2} delay={540}>
               <LocationSelect
                 country={input.country}
                 province={input.province}
                 district={input.district}
                 errors={errors}
+                errorFlashKey={errorFlashKey}
                 onChange={(patch) => patchInput(patch)}
               />
             </FormSection>
@@ -425,6 +451,7 @@ export function BirthForm() {
           </form>
         </div>
       </GlassCard>
+      </ScrollReveal>
     </div>
   )
 }

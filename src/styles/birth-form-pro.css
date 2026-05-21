@@ -3,25 +3,54 @@
 .home-page {
   margin-left: auto;
   margin-right: auto;
-  max-width: 64rem;
+  max-width: 72rem;
   padding-bottom: 3rem;
 }
 
-/* Cinematic hero */
-.home-hero-cinematic {
+/* Cinematic hero (full-bleed legacy) */
+.home-hero-cinematic:not(.home-hero-split) {
   position: relative;
   margin: -2rem -1rem 2.5rem;
-  min-height: clamp(220px, 38vw, 340px);
+  min-height: clamp(240px, 42vw, 380px);
   overflow: hidden;
   border-radius: 1.5rem;
-  border: 1px solid rgba(212, 168, 75, 0.2);
+  border: 1px solid rgba(212, 168, 75, 0.28);
   animation: form-card-enter 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  isolation: isolate;
+}
+
+.home-hero-cinematic:not(.home-hero-split)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(135deg, rgba(212, 168, 75, 0.14) 0, transparent 22%),
+    linear-gradient(315deg, rgba(60, 110, 85, 0.12) 0, transparent 28%);
+  opacity: 0.9;
+}
+
+/* Split hero — ไม่ล้น margin บนมือถือ */
+.home-hero-split.home-hero-cinematic {
+  margin: 0 0 2.5rem;
+  min-height: 0;
+  animation: form-card-enter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.home-hero-split.home-hero-cinematic::before {
+  display: none;
 }
 
 @media (min-width: 768px) {
-  .home-hero-cinematic {
+  .home-hero-cinematic:not(.home-hero-split) {
     margin-left: 0;
     margin-right: 0;
+  }
+
+  .home-hero-split.home-hero-cinematic {
+    margin-bottom: 3rem;
   }
 }
 
@@ -51,12 +80,15 @@
 .home-hero-scrim {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    105deg,
-    rgba(8, 12, 10, 0.92) 0%,
-    rgba(8, 12, 10, 0.55) 45%,
-    rgba(14, 20, 16, 0.75) 100%
-  );
+  background:
+    linear-gradient(
+      105deg,
+      rgba(6, 10, 8, 0.94) 0%,
+      rgba(10, 16, 12, 0.72) 42%,
+      rgba(12, 18, 14, 0.35) 68%,
+      rgba(8, 12, 10, 0.55) 100%
+    ),
+    radial-gradient(ellipse 80% 60% at 12% 50%, rgba(212, 168, 75, 0.08), transparent 55%);
 }
 
 .home-hero-stars {
@@ -156,9 +188,12 @@
   font-family: var(--font-display);
   font-size: 1.875rem;
   font-weight: 500;
-  line-height: 1.2;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
   color: var(--color-hora-cream);
-  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  text-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.4),
+    0 8px 32px rgba(0, 0, 0, 0.45);
 }
 
 @media (min-width: 768px) {
@@ -190,29 +225,30 @@
 }
 
 .home-hero-features li {
-  padding: 0.25rem 0.75rem;
+  padding: 0.35rem 0.85rem;
   border-radius: 9999px;
-  border: 1px solid rgba(212, 168, 75, 0.25);
+  border: 1px solid rgba(212, 168, 75, 0.32);
   font-size: 0.75rem;
+  font-weight: 500;
   color: var(--color-hora-gold-light);
-  background: rgba(212, 168, 75, 0.08);
-  backdrop-filter: blur(4px);
+  background: linear-gradient(
+    180deg,
+    rgba(212, 168, 75, 0.14),
+    rgba(12, 18, 15, 0.55)
+  );
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Tilt card */
-.birth-form-card--tilt .glass-card,
-.birth-form-card--tilt.glass-card {
+/* Form card inner (ไม่มี tilt) */
+.birth-form-card .glass-card,
+.birth-form-card.glass-card {
   padding: 0;
   overflow: visible;
 }
 
 .birth-form-card-inner {
-  --tilt-x: 0deg;
-  --tilt-y: 0deg;
   padding: 1.25rem;
-  transform: rotateX(var(--tilt-x)) rotateY(var(--tilt-y));
-  transition: transform 0.15s ease-out;
-  transform-style: preserve-3d;
 }
 
 @media (min-width: 768px) {
@@ -321,12 +357,13 @@
   margin-top: 1rem;
   padding: 0.75rem 1rem;
   border-radius: 0.75rem;
-  border: 1px solid rgba(212, 168, 75, 0.1);
+  border: 1px solid rgba(212, 168, 75, 0.16);
   background: linear-gradient(
     180deg,
-    rgba(8, 12, 10, 0.35),
-    rgba(14, 20, 16, 0.25)
+    rgba(16, 24, 20, 0.5),
+    rgba(10, 16, 13, 0.35)
   );
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 .birth-form-checklist-title {
@@ -440,6 +477,9 @@
 .form-section-panel {
   position: relative;
   overflow: hidden;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 4px 20px rgba(0, 0, 0, 0.18);
 }
 
 .form-section-corner {
@@ -690,11 +730,15 @@
 .location-block--country {
   padding: 1rem 1.125rem 1.125rem;
   border-radius: 1rem;
-  border: 1px solid rgba(122, 154, 138, 0.22);
-  background: rgba(14, 20, 16, 0.55);
+  border: 1px solid rgba(122, 154, 138, 0.28);
+  background: linear-gradient(
+    165deg,
+    rgba(18, 28, 22, 0.75) 0%,
+    rgba(12, 18, 15, 0.55) 100%
+  );
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.04),
-    0 6px 24px rgba(0, 0, 0, 0.2);
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 8px 28px rgba(0, 0, 0, 0.28);
   transition:
     border-color 0.35s ease,
     box-shadow 0.35s ease;
@@ -829,16 +873,20 @@
 }
 
 .country-pill--active {
-  border-color: rgba(212, 168, 75, 0.45);
+  border-color: rgba(212, 168, 75, 0.55);
   color: var(--color-hora-gold-light);
   background: linear-gradient(
     155deg,
-    rgba(212, 168, 75, 0.18) 0%,
-    rgba(18, 26, 20, 0.92) 100%
+    rgba(212, 168, 75, 0.22) 0%,
+    rgba(24, 36, 28, 0.95) 55%,
+    rgba(14, 20, 16, 0.92) 100%
   );
   box-shadow:
-    inset 0 0 0 1px rgba(212, 168, 75, 0.15),
-    0 2px 12px rgba(0, 0, 0, 0.25);
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 0 0 1px rgba(212, 168, 75, 0.2),
+    0 4px 20px rgba(212, 168, 75, 0.12),
+    0 2px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-1px);
 }
 
 .country-pill-glow {
@@ -964,7 +1012,7 @@
   height: 25%;
   top: 50%;
   left: 40%;
-  background: rgba(30, 100, 140, 0.3);
+  background: rgba(50, 95, 72, 0.28);
   animation: aurora-drift 12s ease-in-out infinite 2s;
 }
 
@@ -1304,9 +1352,9 @@
     background: linear-gradient(
       180deg,
       rgba(14, 20, 16, 0) 0%,
-      rgba(14, 20, 16, 0.72) 18%,
-      rgba(10, 14, 40, 0.92) 45%,
-      rgba(8, 10, 32, 0.98) 100%
+      rgba(12, 18, 15, 0.75) 18%,
+      rgba(10, 16, 13, 0.94) 45%,
+      rgba(8, 12, 10, 0.98) 100%
     );
     backdrop-filter: blur(16px);
   }
@@ -1329,7 +1377,6 @@
     animation: none !important;
   }
 
-  .birth-form-card-inner,
   .country-pill:hover,
   .country-pill--active {
     transform: none !important;

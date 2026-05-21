@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
+import { scrollRevealClass, useScrollReveal } from '../hooks/useScrollReveal'
 
 interface FormSectionProps {
   id: string
@@ -17,10 +18,20 @@ export function FormSection({
   children,
   delay = 0,
 }: FormSectionProps) {
+  const { ref, revealed } = useScrollReveal<HTMLElement>({
+    rootMargin: '0px 0px -5% 0px',
+  })
+
   return (
     <section
-      className="form-section"
-      style={{ animationDelay: `${delay}ms` }}
+      ref={ref}
+      className={scrollRevealClass(revealed, 'left', 'form-section')}
+      style={
+        {
+          animationDelay: `${delay}ms`,
+          '--reveal-delay': `${step * 80}ms`,
+        } as CSSProperties
+      }
       aria-labelledby={id}
     >
       <div className="form-section-connector" aria-hidden>

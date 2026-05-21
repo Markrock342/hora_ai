@@ -501,8 +501,12 @@
     0 0 80px rgba(90, 50, 140, 0.15);
 }
 
-.home-hero-title {
+.home-hero-cinematic.home-hero-mystic .home-hero-title {
   animation: hero-title-shimmer 5s ease-in-out infinite;
+}
+
+.home-hero-split--clean .home-hero-title {
+  animation: none;
 }
 
 @keyframes hero-title-shimmer {
