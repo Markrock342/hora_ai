@@ -69,9 +69,38 @@ function htmlToLines(html: string): MyhoraDateLine[] {
   return lines
 }
 
-export function parseDateInfoBlock(html: string | undefined, title: string): MyhoraDateDetail | null {
+function extractDateInfoTitle(html: string, kind: 'natal' | 'transit'): string {
+  const fallback = kind === 'natal' ? 'ดวงกำเนิด' : 'ดวงจร'
+  const plain = html
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/p>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ')
+  for (const raw of plain.split('\n')) {
+    const line = raw.replace(/\s+/g, ' ').trim()
+    if (!line) continue
+    if (kind === 'natal' && /ดวงกำเนิด/.test(line)) {
+      return line.slice(0, 120)
+    }
+    if (kind === 'transit' && /ดวงจร/.test(line)) {
+      return line.slice(0, 120)
+    }
+  }
+  return fallback
+}
+
+function filterTitleLine(lines: MyhoraDateLine[], title: string): MyhoraDateLine[] {
+  if (!title.startsWith('ดวง')) return lines
+  return lines.filter((l) => l.text !== title && !l.text.startsWith(title))
+}
+
+export function parseDateInfoBlock(
+  html: string | undefined,
+  kind: 'natal' | 'transit',
+): MyhoraDateDetail | null {
   if (!html?.trim()) return null
-  const lines = htmlToLines(html)
+  const title = extractDateInfoTitle(html, kind)
+  const lines = filterTitleLine(htmlToLines(html), title)
   if (!lines.length) return null
   return {
     title,
@@ -87,7 +116,7 @@ export function parseDateInfoFromMainHtml(html: string): {
   const natalHtml = html.match(/id="n_date_info"[^>]*>([\s\S]*?)<\/div>/i)?.[1]
   const transitHtml = html.match(/id="t_date_info"[^>]*>([\s\S]*?)<\/div>/i)?.[1]
   return {
-    natal: parseDateInfoBlock(natalHtml, 'วันเกิด'),
-    transit: parseDateInfoBlock(transitHtml, 'วันจร'),
+    natal: parseDateInfoBlock(natalHtml, 'natal'),
+    transit: parseDateInfoBlock(transitHtml, 'transit'),
   }
 }

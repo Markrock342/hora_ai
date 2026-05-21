@@ -1,0 +1,96 @@
+import type { MyhoraTables } from '../types/myhora'
+import { isMyhoraHtmlSubstantive } from '../utils/myhora/prepareContentHtml'
+import { MyhoraChartEmbed } from './MyhoraChartEmbed'
+import { MyhoraChartsPanel } from './MyhoraChartsPanel'
+import { MyhoraEmbedFrame } from './MyhoraEmbedFrame'
+import { MyhoraHtmlBlock } from './MyhoraHtmlBlock'
+import { MyhoraTaksaTriwaiRow } from './MyhoraTaksaTriwaiRow'
+
+interface MyhoraExactPanelProps {
+  tables: MyhoraTables
+}
+
+function MyhoraNatalSummary({ tables }: { tables: MyhoraTables }) {
+  const detail = tables.dateDetailNatal
+  const lines = detail?.lines ?? []
+
+  if (!detail && !tables.summaryNatal) return null
+
+  return (
+    <section className="myhora-native-summary" aria-label="ข้อมูลสรุปดวงกำเนิด">
+      <p className="myhora-native-summary-title">{detail?.title ?? 'ดวงกำเนิด'}</p>
+      {lines.length ? (
+        <div className="myhora-native-summary-lines">
+          {lines.map((line, index) => (
+            <p key={`${line.type}-${index}`}>{line.text}</p>
+          ))}
+        </div>
+      ) : (
+        <p className="myhora-native-summary-lines">{tables.summaryNatal}</p>
+      )}
+    </section>
+  )
+}
+
+export function MyhoraExactPanel({ tables }: MyhoraExactPanelProps) {
+  const charts = tables.chartEmbeds
+  const content = tables.contentEmbeds
+  const html = tables.htmlFragments
+  const predictHtml = isMyhoraHtmlSubstantive(html?.astrologyNatal)
+    ? html!.astrologyNatal
+    : null
+
+  return (
+    <div className="myhora-exact-panel space-y-8">
+      <p className="rounded-lg border border-hora-gold/30 bg-hora-gold/10 px-4 py-3 text-sm text-hora-cream no-print">
+        ผลด้านล่างดึงจากแหล่งออนไลน์โดยตรง (กราฟ · ตารางสมผุส · คำทำนาย) — ตรงกับเว็บต้นทาง
+      </p>
+
+      <section className="myhora-charts-block" aria-label="กราฟดวงกำเนิด">
+        <MyhoraNatalSummary tables={tables} />
+        {charts ? <MyhoraChartsPanel charts={charts} bare /> : null}
+        <p className="myhora-charts-note text-xs text-hora-muted no-print">
+          ราศีจักร = ตำแหน่งดาวบนวงกลม (แบบ myhora) · ไม่แสดงตารางตัวเลข Longitude แยก
+        </p>
+      </section>
+
+      {charts?.bhava ? (
+        <MyhoraChartEmbed
+          embedPath={charts.bhava}
+          title="เรือนลัคนา"
+          subtitle="ภวะจักร — ดึงออนไลน์"
+          size="large"
+        />
+      ) : null}
+
+      <MyhoraHtmlBlock
+        title="ตารางสมผุสดวงกำเนิด"
+        subtitle="เรือนลัคนา · ตรียางค์ · นวางค์ · ทักษา · ฤกษ์ — ดึงออนไลน์"
+        html={html?.natalTable ?? null}
+        minHeight={200}
+        className="myhora-html-block--samrap"
+      />
+
+      {predictHtml ? (
+        <MyhoraHtmlBlock
+          title="ทำนายดวงกำเนิด"
+          subtitle="ข้อความทำนาย (จักรราศี)"
+          html={predictHtml}
+          minHeight={320}
+          className="myhora-html-block--predict"
+        />
+      ) : content?.astrologyNatal ? (
+        <MyhoraEmbedFrame
+          embedPath={content.astrologyNatal}
+          title="ทำนายดวงกำเนิด"
+          subtitle="ลัคนา · มาตรฐานดาว · เจ้าเรือน · ดาวในเรือน/ราศี — ดึงออนไลน์"
+          height={720}
+          wide
+          className="myhora-embed-section--natal"
+        />
+      ) : null}
+
+      <MyhoraTaksaTriwaiRow tables={tables} />
+    </div>
+  )
+}

@@ -30,7 +30,7 @@ export function buildLocalNatalDetail(
     lines.push(line('lagna', parts.join(' · ')))
   }
 
-  return { title: 'วันเกิด', lines, raw: lines.map((l) => l.text).join(' ') }
+  return { title: 'ดวงกำเนิด', lines, raw: lines.map((l) => l.text).join(' ') }
 }
 
 export function buildLocalTransitDetail(

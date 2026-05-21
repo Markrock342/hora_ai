@@ -12,12 +12,35 @@ export interface MyhoraChartEmbeds {
   navamsa: string | null
   /** chart-rasi-navang-triyang.aspx?type=triyang */
   drekkana: string | null
+  /** HTML กราพร้อมแสดง (มี CSS ตำแหน่งดาว) */
+  rasiHtml?: string | null
+  navamsaHtml?: string | null
+  drekkanaHtml?: string | null
+  /** chart-bhava.aspx */
+  bhava?: string | null
+  bhavaHtml?: string | null
 }
 
 /** path สำหรับ iframe ทักษา / ตรีวัย */
 export interface MyhoraWidgetEmbeds {
   taksa: string | null
   triwai: string | null
+}
+
+/** iframe เพิ่ม — ดาวรอบกราฟ, คำทำนาย, เรือนลัคนา ฯลฯ */
+export interface MyhoraContentEmbeds {
+  chartPlanet: string | null
+  astrologyNatal: string | null
+  astrologyTransit: string | null
+  chartBhava: string | null
+  chartRasiAnalysisNatal: string | null
+  chartRasi10Luck: string | null
+}
+
+/** HTML ฝังใน thai.aspx หรือดึงมาแล้วเตรียมแสดง */
+export interface MyhoraHtmlFragments {
+  natalTable: string | null
+  astrologyNatal: string | null
 }
 
 export interface MyhoraTaksaCell {
@@ -49,6 +72,10 @@ export interface MyhoraTables {
   chartEmbeds?: MyhoraChartEmbeds
   /** chart-taksa.aspx / chart-triwai.aspx */
   widgetEmbeds?: MyhoraWidgetEmbeds
+  /** กราฟ/คำทำนายเพิ่มจาก .load() ใน thai.aspx */
+  contentEmbeds?: MyhoraContentEmbeds
+  /** ตารางสมผุส + คำทำนาย (HTML พร้อมแสดง) */
+  htmlFragments?: MyhoraHtmlFragments
   /** วันจรที่ใช้คำนวณรอบนี้ */
   transit?: TransitInput
   /** 3×3 ทักษา */

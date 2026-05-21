@@ -15,9 +15,10 @@ export function myhoraEmbedUrl(embedPath: string): string {
   return `${origin}${path}`
 }
 
-/** path ต้องเป็นกราฟ myhora เท่านั้น */
+const ALLOWED_EMBED = /^\/astrology\/thai\/(?:chart-(?:rasi|taksa|triwai|rasi-navang-triyang|planet|bhava|rasi-analysis-natal|rasi-10luck)|astrology-(?:natal|transit))\.aspx$/i
+
+/** path ต้องเป็นหน้า embed ของ myhora เท่านั้น */
 export function isAllowedMyhoraChartPath(path: string): boolean {
-  return /^\/astrology\/thai\/chart-(rasi|taksa|triwai|rasi-navang-triyang)\.aspx/i.test(
-    path.split('?')[0] ?? '',
-  )
+  const base = path.split('?')[0] ?? ''
+  return ALLOWED_EMBED.test(base)
 }

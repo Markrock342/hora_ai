@@ -3,6 +3,11 @@ import { PLANETS } from '../../data/astrologyConstants'
 import type { PlanetSignRow } from '../../types/astrology'
 import type { MyhoraTables, MyhoraTaksaCell, MyhoraTriwaiCell } from '../../types/myhora'
 import { parseDateInfoFromMainHtml } from './parseDateDetail'
+import {
+  extractNatalTableHtml,
+  parseMyhoraContentPaths,
+} from './parseContent'
+import { prepareMyhoraContentHtml } from './prepareContentHtml'
 
 function planetNumFromImg(html: string): number | null {
   const m = html.match(/\/star\/A(\d)\.png/i) ?? html.match(/\/star\/a(\d)\.png/i)
@@ -204,7 +209,9 @@ export function mergeMyhoraTables(
   mainHtml: string,
   taksaHtml: string,
   triwaiHtml: string,
-  extra?: Pick<MyhoraTables, 'chartEmbeds' | 'transit'>,
+  extra?: Pick<MyhoraTables, 'chartEmbeds' | 'transit'> & {
+    htmlFragments?: Partial<NonNullable<MyhoraTables['htmlFragments']>>
+  },
 ): MyhoraTables {
   const { lagnaSign } = parsePlanetTable(mainHtml)
   const summaries = parseSummaryLines(mainHtml)
@@ -212,6 +219,11 @@ export function mergeMyhoraTables(
   const taksa = parseTaksaHtml(taksaHtml)
   const triwai = parseTriwaiHtml(triwaiHtml)
   const embeds = parseEmbedUrls(mainHtml)
+  const contentPaths = parseMyhoraContentPaths(mainHtml)
+  const natalTableRaw = extractNatalTableHtml(mainHtml)
+  const natalTablePrepared = natalTableRaw
+    ? prepareMyhoraContentHtml(natalTableRaw)
+    : null
 
   return {
     lagnaSign: lagnaSign ?? null,
@@ -227,6 +239,11 @@ export function mergeMyhoraTables(
     widgetEmbeds: {
       taksa: embeds.taksa,
       triwai: embeds.triwai,
+    },
+    contentEmbeds: contentPaths,
+    htmlFragments: {
+      natalTable: natalTablePrepared,
+      astrologyNatal: extra?.htmlFragments?.astrologyNatal ?? null,
     },
     transit: extra?.transit ?? {
       day: new Date().getDate(),

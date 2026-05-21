@@ -3,6 +3,9 @@ import type { BirthInput } from '../../types/astrology'
 import type { MyhoraChartEmbeds, MyhoraTables } from '../../types/myhora'
 import type { TransitInput } from '../../types/transit'
 import { defaultTransitInput } from '../../types/transit'
+import { prepareMyhoraChartHtml } from './chartHtml'
+import { prepareMyhoraContentHtml } from './prepareContentHtml'
+import { parseMyhoraContentPaths } from './parseContent'
 import {
   mergeMyhoraTables,
   parseAscendantOption,
@@ -131,20 +134,44 @@ export async function fetchMyhoraThaiChart(
   const { lagnaSign, planets } = parsePlanetTable(resultHtml)
   const embeds = parseEmbedUrls(resultHtml)
 
-  let taksaHtml = ''
-  let triwaiHtml = ''
-  if (embeds.taksa) taksaHtml = await fetchText(embeds.taksa)
-  if (embeds.triwai) triwaiHtml = await fetchText(embeds.triwai)
+  const contentPaths = parseMyhoraContentPaths(resultHtml)
+
+  const [taksaHtml, triwaiHtml, natalHtml, rasiRaw, navamsaRaw, drekkanaRaw, bhavaRaw] =
+    await Promise.all([
+      embeds.taksa ? fetchText(embeds.taksa) : Promise.resolve(''),
+      embeds.triwai ? fetchText(embeds.triwai) : Promise.resolve(''),
+      contentPaths.astrologyNatal
+        ? fetchText(contentPaths.astrologyNatal)
+        : Promise.resolve(''),
+      embeds.rasi ? fetchText(embeds.rasi) : Promise.resolve(''),
+      embeds.navamsa ? fetchText(embeds.navamsa) : Promise.resolve(''),
+      embeds.drekkana ? fetchText(embeds.drekkana) : Promise.resolve(''),
+      contentPaths.chartBhava ? fetchText(contentPaths.chartBhava) : Promise.resolve(''),
+    ])
 
   const chartEmbeds: MyhoraChartEmbeds = {
     rasi: embeds.rasi,
     navamsa: embeds.navamsa,
     drekkana: embeds.drekkana,
+    rasiHtml: rasiRaw ? prepareMyhoraChartHtml(rasiRaw) : null,
+    navamsaHtml: navamsaRaw ? prepareMyhoraChartHtml(navamsaRaw) : null,
+    drekkanaHtml: drekkanaRaw ? prepareMyhoraChartHtml(drekkanaRaw) : null,
+    bhava: contentPaths.chartBhava,
+    bhavaHtml: bhavaRaw ? prepareMyhoraChartHtml(bhavaRaw) : null,
   }
+
+  const astrologyNatalHtml = natalHtml
+    ? prepareMyhoraContentHtml(
+        natalHtml.match(/<body[^>]*>([\s\S]*)<\/body>/i)?.[1] ?? natalHtml,
+      )
+    : null
 
   const tables = mergeMyhoraTables(resultHtml, taksaHtml, triwaiHtml, {
     chartEmbeds,
     transit,
+    htmlFragments: {
+      astrologyNatal: astrologyNatalHtml,
+    },
   })
 
   return {

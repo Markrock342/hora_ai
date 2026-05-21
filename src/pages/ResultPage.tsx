@@ -8,6 +8,8 @@ import { PrintButton } from '../components/PrintButton'
 import { ReportHeader } from '../components/ReportHeader'
 import { PLANET_SIGN_COLUMNS } from '../components/resultTableColumns'
 import { MyhoraDetailPanel } from '../components/MyhoraDetailPanel'
+import { MyhoraExactPanel } from '../components/MyhoraExactPanel'
+import { MyhoraNatalPrintSummary } from '../components/MyhoraNatalPrintSummary'
 import { MyhoraTaksaTriwaiRow } from '../components/MyhoraTaksaTriwaiRow'
 import { RasiChakraChart } from '../components/RasiChakraChart'
 import { ResultTable } from '../components/ResultTable'
@@ -98,7 +100,7 @@ export function ResultPage() {
 
   const sourceLabel =
     meta.calculationSource === 'myhora-scrape'
-      ? 'ดึงข้อมูลออนไลน์ — ราศีจักร / นวางศ์ / ตรียางศ์ / ทักษา / ตรีวัย'
+      ? 'ดึงข้อมูลออนไลน์ — กราฟ · ตารางสมผุส · คำทำนาย · ทักษา · ตรีวัย'
       : meta.calculationSource === 'suryayat-100-reference' ||
           meta.calculationSource === 'suryayat-100-year'
         ? 'ปฏิทินร้อยปี สุริยยาตร์ (ตรง myhora)'
@@ -140,6 +142,8 @@ export function ResultPage() {
       >
         <ReportHeader result={result} />
 
+        {dateDetails.natal ? <MyhoraNatalPrintSummary natal={dateDetails.natal} /> : null}
+
         <div className="result-info-stack no-print">
           <BirthInfoBanner birth={meta.birthDisplay} location={meta.locationDisplay} />
           <CalculationSettingsBadge />
@@ -162,50 +166,54 @@ export function ResultPage() {
           fromMyhora={dateDetails.fromMyhora}
         />
 
-        <div className="result-charts-block space-y-6">
-          <div
-            className="result-charts-grid result-charts-grid--local"
-          >
-            <div className="result-rasi-chart-slot">
-              <RasiChakraChart
-                result={result}
-                animateOnEnter
-                subtitle={
-                  isMyhora
-                    ? 'ตำแหน่งดาวออนไลน์ · วงจรในเครื่อง (Whole Sign)'
-                    : undefined
-                }
-              />
+        {isMyhora && result.myhora ? (
+          <MyhoraExactPanel tables={result.myhora} />
+        ) : (
+          <>
+            <div className="result-charts-block space-y-6">
+              <div className="result-charts-grid result-charts-grid--local">
+                <div className="result-rasi-chart-slot">
+                  <RasiChakraChart
+                    result={result}
+                    animateOnEnter
+                    subtitle={
+                      isMyhora
+                        ? 'ตำแหน่งดาวออนไลน์ · วงจรในเครื่อง (Whole Sign)'
+                        : undefined
+                    }
+                  />
+                </div>
+
+                <DivisionalChakraChart
+                  result={result}
+                  title="นวางศ์จักร"
+                  subtitle={`ลัคนา ${navamsaLocal.lagna} · ปรชายาจารี + ลาหิรี`}
+                  printSectionId="navamsa-chakra"
+                  planets={navamsaLocal.planets}
+                  lagna={navamsaLocal.lagna}
+                />
+
+                <DivisionalChakraChart
+                  result={result}
+                  title="ตรียางศ์จักร"
+                  subtitle={`ลัคนา ${drekkanaLocal.lagna} · ปรชายาจารี + ลาหิรี`}
+                  printSectionId="drekkana-chakra"
+                  planets={drekkanaLocal.planets}
+                  lagna={drekkanaLocal.lagna}
+                />
+              </div>
             </div>
 
-            <DivisionalChakraChart
-              result={result}
-              title="นวางศ์จักร"
-              subtitle={`ลัคนา ${navamsaLocal.lagna} · ปรชายาจารี + ลาหิรี`}
-              printSectionId="navamsa-chakra"
-              planets={navamsaLocal.planets}
-              lagna={navamsaLocal.lagna}
-            />
+            {result.myhora ? <MyhoraTaksaTriwaiRow tables={result.myhora} /> : null}
 
-            <DivisionalChakraChart
-              result={result}
-              title="ตรียางศ์จักร"
-              subtitle={`ลัคนา ${drekkanaLocal.lagna} · ปรชายาจารี + ลาหิรี`}
-              printSectionId="drekkana-chakra"
-              planets={drekkanaLocal.planets}
-              lagna={drekkanaLocal.lagna}
-            />
-          </div>
-        </div>
-
-        {result.myhora ? <MyhoraTaksaTriwaiRow tables={result.myhora} /> : null}
-
-        {meta.calculationSource !== 'myhora-scrape' && (
-          <p className="text-xs text-hora-muted no-print">
-            ผลดาวจากสูตรในเครื่อง — อาจไม่ตรง myhora จนกว่าจะดึงข้อมูลสำเร็จ (รัน{' '}
-            <code className="text-hora-gold-dim">npm run dev</code> หรือ{' '}
-            <code className="text-hora-gold-dim">npm run start</code> พร้อม proxy /api/myhora)
-          </p>
+            {meta.calculationSource !== 'myhora-scrape' && (
+              <p className="text-xs text-hora-muted no-print">
+                ผลดาวจากสูตรในเครื่อง — อาจไม่ตรงแหล่งออนไลน์จนกว่าจะดึงข้อมูลสำเร็จ (รัน{' '}
+                <code className="text-hora-gold-dim">npm run dev</code> หรือ{' '}
+                <code className="text-hora-gold-dim">npm run start</code> พร้อม proxy /api/myhora)
+              </p>
+            )}
+          </>
         )}
 
         {!result.myhora && (
