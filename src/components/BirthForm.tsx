@@ -371,7 +371,6 @@ export function BirthForm() {
                     filled={Boolean(input.year)}
                     error={fieldError('year')}
                     errorFlashKey={errorFlashKey}
-                    icon="③"
                     className="datetime-grid-year"
                     hint={
                       buddhistYear

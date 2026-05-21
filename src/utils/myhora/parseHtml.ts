@@ -7,7 +7,7 @@ import {
   extractNatalTableHtml,
   parseMyhoraContentPaths,
 } from './parseContent'
-import { prepareMyhoraContentHtml } from './prepareContentHtml'
+import { prepareSamrapTableHtml } from './prepareContentHtml'
 
 function planetNumFromImg(html: string): number | null {
   const m = html.match(/\/star\/A(\d)\.png/i) ?? html.match(/\/star\/a(\d)\.png/i)
@@ -221,9 +221,7 @@ export function mergeMyhoraTables(
   const embeds = parseEmbedUrls(mainHtml)
   const contentPaths = parseMyhoraContentPaths(mainHtml)
   const natalTableRaw = extractNatalTableHtml(mainHtml)
-  const natalTablePrepared = natalTableRaw
-    ? prepareMyhoraContentHtml(natalTableRaw)
-    : null
+  const natalTablePrepared = natalTableRaw ? prepareSamrapTableHtml(natalTableRaw) : null
 
   return {
     lagnaSign: lagnaSign ?? null,

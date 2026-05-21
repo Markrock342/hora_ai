@@ -16,6 +16,18 @@ interface ChartSlotProps {
   bare?: boolean
 }
 
+function ChartSlotHeader({ label, size }: { label: string; size: 'large' | 'small' }) {
+  return (
+    <header className="myhora-embed-header border-b border-hora-gold/20 bg-gradient-to-r from-hora-panel-light/90 to-hora-panel/60 px-4 py-3 text-center">
+      <h3
+        className={`font-display font-medium text-gradient-gold ${size === 'large' ? 'text-xl' : 'text-lg'}`}
+      >
+        {label}
+      </h3>
+    </header>
+  )
+}
+
 function ChartSlot({ label, embedPath, preparedHtml, size, bare = false }: ChartSlotProps) {
   if (!embedPath && !preparedHtml) return null
 
@@ -25,7 +37,7 @@ function ChartSlot({ label, embedPath, preparedHtml, size, bare = false }: Chart
     <figure
       className={`myhora-charts-slot myhora-charts-slot--${size}${bare ? ' myhora-charts-slot--bare' : ''}`}
     >
-      {bare ? <figcaption className="myhora-charts-slot-label">{label}</figcaption> : null}
+      {bare ? <ChartSlotHeader label={label} size={size} /> : null}
       <div className="myhora-charts-slot-body">
         {useHtml ? (
           <MyhoraChartHtml
@@ -35,29 +47,25 @@ function ChartSlot({ label, embedPath, preparedHtml, size, bare = false }: Chart
             className="myhora-chart-section--chart-only"
           />
         ) : (
-          <MyhoraChartEmbed
-            embedPath={embedPath}
-            title={label}
-            size={size}
-            bare={bare}
-          />
+          <MyhoraChartEmbed embedPath={embedPath} title={label} size={size} bare={bare} />
         )}
       </div>
     </figure>
   )
 }
 
+/** ราศีจักรบน — นวางศ์/ตรียางศ์ล่างคู่กัน (จัดสามเหลี่ยม) */
 export function MyhoraChartsPanel({ charts, bare = false }: MyhoraChartsPanelProps) {
   const hasNavamsa = Boolean(charts.navamsa || charts.navamsaHtml)
   const hasDrekkana = Boolean(charts.drekkana || charts.drekkanaHtml)
-  const hasSide = hasNavamsa || hasDrekkana
+  const hasBottom = hasNavamsa || hasDrekkana
 
   return (
     <div
-      className={`myhora-charts-panel ${hasSide ? 'myhora-charts-panel--with-side' : ''} ${bare ? 'myhora-charts-panel--bare' : ''}`.trim()}
+      className={`myhora-charts-panel ${hasBottom ? 'myhora-charts-panel--triangle' : ''} ${bare ? 'myhora-charts-panel--bare' : ''}`.trim()}
       aria-label="กราฟราศีจักร"
     >
-      <div className="myhora-charts-main">
+      <div className="myhora-charts-triangle-top">
         <ChartSlot
           label="ราศีจักร"
           embedPath={charts.rasi}
@@ -67,8 +75,8 @@ export function MyhoraChartsPanel({ charts, bare = false }: MyhoraChartsPanelPro
         />
       </div>
 
-      {hasSide ? (
-        <div className="myhora-charts-side">
+      {hasBottom ? (
+        <div className="myhora-charts-triangle-bottom">
           {hasNavamsa ? (
             <ChartSlot
               label="นวางศ์จักร"

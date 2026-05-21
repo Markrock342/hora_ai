@@ -9,6 +9,7 @@ interface MyhoraChartEmbedProps {
   /** ไม่แสดงหัวข้อการ์ด — checkbox ยังอยู่ในกราฟ myhora */
   bare?: boolean
   fallback?: ReactNode
+  className?: string
 }
 
 /** ขนาด embed myhora (layout ~500×450 + แถบ checkbox) */
@@ -27,6 +28,7 @@ export function MyhoraChartEmbed({
   size = 'large',
   bare = false,
   fallback,
+  className = '',
 }: MyhoraChartEmbedProps) {
   const dim = CHART_SIZE[size]
 
@@ -57,7 +59,7 @@ export function MyhoraChartEmbed({
       bare={bare}
       chartControls
       fallback={fallback}
-      className={`myhora-chart-embed ${size === 'small' ? 'myhora-chart-embed--small' : ''} ${bare ? 'myhora-chart-embed--bare' : ''}`.trim()}
+      className={`myhora-chart-embed ${size === 'small' ? 'myhora-chart-embed--small' : ''} ${bare ? 'myhora-chart-embed--bare' : ''} ${className}`.trim()}
     />
   )
 }

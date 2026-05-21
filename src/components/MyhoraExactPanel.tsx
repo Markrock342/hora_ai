@@ -10,28 +10,6 @@ interface MyhoraExactPanelProps {
   tables: MyhoraTables
 }
 
-function MyhoraNatalSummary({ tables }: { tables: MyhoraTables }) {
-  const detail = tables.dateDetailNatal
-  const lines = detail?.lines ?? []
-
-  if (!detail && !tables.summaryNatal) return null
-
-  return (
-    <section className="myhora-native-summary" aria-label="ข้อมูลสรุปดวงกำเนิด">
-      <p className="myhora-native-summary-title">{detail?.title ?? 'ดวงกำเนิด'}</p>
-      {lines.length ? (
-        <div className="myhora-native-summary-lines">
-          {lines.map((line, index) => (
-            <p key={`${line.type}-${index}`}>{line.text}</p>
-          ))}
-        </div>
-      ) : (
-        <p className="myhora-native-summary-lines">{tables.summaryNatal}</p>
-      )}
-    </section>
-  )
-}
-
 export function MyhoraExactPanel({ tables }: MyhoraExactPanelProps) {
   const charts = tables.chartEmbeds
   const content = tables.contentEmbeds
@@ -42,18 +20,31 @@ export function MyhoraExactPanel({ tables }: MyhoraExactPanelProps) {
 
   return (
     <div className="myhora-exact-panel space-y-8">
-      <section className="myhora-charts-block" aria-label="กราฟดวงกำเนิด">
-        <MyhoraNatalSummary tables={tables} />
-        {charts ? <MyhoraChartsPanel charts={charts} bare /> : null}
-      </section>
+      {charts ? (
+        <section
+          className="myhora-charts-block gold-glow overflow-hidden rounded-2xl border border-hora-gold/25 bg-hora-panel/80 backdrop-blur-md"
+          aria-label="กราฟดวงชะตา"
+        >
+          <header className="myhora-embed-header border-b border-hora-gold/20 bg-gradient-to-r from-hora-panel-light/90 to-hora-panel/60 px-5 py-4">
+            <h3 className="font-display text-xl font-medium text-gradient-gold">กราฟดวงชะตา</h3>
+            <p className="mt-1 text-xs text-hora-gold-dim">ราศีจักร · นวางศ์จักร · ตรียางศ์จักร</p>
+          </header>
+          <div className="myhora-charts-block-body px-3 py-4 md:px-5 md:py-5">
+            <MyhoraChartsPanel charts={charts} bare />
+          </div>
+        </section>
+      ) : null}
 
       {charts?.bhava ? (
-        <MyhoraChartEmbed
-          embedPath={charts.bhava}
-          title="เรือนลัคนา"
-          subtitle="ภวะจักร"
-          size="large"
-        />
+        <section className="myhora-bhava-block" aria-label="เรือนลัคนา">
+          <MyhoraChartEmbed
+            embedPath={charts.bhava}
+            title="เรือนลัคนา"
+            subtitle="ภวจักร"
+            size="large"
+            className="myhora-embed-section--bhava"
+          />
+        </section>
       ) : null}
 
       <MyhoraHtmlBlock

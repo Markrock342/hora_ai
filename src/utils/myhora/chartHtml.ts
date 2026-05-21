@@ -9,6 +9,12 @@ export const MYHORA_CHART_CHROME_CSS = `
 .cr-info, .cbv-info, .cnt-info { display: none !important; }
 `
 
+/** ตอนพิมพ์ PDF — ซ่อนแถบ checkbox ในกราฟ */
+export const MYHORA_CHART_PRINT_CSS = `
+${MYHORA_CHART_CHROME_CSS}
+.cnt-set-embed, .cr-set-embed, .cbv-set-embed { display: none !important; }
+`
+
 function extractInlineStyles(raw: string): string {
   return [...raw.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)]
     .map((m) => m[1])

@@ -48,6 +48,37 @@ export function expandMyhoraInteractiveHtml(html: string): string {
   return out
 }
 
+/** ตัดพื้นขาว/ตัวอักษรสีอ่อนจาก inline style ของตารางสมผุส */
+function stripSamrapLightInlineStyles(html: string): string {
+  let out = html
+  out = out.replace(/\sbgcolor="[^"]*"/gi, '')
+  out = out.replace(/\sbackground="[^"]*"/gi, '')
+  out = out.replace(/<style[\s\S]*?<\/style>/gi, '')
+
+  out = out.replace(/style="([^"]*)"/gi, (_full, styleContent: string) => {
+    let s = styleContent
+    s = s.replace(/background(?:-color)?\s*:\s*[^;]+;?/gi, '')
+    s = s.replace(/color\s*:\s*([^;]+);?/gi, (_cm, col: string) => {
+      const c = col.trim().toLowerCase()
+      if (
+        c === 'white' ||
+        c === '#fff' ||
+        c === '#ffffff' ||
+        /^#f[ef][ef][ef0-9a-f]{0,3}$/i.test(c) ||
+        /^#ff[ef][a-f0-9]{2,4}$/i.test(c) ||
+        /^#fad[a-f0-9]{0,4}$/i.test(c)
+      ) {
+        return ''
+      }
+      return `color:${col};`
+    })
+    s = s.replace(/;\s*;/g, ';').replace(/^;|;$/g, '').trim()
+    return s ? `style="${s}"` : ''
+  })
+
+  return out
+}
+
 export function prepareMyhoraContentHtml(raw: string, options?: { expandInteractive?: boolean }): string {
   let html = raw
   html = html.replace(/<script[\s\S]*?<\/script>/gi, '')
@@ -58,6 +89,11 @@ export function prepareMyhoraContentHtml(raw: string, options?: { expandInteract
     html = expandMyhoraInteractiveHtml(html)
   }
   return html.trim()
+}
+
+/** ตารางสมผุสดวงกำเนิด — ไม่ขยาย interactive + ลบธีมขาวจาก myhora */
+export function prepareSamrapTableHtml(raw: string): string {
+  return prepareMyhoraContentHtml(stripSamrapLightInlineStyles(raw), { expandInteractive: false })
 }
 
 /** มีข้อความจริงพอให้แสดง (ไม่ใช่แค่โครงว่างหลังตัด form) */

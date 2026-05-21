@@ -20,7 +20,9 @@ interface MyhoraDateSummaryBlockProps {
 function SummaryLines({ detail }: { detail: MyhoraDateDetail }) {
   return (
     <div className="myhora-date-summary-group">
-      <h3 className="myhora-date-summary-title">{detail.title}</h3>
+      <h4 className="myhora-date-summary-title font-display text-base font-medium text-hora-accent">
+        {detail.title}
+      </h4>
       <div className="myhora-date-summary-lines">
         {detail.lines.map((line, index) => (
           <p key={`${line.type}-${index}`} className={`myhora-date-summary-line ${LINE_CLASS[line.type]}`}>
@@ -32,19 +34,23 @@ function SummaryLines({ detail }: { detail: MyhoraDateDetail }) {
   )
 }
 
-export function MyhoraDateSummaryBlock({ natal, transit, fromMyhora = false }: MyhoraDateSummaryBlockProps) {
+export function MyhoraDateSummaryBlock({ natal, transit }: MyhoraDateSummaryBlockProps) {
   if (!natal && !transit) return null
 
   return (
-    <section className="myhora-date-summary-block" aria-label="ข้อมูลวันเกิดและวันจร">
-      <div className="myhora-date-summary-head">
-        <p className="myhora-date-summary-eyebrow">ข้อมูลคำนวณ</p>
-        <p className="myhora-date-summary-source">
-          {fromMyhora ? 'ข้อมูลจาก myhora' : 'ข้อมูลจากระบบคำนวณในเครื่อง'}
-        </p>
+    <section
+      className="myhora-date-summary-block gold-glow rounded-2xl border border-hora-gold/25 bg-hora-panel/80 backdrop-blur-md print:border-gray-300 print:bg-white"
+      aria-label="ข้อมูลคำนวณ"
+    >
+      <header className="myhora-date-summary-header border-b border-hora-gold/20 bg-gradient-to-r from-hora-panel-light/90 to-hora-panel/60 px-5 py-4 print:border-gray-300 print:bg-gray-100">
+        <h3 className="font-display text-xl font-medium text-gradient-gold print:text-black">
+          ข้อมูลคำนวณ
+        </h3>
+      </header>
+      <div className="myhora-date-summary-body px-5 py-5 print:py-4">
+        {natal ? <SummaryLines detail={natal} /> : null}
+        {transit ? <SummaryLines detail={transit} /> : null}
       </div>
-      {natal ? <SummaryLines detail={natal} /> : null}
-      {transit ? <SummaryLines detail={transit} /> : null}
     </section>
   )
 }

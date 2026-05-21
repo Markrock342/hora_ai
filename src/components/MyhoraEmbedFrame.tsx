@@ -56,12 +56,12 @@ export function MyhoraEmbedFrame({
 
   return (
     <section
-      className={`myhora-embed-section ${bare ? 'myhora-embed-section--bare' : ''} ${chartControls ? 'myhora-embed-section--chart' : ''} ${className}`.trim()}
+      className={`myhora-embed-section gold-glow overflow-hidden rounded-2xl border border-hora-gold/25 bg-hora-panel/80 backdrop-blur-md ${bare ? 'myhora-embed-section--bare' : ''} ${chartControls ? 'myhora-embed-section--chart' : ''} ${className}`.trim()}
       aria-label={title}
     >
       {!bare ? (
-        <header className="myhora-embed-header">
-          <h3 className="font-display text-lg text-gradient-gold print:text-black">{title}</h3>
+        <header className="myhora-embed-header border-b border-hora-gold/20 bg-gradient-to-r from-hora-panel-light/90 to-hora-panel/60 px-5 py-4 print:border-gray-300">
+          <h3 className="font-display text-xl font-medium text-gradient-gold print:text-black">{title}</h3>
           {subtitle ? (
             <p className="text-xs text-hora-muted print:text-gray-600">{subtitle}</p>
           ) : null}
