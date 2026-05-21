@@ -182,6 +182,7 @@ export function ResultPage() {
               result={result}
               title="นวางศ์จักร"
               subtitle={`ลัคนา ${navamsaLocal.lagna} · ปรชายาจารี + ลาหิรี`}
+              printSectionId="navamsa-chakra"
               planets={navamsaLocal.planets}
               lagna={navamsaLocal.lagna}
             />
@@ -190,6 +191,7 @@ export function ResultPage() {
               result={result}
               title="ตรียางศ์จักร"
               subtitle={`ลัคนา ${drekkanaLocal.lagna} · ปรชายาจารี + ลาหิรี`}
+              printSectionId="drekkana-chakra"
               planets={drekkanaLocal.planets}
               lagna={drekkanaLocal.lagna}
             />
@@ -210,6 +212,7 @@ export function ResultPage() {
           <ResultTable
             title="ดาวสถิตรราศี"
             subtitle="สุริยยาตร์ · ลาหิรี · อันโตนาทีฯ · ราหู ๘ กุมภ์ · ทักษา (คงที่)"
+            printSectionId="sidereal-table"
             columns={PLANET_SIGN_COLUMNS}
             rows={planets}
             variant="chart"

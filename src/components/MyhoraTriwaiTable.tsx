@@ -2,10 +2,12 @@ import { useMemo } from 'react'
 import type { MyhoraTriwaiCell } from '../types/myhora'
 import { myhoraTriwaiBg } from '../utils/myhora/assetUrls'
 import { MyhoraStarIcon } from './MyhoraStarIcon'
+import { SectionPrintButton } from './SectionPrintButton'
 
 interface MyhoraTriwaiTableProps {
   title: string
   subtitle?: string
+  printSectionId: string
   grid: (MyhoraTriwaiCell | null)[][]
 }
 
@@ -26,17 +28,33 @@ function compactTriwaiGrid(grid: (MyhoraTriwaiCell | null)[][]): (MyhoraTriwaiCe
   return rows.map((row) => row.slice(0, lastCol))
 }
 
-export function MyhoraTriwaiTable({ title, subtitle, grid }: MyhoraTriwaiTableProps) {
+export function MyhoraTriwaiTable({
+  title,
+  subtitle,
+  printSectionId,
+  grid,
+}: MyhoraTriwaiTableProps) {
   const compactGrid = useMemo(() => compactTriwaiGrid(grid), [grid])
   if (!compactGrid.length) return null
 
   return (
-    <section className="myhora-grid-section myhora-grid-section--triwai" aria-label={title}>
-      <header className="myhora-grid-header">
-        <h3 className="font-display text-lg text-gradient-gold print:text-black">{title}</h3>
-        {subtitle ? (
-          <p className="text-xs text-hora-muted print:text-gray-600">{subtitle}</p>
-        ) : null}
+    <section
+      className="myhora-grid-section myhora-grid-section--triwai printable-section"
+      data-print-section={printSectionId}
+      aria-label={title}
+    >
+      <header className="myhora-grid-header section-heading-with-print">
+        <div className="section-heading-text">
+          <h3 className="font-display text-lg text-gradient-gold print:text-black">{title}</h3>
+          {subtitle ? (
+            <p className="text-xs text-hora-muted print:text-gray-600">{subtitle}</p>
+          ) : null}
+        </div>
+        <SectionPrintButton
+          sectionId={printSectionId}
+          label={`พิมพ์ ${title}${subtitle ? ` (${subtitle})` : ''}`}
+          documentTitle={`NewHora — ${title}`}
+        />
       </header>
       <div className="myhora-triwai-wrap">
         <table className="myhora-triwai-grid myhora-triwai-grid--native">

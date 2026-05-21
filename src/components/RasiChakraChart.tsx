@@ -3,6 +3,7 @@ import { SIGNS } from '../data/astrologyConstants'
 import { getPlanetTheme, getSignTheme } from '../data/planetTheme'
 import type { AstrologyResult } from '../types/astrology'
 import { houseFromLagna, signIndex } from '../utils/chartHouse'
+import { SectionPrintButton } from './SectionPrintButton'
 
 const SIZE = 420
 const CX = SIZE / 2
@@ -20,6 +21,8 @@ interface RasiChakraChartProps {
   result: AstrologyResult
   title?: string
   subtitle?: string
+  /** id สำหรับพิมพ์เฉพาะส่วนนี้ */
+  printSectionId?: string
   /** เปิดแอนิเมชันวงล้อ + ดาวทีละดวง (หลังคำนวณ) */
   animateOnEnter?: boolean
 }
@@ -28,6 +31,7 @@ export function RasiChakraChart({
   result,
   title = 'ราศีจักร',
   subtitle,
+  printSectionId = 'rasi-chakra',
   animateOnEnter = false,
 }: RasiChakraChartProps) {
   const lagna = result.chart?.lagna ?? result.meta.lagna ?? 'เมษ'
@@ -96,17 +100,25 @@ export function RasiChakraChart({
 
   return (
     <section
-      className={`rasi-chakra-section gold-glow relative overflow-hidden rounded-2xl border border-hora-gold/25 bg-hora-panel/80 backdrop-blur-md print:border-gray-300 print:bg-white${chartRevealed ? ' is-chart-revealed' : ''}`}
+      className={`rasi-chakra-section printable-section gold-glow relative overflow-hidden rounded-2xl border border-hora-gold/25 bg-hora-panel/80 backdrop-blur-md print:border-gray-300 print:bg-white${chartRevealed ? ' is-chart-revealed' : ''}`}
+      data-print-section={printSectionId}
       aria-label={title}
     >
-      <header className="border-b border-hora-gold/20 px-5 py-4 print:border-gray-300">
-        <h3 className="font-display text-xl font-medium text-gradient-gold print:text-black">
-          {title}
-        </h3>
-        <p className="text-xs text-hora-muted print:text-gray-600">
-          {subtitle ??
-            `ลัคนา ${lagna} · เรือน Whole Sign · ทักษานับตากลาง`}
-        </p>
+      <header className="section-heading-with-print border-b border-hora-gold/20 px-5 py-4 print:border-gray-300">
+        <div className="section-heading-text">
+          <h3 className="font-display text-xl font-medium text-gradient-gold print:text-black">
+            {title}
+          </h3>
+          <p className="text-xs text-hora-muted print:text-gray-600">
+            {subtitle ??
+              `ลัคนา ${lagna} · เรือน Whole Sign · ทักษานับตากลาง`}
+          </p>
+        </div>
+        <SectionPrintButton
+          sectionId={printSectionId}
+          label={`พิมพ์ ${title}`}
+          documentTitle={`NewHora — ${title}`}
+        />
       </header>
 
       <div className="rasi-chakra-body flex flex-col items-center gap-6 p-4 md:flex-row md:p-6">
@@ -147,6 +159,7 @@ export function RasiChakraChart({
               return (
                 <g key={sign} className="rasi-chakra-segment">
                   <path
+                    className={isLagna ? 'rasi-segment-lagna' : undefined}
                     d={`M ${p1.x} ${p1.y} L ${p2.x} ${p2.y} A ${R_OUTER} ${R_OUTER} 0 0 1 ${p3.x} ${p3.y} L ${p4.x} ${p4.y} A ${R_INNER} ${R_INNER} 0 0 0 ${p1.x} ${p1.y} Z`}
                     fill={isLagna ? 'rgba(212,168,75,0.18)' : theme.bg}
                     stroke="rgba(212,168,75,0.15)"
@@ -201,10 +214,11 @@ export function RasiChakraChart({
               return (
                 <g
                   key={key}
-                  className="rasi-chakra-planet"
+                  className="rasi-chakra-planet rasi-planet-glyph"
                   style={{ '--planet-i': planetIndex } as CSSProperties}
                 >
                   <circle
+                    className="rasi-planet-bg"
                     cx={pos.x}
                     cy={pos.y}
                     r={14}
@@ -213,6 +227,7 @@ export function RasiChakraChart({
                     strokeWidth="1.2"
                   />
                   <text
+                    className="rasi-planet-symbol"
                     x={pos.x}
                     y={pos.y + 1}
                     textAnchor="middle"

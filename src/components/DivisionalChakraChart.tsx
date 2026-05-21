@@ -5,6 +5,7 @@ interface DivisionalChakraChartProps {
   result: AstrologyResult
   title: string
   subtitle?: string
+  printSectionId: string
   planets: PlanetSignRow[]
   lagna: string
 }
@@ -14,6 +15,7 @@ export function DivisionalChakraChart({
   result,
   title,
   subtitle,
+  printSectionId,
   planets,
   lagna,
 }: DivisionalChakraChartProps) {
@@ -24,6 +26,11 @@ export function DivisionalChakraChart({
     meta: { ...result.meta, lagna },
   }
   return (
-    <RasiChakraChart result={chartResult} title={title} subtitle={subtitle} />
+    <RasiChakraChart
+      result={chartResult}
+      title={title}
+      subtitle={subtitle}
+      printSectionId={printSectionId}
+    />
   )
 }

@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react'
+import { SectionPrintButton } from './SectionPrintButton'
 
 export interface Column<T> {
   key: keyof T | string
@@ -11,6 +12,8 @@ export interface Column<T> {
 interface ResultTableProps<T extends object> {
   title: string
   subtitle?: string
+  /** id สำหรับพิมพ์เฉพาะตารางนี้ */
+  printSectionId?: string
   columns: Column<T>[]
   rows: T[]
   emptyMessage?: string
@@ -23,6 +26,7 @@ interface ResultTableProps<T extends object> {
 export function ResultTable<T extends object>({
   title,
   subtitle,
+  printSectionId,
   columns,
   rows,
   emptyMessage = 'ไม่มีข้อมูล',
@@ -51,9 +55,10 @@ export function ResultTable<T extends object>({
 
   return (
     <section
-      className={`result-table-section result-table-mystic result-table-stagger relative overflow-hidden rounded-2xl border border-hora-gold/25 bg-hora-panel/80 backdrop-blur-md print:rounded-none print:border print:border-gray-300 print:bg-white ${
+      className={`result-table-section printable-section result-table-mystic result-table-stagger relative overflow-hidden rounded-2xl border border-hora-gold/25 bg-hora-panel/80 backdrop-blur-md print:rounded-none print:border print:border-gray-300 print:bg-white ${
         printSection ? 'print:break-inside-avoid' : ''
       } ${isChart ? 'gold-glow result-table-mystic--chart' : ''}`}
+      data-print-section={printSectionId}
       style={{ '--stagger-i': staggerIndex } as CSSProperties}
     >
       <div className="result-table-border-glow" aria-hidden />
@@ -67,9 +72,9 @@ export function ResultTable<T extends object>({
         </>
       )}
 
-      <header className="result-table-header relative border-b border-hora-gold/20 bg-gradient-to-r from-hora-panel-light/90 to-hora-panel/60 px-5 py-4 print:border-gray-300 print:bg-gray-100">
+      <header className="result-table-header section-heading-with-print relative border-b border-hora-gold/20 bg-gradient-to-r from-hora-panel-light/90 to-hora-panel/60 px-5 py-4 print:border-gray-300 print:bg-gray-100">
         <div className="result-table-header-shine" aria-hidden />
-        <div className="flex items-center gap-3">
+        <div className="section-heading-text flex items-center gap-3">
           <span className="result-table-header-icon text-hora-gold-light" aria-hidden>
             ✦
           </span>
@@ -82,6 +87,13 @@ export function ResultTable<T extends object>({
             )}
           </div>
         </div>
+        {printSectionId ? (
+          <SectionPrintButton
+            sectionId={printSectionId}
+            label={`พิมพ์ ${title}`}
+            documentTitle={`NewHora — ${title}`}
+          />
+        ) : null}
       </header>
 
       <div className="relative overflow-x-auto print:overflow-visible">

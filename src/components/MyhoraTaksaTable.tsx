@@ -1,6 +1,7 @@
 import type { MyhoraTables } from '../types/myhora'
 import { myhoraTaksaBg } from '../utils/myhora/assetUrls'
 import { MyhoraStarIcon } from './MyhoraStarIcon'
+import { SectionPrintButton } from './SectionPrintButton'
 
 interface MyhoraTaksaTableProps {
   tables: MyhoraTables
@@ -11,10 +12,21 @@ export function MyhoraTaksaTable({ tables }: MyhoraTaksaTableProps) {
   if (!grid.length) return null
 
   return (
-    <section className="myhora-grid-section myhora-grid-section--taksa" aria-label="ตารางทักษา">
-      <header className="myhora-grid-header">
-        <h3 className="font-display text-lg text-gradient-gold print:text-black">ทักษา</h3>
-        <p className="text-xs text-hora-muted print:text-gray-600">นับตากลาง</p>
+    <section
+      className="myhora-grid-section myhora-grid-section--taksa printable-section"
+      data-print-section="taksa"
+      aria-label="ตารางทักษา"
+    >
+      <header className="myhora-grid-header section-heading-with-print">
+        <div className="section-heading-text">
+          <h3 className="font-display text-lg text-gradient-gold print:text-black">ทักษา</h3>
+          <p className="text-xs text-hora-muted print:text-gray-600">นับตากลาง</p>
+        </div>
+        <SectionPrintButton
+          sectionId="taksa"
+          label="พิมพ์ ทักษา"
+          documentTitle="NewHora — ทักษา"
+        />
       </header>
       <div className="myhora-taksa-wrap">
         <table className="myhora-taksa-grid myhora-taksa-grid--native">

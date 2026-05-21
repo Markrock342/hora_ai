@@ -5,7 +5,6 @@ import type { AstrologyResult } from '../types/astrology'
 import { RasiChakraChart } from './RasiChakraChart'
 import { TABLE_ROW_COUNT, buildDashboardTables } from './dashboardTableTypes'
 import { SummaryCard } from './SummaryCard'
-import { PrintButton } from './PrintButton'
 import { ExportButton } from './ExportButton'
 import { ReportHeader } from './ReportHeader'
 import { ResultTable } from './ResultTable'
@@ -65,7 +64,6 @@ export function ResultDashboard({ result }: ResultDashboardProps) {
         </ScrollReveal>
         <ScrollReveal variant="right" delay={80} className="print-actions-mystic flex flex-wrap gap-2">
           <ExportButton result={result} />
-          <PrintButton result={result} />
         </ScrollReveal>
       </div>
 
@@ -98,6 +96,7 @@ export function ResultDashboard({ result }: ResultDashboardProps) {
           <ResultTable
             title="ตารางที่ 1 — ดาว"
             subtitle={`${TABLE_ROW_COUNT} แถว`}
+            printSectionId="dashboard-planets"
             columns={PLANET_TABLE_COLUMNS}
             rows={tables.planets}
             variant="chart"
@@ -109,6 +108,7 @@ export function ResultDashboard({ result }: ResultDashboardProps) {
           <ResultTable
             title="ตารางที่ 2 — ทักษา"
             subtitle={`${TABLE_ROW_COUNT} แถว`}
+            printSectionId="dashboard-taksa"
             columns={TAKSA_TABLE_COLUMNS}
             rows={tables.taksa}
             variant="chart"
@@ -120,6 +120,7 @@ export function ResultDashboard({ result }: ResultDashboardProps) {
           <ResultTable
             title="ตารางที่ 3 — ราศี / ภพ / เรือน"
             subtitle={`${TABLE_ROW_COUNT} แถว`}
+            printSectionId="dashboard-houses"
             columns={HOUSE_TABLE_COLUMNS}
             rows={tables.houses}
             variant="chart"

@@ -933,11 +933,66 @@
   box-shadow: inset 0 0 0 1px rgba(212, 168, 75, 0.35);
 }
 
-/* ——— Print ——— */
+/* ——— Section print button (screen) ——— */
+.section-heading-with-print {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.section-heading-with-print .section-heading-text {
+  min-width: 0;
+  flex: 1;
+}
+
+.section-print-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid rgba(212, 168, 75, 0.35);
+  border-radius: 0.5rem;
+  background: rgba(20, 28, 24, 0.65);
+  color: var(--color-hora-gold-light, #d4a84b);
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    color 0.2s;
+}
+
+.section-print-btn-icon {
+  display: block;
+  color: var(--color-hora-gold-light, #d4a84b);
+}
+
+.section-print-btn:hover {
+  border-color: rgba(212, 168, 75, 0.65);
+  background: rgba(212, 168, 75, 0.12);
+}
+
+.section-print-btn:focus-visible {
+  outline: 2px solid rgba(212, 168, 75, 0.55);
+  outline-offset: 2px;
+}
+
+/* ——— Print (โทนสว่าง อ่านง่าย — ตาราง + วงกลม) ——— */
 @media print {
   @page {
     size: A4 portrait;
     margin: 14mm 12mm;
+  }
+
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .celestial-backdrop,
@@ -945,16 +1000,169 @@
     display: none !important;
   }
 
-  body {
-    background: white !important;
-    color: black !important;
+  body,
+  .mystic-page,
+  .result-page-mystic,
+  main {
+    background: #fff !important;
+    color: #111 !important;
     font-size: 11pt;
   }
 
-  .astrology-report {
-    color: black;
+  /* พิมพ์เฉพาะส่วนที่เลือก */
+  body.is-section-print .printable-section:not(.print-section-target) {
+    display: none !important;
   }
 
+  body.is-section-print .print-section-target {
+    display: block !important;
+    break-inside: avoid;
+    box-shadow: none !important;
+  }
+
+  .astrology-report {
+    color: #111 !important;
+  }
+
+  /* การ์ด / กล่อง — พื้นขาว ไม่เขียวเข้ม */
+  .glass-card,
+  .gold-glow,
+  .rasi-chakra-section,
+  .myhora-grid-section,
+  .result-table-section,
+  .summary-card {
+    box-shadow: none !important;
+    background: #fff !important;
+    border-color: #d4d4d4 !important;
+    backdrop-filter: none !important;
+  }
+
+  .result-table-header,
+  .myhora-grid-header,
+  .rasi-chakra-section > header,
+  .summary-card-header {
+    background: #fafafa !important;
+    border-color: #ddd !important;
+  }
+
+  .text-gradient-gold {
+    background: none !important;
+    -webkit-background-clip: border-box !important;
+    background-clip: border-box !important;
+    color: #8a7028 !important;
+    -webkit-text-fill-color: #8a7028 !important;
+  }
+
+  [class*='text-hora-cream'],
+  [class*='text-hora-muted'],
+  [class*='text-hora-gold'] {
+    color: #333 !important;
+    -webkit-text-fill-color: #333 !important;
+  }
+
+  /* ——— ตารางทักษา / ตรีวัย (แบบรูป: ช่องเทาอ่อน ตัวเลขดำ) ——— */
+  .myhora-taksa-cell,
+  .myhora-triwai-cell,
+  .myhora-taksa-grid--native .myhora-taksa-cell,
+  .myhora-triwai-grid--native .myhora-triwai-cell {
+    background: #f5f5f5 !important;
+    background-color: #f5f5f5 !important;
+    background-image: none !important;
+    border: 1px solid #d0d0d0 !important;
+    box-shadow: none !important;
+  }
+
+  .myhora-taksa-cell--active,
+  .myhora-triwai-cell--active {
+    background: #fff9eb !important;
+    background-color: #fff9eb !important;
+    border-color: #c5a059 !important;
+  }
+
+  .myhora-taksa-cell--center {
+    background: #eee !important;
+    background-color: #eee !important;
+  }
+
+  .myhora-taksa-label,
+  .myhora-triwai-house,
+  .myhora-triwai-age,
+  .myhora-taksa-transit,
+  .myhora-taksa-planet,
+  .myhora-triwai-planet,
+  .myhora-star-symbol,
+  .myhora-grid-cell-top,
+  .myhora-grid-cell-bottom,
+  .myhora-grid-cell-mid,
+  .myhora-grid-cell-inner,
+  .myhora-grid-cell-inner span {
+    color: #111 !important;
+    -webkit-text-fill-color: #111 !important;
+    opacity: 1 !important;
+  }
+
+  .myhora-triwai-age,
+  .myhora-taksa-transit {
+    color: #444 !important;
+    -webkit-text-fill-color: #444 !important;
+  }
+
+  .myhora-taksa-grid--native .myhora-star-img,
+  .myhora-triwai-grid--native .myhora-star-img {
+    filter: brightness(0) !important;
+    opacity: 1 !important;
+  }
+
+  /* ——— วงกลมราศีจักร (พื้นอ่อน ข้อความดำ) ——— */
+  .rasi-chakra-svg {
+    filter: none !important;
+  }
+
+  .rasi-chakra-svg circle {
+    fill: #f8f8f8 !important;
+    stroke: #bbb !important;
+  }
+
+  .rasi-chakra-svg .rasi-chakra-segment path {
+    fill: #ececec !important;
+    stroke: #c8c8c8 !important;
+  }
+
+  .rasi-chakra-svg .rasi-segment-lagna {
+    fill: #fff4d6 !important;
+    stroke: #c5a059 !important;
+  }
+
+  .rasi-chakra-svg text,
+  .rasi-chakra-svg tspan {
+    fill: #111 !important;
+    color: #111 !important;
+  }
+
+  .rasi-chakra-svg .rasi-planet-bg {
+    fill: #fff !important;
+    stroke: #555 !important;
+  }
+
+  .rasi-chakra-svg .rasi-planet-symbol {
+    fill: #222 !important;
+  }
+
+  .rasi-chakra-taksa-item {
+    background: #f5f5f5 !important;
+    border-color: #ddd !important;
+  }
+
+  .rasi-chakra-taksa-item span {
+    color: #111 !important;
+  }
+
+  .rasi-chakra-body,
+  .rasi-chakra-wheel-wrap {
+    background: #fff !important;
+  }
+
+  /* ——— ตารางรายงานทั่วไป ——— */
   .report-table {
     min-width: 0 !important;
     font-size: 9pt;
@@ -962,21 +1170,28 @@
 
   .report-table thead {
     display: table-header-group;
+    background: #f0f0f0 !important;
+  }
+
+  .report-table th,
+  .report-table td {
+    color: #111 !important;
+    border-color: #ccc !important;
+    background: #fff !important;
   }
 
   .report-table tr {
     page-break-inside: avoid;
   }
 
-  .report-print-header {
-    display: block !important;
+  .tabular-nums,
+  .print-table-num {
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
   }
 
-  .glass-card,
-  .gold-glow {
-    box-shadow: none !important;
-    background: white !important;
-    border-color: #ccc !important;
+  .report-print-header {
+    display: block !important;
   }
 }
 
@@ -1650,15 +1865,4 @@
   color: rgba(245, 240, 232, 0.88);
 }
 
-@media print {
-  .myhora-taksa-cell,
-  .myhora-triwai-cell {
-    border-color: #ccc;
-    background: #f8f8f8;
-  }
-
-  .myhora-taksa-label,
-  .myhora-triwai-house {
-    color: #333;
-  }
-}
+/* myhora print rules รวมอยู่ในบล็อก Print ด้านบน */

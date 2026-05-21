@@ -16,12 +16,18 @@ export function MyhoraTaksaTriwaiRow({ tables }: MyhoraTaksaTriwaiRowProps) {
       {taksa.length > 0 ? <MyhoraTaksaTable tables={tables} /> : null}
       <div className="myhora-triwai-column">
         {triwaiNatal.length > 0 ? (
-          <MyhoraTriwaiTable title="ตรีวัย" subtitle="ดวงกำเนิด" grid={triwaiNatal} />
+          <MyhoraTriwaiTable
+            title="ตรีวัย"
+            subtitle="ดวงกำเนิด"
+            printSectionId="triwai-natal"
+            grid={triwaiNatal}
+          />
         ) : null}
         {triwaiTransit.length > 0 ? (
           <MyhoraTriwaiTable
             title="ตรีวัย"
             subtitle="ดวงจร (วันจร)"
+            printSectionId="triwai-transit"
             grid={triwaiTransit}
           />
         ) : null}
