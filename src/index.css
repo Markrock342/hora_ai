@@ -1,0 +1,200 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-hora-bg: #060818;
+  --color-hora-panel: #0e1232;
+  --color-hora-panel-light: #151b42;
+  --color-hora-green: #1a2a4a;
+  --color-hora-green-light: #243660;
+  --color-hora-gold: #d4a84b;
+  --color-hora-gold-light: #f0d078;
+  --color-hora-gold-dim: #9a7a3a;
+  --color-hora-cream: #f0ebe3;
+  --color-hora-muted: #8b92b8;
+  --color-hora-accent: #e85d5a;
+  --color-cosmic-blue: #1e3a6e;
+
+  --font-display: 'Pridi', 'Sarabun', system-ui, sans-serif;
+  --font-serif: 'Sarabun', 'Segoe UI', system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-serif);
+  }
+
+  body {
+    @apply bg-hora-bg text-hora-cream antialiased;
+    margin: 0;
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: rgba(212, 168, 75, 0.35);
+    color: #fff;
+  }
+}
+
+/* ——— Cosmic background ——— */
+.cosmic-gradient {
+  background:
+    radial-gradient(ellipse 120% 80% at 50% -20%, rgba(60, 80, 180, 0.35), transparent 50%),
+    radial-gradient(ellipse 80% 50% at 100% 50%, rgba(90, 50, 140, 0.2), transparent 45%),
+    radial-gradient(ellipse 60% 40% at 0% 80%, rgba(30, 100, 140, 0.15), transparent 40%),
+    linear-gradient(180deg, #060818 0%, #0a1030 40%, #060818 100%);
+}
+
+.stars-layer {
+  background-image:
+    radial-gradient(1px 1px at 20px 30px, rgba(255, 255, 255, 0.5), transparent),
+    radial-gradient(1px 1px at 80px 120px, rgba(255, 255, 255, 0.35), transparent),
+    radial-gradient(1.5px 1.5px at 160px 80px, rgba(240, 220, 180, 0.4), transparent),
+    radial-gradient(1px 1px at 240px 200px, rgba(255, 255, 255, 0.3), transparent),
+    radial-gradient(1px 1px at 320px 50px, rgba(255, 255, 255, 0.45), transparent);
+  background-size: 400px 280px;
+  animation: twinkle 8s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  from {
+    opacity: 0.6;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.moon-glow {
+  background: radial-gradient(
+    circle at 35% 35%,
+    rgba(255, 248, 230, 0.25) 0%,
+    rgba(200, 210, 255, 0.08) 40%,
+    transparent 70%
+  );
+  box-shadow: 0 0 80px rgba(220, 210, 255, 0.15);
+}
+
+.orbit-ring {
+  border: 1px solid rgba(212, 168, 75, 0.5);
+  border-radius: 50%;
+}
+
+/* ——— Glass & glow ——— */
+.glass-card {
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.gold-glow {
+  box-shadow:
+    0 0 0 1px rgba(212, 168, 75, 0.12),
+    0 8px 32px rgba(0, 0, 0, 0.45),
+    0 0 48px rgba(212, 168, 75, 0.06);
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #f0d078 0%, #d4a84b 45%, #c9a050 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hora-input {
+  @apply w-full rounded-xl border border-hora-gold/20 bg-hora-bg/80 px-3 py-2.5 text-hora-cream backdrop-blur-sm transition;
+  @apply placeholder:text-hora-muted/50;
+  @apply focus:border-hora-gold/60 focus:outline-none focus:ring-2 focus:ring-hora-gold/20;
+}
+
+.hora-input option {
+  background: #0e1232;
+  color: #f0ebe3;
+}
+
+.btn-primary {
+  @apply relative overflow-hidden rounded-xl px-8 py-3 text-sm font-semibold text-hora-bg transition;
+  background: linear-gradient(135deg, #f0d078 0%, #d4a84b 50%, #b8923f 100%);
+  box-shadow:
+    0 4px 16px rgba(212, 168, 75, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.btn-primary:hover {
+  filter: brightness(1.08);
+  box-shadow: 0 6px 24px rgba(212, 168, 75, 0.45);
+}
+
+.btn-ghost {
+  @apply rounded-xl border border-hora-gold/25 px-6 py-2.5 text-sm font-medium text-hora-muted transition;
+  @apply hover:border-hora-gold/45 hover:bg-hora-gold/5 hover:text-hora-cream;
+}
+
+/* ——— Result table premium ——— */
+.chart-table thead th {
+  @apply border-b border-hora-gold/30 bg-hora-panel-light/90 py-3.5 text-xs font-semibold uppercase tracking-widest text-hora-gold-light;
+}
+
+.chart-table tbody tr {
+  @apply border-b border-hora-gold/10 transition;
+}
+
+.chart-table tbody tr:hover {
+  background: rgba(212, 168, 75, 0.04);
+}
+
+.chart-table tbody td {
+  @apply py-3.5 md:py-4;
+}
+
+/* ——— Nav pill ——— */
+.nav-pill-active {
+  background: linear-gradient(135deg, rgba(212, 168, 75, 0.2), rgba(212, 168, 75, 0.08));
+  box-shadow: inset 0 0 0 1px rgba(212, 168, 75, 0.35);
+}
+
+/* ——— Print ——— */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 14mm 12mm;
+  }
+
+  .celestial-backdrop,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt;
+  }
+
+  .astrology-report {
+    color: black;
+  }
+
+  .report-table {
+    min-width: 0 !important;
+    font-size: 9pt;
+  }
+
+  .report-table thead {
+    display: table-header-group;
+  }
+
+  .report-table tr {
+    page-break-inside: avoid;
+  }
+
+  .report-print-header {
+    display: block !important;
+  }
+
+  .glass-card,
+  .gold-glow {
+    box-shadow: none !important;
+    background: white !important;
+    border-color: #ccc !important;
+  }
+}
