@@ -17,7 +17,6 @@ import { useAstrology } from '../context/AstrologyContext'
 import { resolvePlaceCoords } from '../data/placeCoordinates'
 import { GlassCard } from '../components/ui/GlassCard'
 import { PageAmbient } from '../components/ui/PageAmbient'
-import { ScrollReveal } from '../components/ui/ScrollReveal'
 import { defaultTransitInput } from '../types/transit'
 import type { TransitInput } from '../types/transit'
 import { buildLocalNatalDetail, buildLocalTransitDetail } from '../utils/formulas/buildDateDetail'
@@ -31,8 +30,7 @@ export function ResultPage() {
     return (
       <div className="mystic-page result-page-mystic result-page-mystic--empty relative">
         <PageAmbient variant="result" />
-        <ScrollReveal variant="scale">
-        <GlassCard mystic className="mystic-empty-card text-center">
+        <GlassCard mystic className="mystic-empty-card relative z-[1] text-center">
           <div className="mystic-empty-mandala" aria-hidden />
           <p className="mystic-empty-moon text-5xl text-hora-gold/60">☽</p>
           <p className="mt-4 font-display text-lg text-hora-cream">ยังไม่มีผลคำนวณ</p>
@@ -41,7 +39,6 @@ export function ResultPage() {
             กรอกข้อมูลเกิด
           </Link>
         </GlassCard>
-        </ScrollReveal>
       </div>
     )
   }

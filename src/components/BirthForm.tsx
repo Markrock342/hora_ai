@@ -1,4 +1,4 @@
-import { useMemo, useState, type CSSProperties } from 'react'
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { CALC_OUTRO_MS, CALC_RITUAL_MIN_MS, sleep, type CalcNavState } from '../constants/calcTransition'
 import { useEnterMotion } from '../hooks/useEnterMotion'
 import { useNavigate } from 'react-router-dom'
@@ -62,7 +62,7 @@ function isFieldFilled(input: BirthInput, key: keyof BirthInput): boolean {
 }
 
 export function BirthForm() {
-  const { input, setInput, resetInput, calculate, calculating } = useAstrology()
+  const { input, setInput, resetInput, calculate, calculating, result } = useAstrology()
   const navigate = useNavigate()
   const formMotionReady = useEnterMotion(80)
   const [errors, setErrors] = useState<BirthFormErrors>({})
@@ -70,6 +70,9 @@ export function BirthForm() {
   const [errorFlashKey, setErrorFlashKey] = useState(0)
   const [ritualHold, setRitualHold] = useState(false)
   const [calcOutro, setCalcOutro] = useState(false)
+  /** รอ result ใน context แล้วค่อย outro + ไป /result */
+  const [pendingCalcNav, setPendingCalcNav] = useState(false)
+  const calcNavStartedRef = useRef(0)
 
   const maxDay = useMemo(
     () => (input.month && input.year ? daysInMonth(input.month, input.year) : 31),
@@ -96,7 +99,7 @@ export function BirthForm() {
 
   const handleCalculate = async () => {
     setSubmitAttempted(true)
-    const started = performance.now()
+    calcNavStartedRef.current = performance.now()
     const { ok, errors: nextErrors } = await calculate()
     setErrors(nextErrors)
 
@@ -105,19 +108,37 @@ export function BirthForm() {
       return
     }
 
-    setRitualHold(true)
-    const ritualRemain = Math.max(0, CALC_RITUAL_MIN_MS - (performance.now() - started))
-    await sleep(ritualRemain)
-
-    setCalcOutro(true)
-    document.documentElement.classList.add('calc-transition-outro')
-    await sleep(CALC_OUTRO_MS)
-
-    document.documentElement.classList.remove('calc-transition-outro')
-    setCalcOutro(false)
-    setRitualHold(false)
-    navigate('/result', { state: { fromCalc: true } satisfies CalcNavState })
+    setPendingCalcNav(true)
   }
+
+  useEffect(() => {
+    if (!pendingCalcNav || calculating || !result) return
+
+    let alive = true
+
+    void (async () => {
+      const started = calcNavStartedRef.current
+      setRitualHold(true)
+      const ritualRemain = Math.max(0, CALC_RITUAL_MIN_MS - (performance.now() - started))
+      await sleep(ritualRemain)
+      if (!alive) return
+
+      setCalcOutro(true)
+      document.documentElement.classList.add('calc-transition-outro')
+      await sleep(CALC_OUTRO_MS)
+      if (!alive) return
+
+      document.documentElement.classList.remove('calc-transition-outro')
+      setCalcOutro(false)
+      setRitualHold(false)
+      setPendingCalcNav(false)
+      navigate('/result', { state: { fromCalc: true } satisfies CalcNavState })
+    })()
+
+    return () => {
+      alive = false
+    }
+  }, [pendingCalcNav, calculating, result, navigate])
 
   const showCalcOverlay = calculating || ritualHold || calcOutro
 
@@ -125,6 +146,10 @@ export function BirthForm() {
     resetInput()
     setErrors({})
     setSubmitAttempted(false)
+    setPendingCalcNav(false)
+    setRitualHold(false)
+    setCalcOutro(false)
+    document.documentElement.classList.remove('calc-transition-outro')
   }
 
   const validationErrors = useMemo(() => validateBirthInput(input), [input])
