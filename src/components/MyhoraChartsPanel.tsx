@@ -165,13 +165,7 @@ function DivisionalChartContent({
 function ChartSlot({ label, embedPath, preparedHtml, size, bare = false }: ChartSlotProps) {
   if (!embedPath && !preparedHtml?.trim()) return null
 
-<<<<<<< HEAD
   const dim = DIVISIONAL_DIMS[size]
-=======
-  const dim = CHART_DIMS[size]
-  const sizeClass = size === 'natal' ? 'xlarge' : size
-  const htmlSize = size === 'small' ? 'small' : 'large'
->>>>>>> 2774f13 (Merge friend’s divisional chart embed with natal wheel panel.)
 
   return (
     <figure
@@ -185,11 +179,7 @@ function ChartSlot({ label, embedPath, preparedHtml, size, bare = false }: Chart
             embedPath={embedPath}
             preparedHtml={preparedHtml}
             dim={dim}
-<<<<<<< HEAD
             htmlSize={size}
-=======
-            htmlSize={htmlSize}
->>>>>>> 2774f13 (Merge friend’s divisional chart embed with natal wheel panel.)
             bare={bare}
           />
         </MyhoraChartFitHost>
@@ -206,13 +196,8 @@ export function MyhoraChartsPanel({ charts, bare = false }: MyhoraChartsPanelPro
   const hasRasi = Boolean(charts.rasi || charts.rasiHtml)
   const hasNavamsa = Boolean(charts.navamsa || charts.navamsaHtml)
   const hasDrekkana = Boolean(charts.drekkana || charts.drekkanaHtml)
-<<<<<<< HEAD
   const hasBottom = hasNavamsa || hasDrekkana
   const hasDivisional = hasRasi || hasBottom
-=======
-  const hasSide = hasNavamsa || hasDrekkana
-  const hasDivisional = hasRasi || hasSide
->>>>>>> 2774f13 (Merge friend’s divisional chart embed with natal wheel panel.)
 
   return (
     <div className="myhora-charts-panel-root space-y-6">
@@ -236,19 +221,11 @@ export function MyhoraChartsPanel({ charts, bare = false }: MyhoraChartsPanelPro
 
       {hasDivisional ? (
         <div
-<<<<<<< HEAD
           className={`myhora-charts-panel ${hasBottom ? 'myhora-charts-panel--triangle' : ''} ${bare ? 'myhora-charts-panel--bare' : ''}`.trim()}
           aria-label="กราฟราศีจักร"
         >
           {hasRasi ? (
             <div className="myhora-charts-triangle-top">
-=======
-          className={`myhora-charts-panel ${hasSide ? 'myhora-charts-panel--with-side' : ''} ${bare ? 'myhora-charts-panel--bare' : ''}`.trim()}
-          aria-label="กราฟราศีจักร"
-        >
-          {hasRasi ? (
-            <div className="myhora-charts-main">
->>>>>>> 2774f13 (Merge friend’s divisional chart embed with natal wheel panel.)
               <ChartSlot
                 label="ราศีจักร"
                 embedPath={charts.rasi}
@@ -259,13 +236,8 @@ export function MyhoraChartsPanel({ charts, bare = false }: MyhoraChartsPanelPro
             </div>
           ) : null}
 
-<<<<<<< HEAD
           {hasBottom ? (
             <div className="myhora-charts-triangle-bottom">
-=======
-          {hasSide ? (
-            <div className="myhora-charts-side">
->>>>>>> 2774f13 (Merge friend’s divisional chart embed with natal wheel panel.)
               {hasNavamsa ? (
                 <ChartSlot
                   label="นวางศ์จักร"
