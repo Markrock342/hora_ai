@@ -64,7 +64,7 @@ export function MyhoraChartHtml({
 
   return (
     <div
-      className={`myhora-chart-html-host ${size === 'small' ? 'myhora-chart-html-host--small' : ''} ${className}`.trim()}
+      className={`myhora-chart-html-host myhora-chart-html-host--fit ${size === 'small' ? 'myhora-chart-html-host--small' : ''} ${className}`.trim()}
     >
       {loading ? (
         <p className="myhora-chart-html-loading text-center text-sm text-hora-muted py-12">

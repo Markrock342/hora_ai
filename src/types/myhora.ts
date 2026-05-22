@@ -6,6 +6,10 @@ export type { MyhoraDateDetail, MyhoraDateLine, MyhoraDateLineType } from '../ut
 /** ข้อมูลดึงจาก myhora thai.aspx (กราฟ / ตารางทักษา / ตรีวัย) */
 
 export interface MyhoraChartEmbeds {
+  /** chart-rasi-analysis-natal.aspx — วงกลมหลัก #chart_natal (900px) */
+  natalAnalysis?: string | null
+  /** chart-natal.aspx (SVG) — โหลดใน iframe ได้ตรง ไม่ redirect */
+  natalSvg?: string | null
   /** chart-rasi.aspx */
   rasi: string | null
   /** chart-rasi-navang-triyang.aspx?type=navang */

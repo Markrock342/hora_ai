@@ -1,4 +1,4 @@
-import { getMyhoraOrigin } from './myhoraProxy'
+import { getMyhoraOrigin, myhoraNetProxyUrl } from './myhoraProxy'
 
 function myhoraNetBase(): string {
   if (import.meta.env.VITE_MYHORA_NET_ORIGIN) {
@@ -29,6 +29,10 @@ export function rewriteAssetUrls(html: string): string {
     .replace(/https?:\/\/myhora\.com/gi, com)
     .replace(/https?:\/\/myhora\.net\/astrology/gi, `${com.replace(/\/$/, '')}/astrology`)
     .replace(/https?:\/\/myhora\.net/gi, net)
+    .replace(
+      /@import\s+url\(\s*['"]?https?:\/\/myhora\.net([^'")]+)['"]?\s*\)\s*;?/gi,
+      (_m, path: string) => `@import url('${myhoraNetProxyUrl(path)}');`,
+    )
 
   out = out.replace(
     /url\(\s*(['"]?)https?:\/\/myhora\.net\/astrology/gi,
@@ -36,7 +40,7 @@ export function rewriteAssetUrls(html: string): string {
   )
 
   out = out.replace(
-    /(\s(?:src|href)=["'])\/(astrology\/[^"']+)/gi,
+    /(\s(?:src|href|data)=["'])\/(astrology\/[^"']+)/gi,
     (_m, prefix: string, path: string) => `${prefix}${joinOrigin(com, `/${path}`)}`,
   )
   out = out.replace(

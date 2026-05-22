@@ -1583,9 +1583,10 @@
   min-height: 120px;
 }
 
-.myhora-chart-html-host--small .myhora-chart-html-shadow {
-  transform: scale(0.88);
-  transform-origin: top center;
+.myhora-chart-html-host--fit {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
 }
 
 .myhora-chart-html-shadow {
@@ -1689,9 +1690,11 @@
 .myhora-charts-slot-body {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   overflow: hidden;
   background: #fff;
+  width: 100%;
+  min-width: 0;
 }
 
 .myhora-charts-slot--large .myhora-charts-slot-body {
@@ -1699,7 +1702,51 @@
 }
 
 .myhora-charts-slot--small .myhora-charts-slot-body {
-  max-height: 318px;
+  min-height: 0;
+}
+
+.myhora-chart-fit-host {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.myhora-chart-fit-scaler {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.myhora-chart-fit-inner {
+  position: relative;
+}
+
+.myhora-chart-fit-host .myhora-chart-html-host,
+.myhora-chart-fit-host .myhora-chart-document-frame {
+  width: 100%;
+  height: 100%;
+}
+
+.myhora-chart-fit-host .myhora-chart-html-shadow {
+  width: 100%;
+  height: 100%;
+}
+
+.myhora-chart-fit-host .myhora-chart-document-iframe {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.myhora-charts-slot--large .myhora-chart-fit-host {
+  max-width: 500px;
+  margin-inline: auto;
+}
+
+.myhora-charts-slot--small .myhora-chart-fit-host {
+  max-width: 325px;
+  margin-inline: auto;
 }
 
 .myhora-charts-slot .myhora-embed-section--bare,
@@ -1715,31 +1762,149 @@
 }
 
 .myhora-charts-slot--small .myhora-embed-iframe--chart {
-  width: 268px !important;
+  width: 100% !important;
   max-width: 100% !important;
-  height: 300px !important;
+  height: 100% !important;
   min-width: 0 !important;
 }
 
 .myhora-charts-slot--large .myhora-embed-iframe--chart {
-  width: min(500px, 100%) !important;
+  width: 100% !important;
   max-width: 100% !important;
-  height: 480px !important;
+  height: 100% !important;
+  min-width: 0 !important;
+}
+
+.myhora-natal-wheel-section {
+  width: 100%;
+  max-width: 920px;
+  margin-inline: auto;
+}
+
+.myhora-natal-wheel-host {
+  position: relative;
+  width: min(900px, 100%);
+  height: min(900px, 100vw);
+  overflow: hidden;
+  margin-inline: auto;
+}
+
+.myhora-natal-chart-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  margin-inline: auto;
+  overflow: hidden;
+}
+
+.myhora-natal-wheel-host .myhora-chart-document-frame {
+  width: 100% !important;
+  max-width: 900px !important;
+}
+
+.myhora-natal-wheel-host .myhora-chart-document-iframe {
+  width: 900px !important;
+  max-width: 100% !important;
+  height: 900px !important;
+  overflow: hidden !important;
+}
+
+.myhora-natal-chart-controls {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  z-index: 20;
+  width: 11.5rem;
+  padding: 0.45rem 0.5rem;
+  border: 1px solid #e8e8e8;
+  border-radius: 0.35rem;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  font-size: 0.85rem;
+  color: #222;
+}
+
+.myhora-natal-control-row {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 0.35rem;
+}
+
+.myhora-natal-control-row:last-of-type {
+  margin-bottom: 0.5rem;
+}
+
+.myhora-natal-control-check {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+}
+
+.myhora-natal-control-check input {
+  width: 1rem;
+  height: 1rem;
+  margin: 0;
+  cursor: pointer;
+}
+
+.myhora-natal-control-select {
+  flex: 1;
+  min-width: 0;
+  font-size: 0.85em;
+  padding: 0.15rem 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 0.2rem;
+  background: #fff;
+  color: #111;
+}
+
+.myhora-natal-control-select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.myhora-natal-control-aspect {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  cursor: pointer;
+  font-size: 0.85em;
+  color: #11119f;
+}
+
+.myhora-natal-control-aspect input {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .myhora-natal-chart-controls {
+    position: static;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+}
+
+.myhora-charts-slot--xlarge .myhora-charts-slot-body,
+.myhora-charts-slot--xlarge .myhora-embed-frame-wrap--chart,
+.myhora-charts-slot--xlarge .myhora-chart-document-frame {
+  display: flex;
+  justify-content: center;
+}
+
+.myhora-charts-slot--xlarge .myhora-embed-iframe--chart,
+.myhora-charts-slot--xlarge .myhora-chart-document-iframe {
+  width: min(900px, 100%) !important;
+  max-width: 100% !important;
+  height: min(940px, 95vh) !important;
   min-width: 0 !important;
 }
 
 .myhora-charts-slot .myhora-chart-html-host {
   width: 100%;
+  height: 100%;
   overflow: hidden;
-}
-
-.myhora-charts-slot--small .myhora-chart-html-host {
-  max-height: 300px;
-}
-
-.myhora-charts-slot--small .myhora-chart-html-host--small .myhora-chart-html-shadow {
-  transform: scale(0.9);
-  transform-origin: top center;
 }
 
 @media (max-width: 640px) {

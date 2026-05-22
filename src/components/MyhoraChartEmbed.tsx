@@ -8,8 +8,12 @@ interface MyhoraChartEmbedProps {
   size?: 'large' | 'small'
   /** ไม่แสดงหัวข้อการ์ด — checkbox ยังอยู่ในกราฟ myhora */
   bare?: boolean
+  /** ความกว้าง/สูงกำหนดเอง (เช่น กราฟ natal 900px) */
+  width?: number
+  height?: number
   fallback?: ReactNode
   className?: string
+  onEmbedFailed?: () => void
 }
 
 /** ขนาด embed myhora (layout ~500×450 + แถบ checkbox) */
@@ -27,10 +31,15 @@ export function MyhoraChartEmbed({
   subtitle,
   size = 'large',
   bare = false,
+  width,
+  height,
   fallback,
   className = '',
+  onEmbedFailed,
 }: MyhoraChartEmbedProps) {
   const dim = CHART_SIZE[size]
+  const frameWidth = width ?? dim.width
+  const frameHeight = height ?? dim.height
 
   if (!embedPath) {
     return fallback ? (
@@ -53,12 +62,13 @@ export function MyhoraChartEmbed({
       embedPath={embedPath}
       title={title}
       subtitle={bare ? undefined : subtitle}
-      height={dim.height}
-      width={dim.width}
+      height={frameHeight}
+      width={frameWidth}
       wide
       bare={bare}
       chartControls
       fallback={fallback}
+      onEmbedFailed={onEmbedFailed}
       className={`myhora-chart-embed ${size === 'small' ? 'myhora-chart-embed--small' : ''} ${bare ? 'myhora-chart-embed--bare' : ''} ${className}`.trim()}
     />
   )

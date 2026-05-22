@@ -14,11 +14,9 @@ import {
   parseViewState,
   planetsFromMyhoraTable,
 } from './parseHtml'
+import { parseNatalAnalysisChartPath, parseNatalSvgChartPath } from './parseNatalChart'
+import { myhoraProxyUrl } from './myhoraProxy'
 import type { PlanetSignRow } from '../../types/astrology'
-
-const MYHORA_ORIGIN =
-  import.meta.env.VITE_MYHORA_ORIGIN ??
-  (import.meta.env.DEV ? '/api/myhora' : 'https://myhora.com')
 
 function ceToBe(year: number): number {
   return year + 543
@@ -90,7 +88,7 @@ export function buildMyhoraFormBody(
 }
 
 async function fetchText(path: string, init?: RequestInit): Promise<string> {
-  const url = path.startsWith('http') ? path : `${MYHORA_ORIGIN}${path}`
+  const url = path.startsWith('http') ? path : myhoraProxyUrl(path)
   const res = await fetch(url, {
     ...init,
     headers: {
@@ -149,7 +147,21 @@ export async function fetchMyhoraThaiChart(
       contentPaths.chartBhava ? fetchText(contentPaths.chartBhava) : Promise.resolve(''),
     ])
 
+  const natalAnalysis =
+    parseNatalAnalysisChartPath(resultHtml) ?? contentPaths.chartRasiAnalysisNatal
+  let natalSvg: string | null = null
+  if (natalAnalysis) {
+    try {
+      const analysisHtml = await fetchText(natalAnalysis)
+      natalSvg = parseNatalSvgChartPath(analysisHtml)
+    } catch {
+      natalSvg = null
+    }
+  }
+
   const chartEmbeds: MyhoraChartEmbeds = {
+    natalAnalysis,
+    natalSvg,
     rasi: embeds.rasi,
     navamsa: embeds.navamsa,
     drekkana: embeds.drekkana,

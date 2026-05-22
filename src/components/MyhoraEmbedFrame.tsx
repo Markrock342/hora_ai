@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { isAllowedMyhoraChartPath, myhoraEmbedUrl } from '../utils/myhora/myhoraProxy'
+import { isEmbeddedNewHoraApp } from '../utils/myhora/sanitizeChartHtml'
 
 interface MyhoraEmbedFrameProps {
   embedPath: string | null
@@ -16,6 +17,7 @@ interface MyhoraEmbedFrameProps {
   /** ความกว้าง iframe (px) — myhora กราฟออกแบบ ~500px */
   width?: number
   fallback?: ReactNode
+  onEmbedFailed?: () => void
   className?: string
 }
 
@@ -29,8 +31,10 @@ export function MyhoraEmbedFrame({
   chartControls = false,
   width,
   fallback = null,
+  onEmbedFailed,
   className = '',
 }: MyhoraEmbedFrameProps) {
+  const iframeRef = useRef<HTMLIFrameElement>(null)
   const safe =
     embedPath && isAllowedMyhoraChartPath(embedPath) ? myhoraEmbedUrl(embedPath) : null
   const [failed, setFailed] = useState(false)
@@ -41,10 +45,31 @@ export function MyhoraEmbedFrame({
     setFailed(false)
     if (!safe) return
     const timer = window.setTimeout(() => {
-      if (!loadedRef.current) setFailed(true)
+      if (!loadedRef.current) {
+        setFailed(true)
+        onEmbedFailed?.()
+      }
     }, 12000)
     return () => window.clearTimeout(timer)
-  }, [safe])
+  }, [safe, onEmbedFailed])
+
+  const verifyLoaded = () => {
+    const doc = iframeRef.current?.contentDocument
+    if (isEmbeddedNewHoraApp(doc)) {
+      setFailed(true)
+      onEmbedFailed?.()
+      return false
+    }
+    setFailed(false)
+    return true
+  }
+
+  const handleLoad = () => {
+    loadedRef.current = true
+    if (!verifyLoaded()) return
+    window.setTimeout(verifyLoaded, 400)
+    window.setTimeout(verifyLoaded, 1200)
+  }
 
   if (!embedPath || !safe) {
     return fallback ? <>{fallback}</> : null
@@ -71,7 +96,8 @@ export function MyhoraEmbedFrame({
         className={`myhora-embed-frame-wrap ${wide ? 'myhora-embed-frame-wrap--wide' : ''} ${bare ? 'myhora-embed-frame-wrap--bare' : ''} ${chartControls ? 'myhora-embed-frame-wrap--chart' : ''}`.trim()}
       >
         <iframe
-          src={safe}
+          ref={iframeRef}
+          src={failed && fallback ? undefined : safe}
           title={title}
           className={`myhora-embed-iframe ${wide ? 'myhora-embed-iframe--wide' : ''} ${bare ? 'myhora-embed-iframe--bare' : ''} ${chartControls ? 'myhora-embed-iframe--chart' : ''}`.trim()}
           style={{
@@ -80,10 +106,7 @@ export function MyhoraEmbedFrame({
           }}
           scrolling={chartControls ? 'auto' : 'no'}
           loading="lazy"
-          onLoad={() => {
-            loadedRef.current = true
-            setFailed(false)
-          }}
+          onLoad={handleLoad}
         />
       </div>
     </section>

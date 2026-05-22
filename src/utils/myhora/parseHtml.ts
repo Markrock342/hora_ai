@@ -230,6 +230,8 @@ export function mergeMyhoraTables(
     dateDetailNatal: dateDetails.natal,
     dateDetailTransit: dateDetails.transit,
     chartEmbeds: extra?.chartEmbeds ?? {
+      natalAnalysis: null,
+      natalSvg: null,
       rasi: embeds.rasi,
       navamsa: embeds.navamsa,
       drekkana: embeds.drekkana,

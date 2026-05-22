@@ -15,6 +15,27 @@ ${MYHORA_CHART_CHROME_CSS}
 .cnt-set-embed, .cr-set-embed, .cbv-set-embed { display: none !important; }
 `
 
+export const MYHORA_CHART_FIT_STAGE_CSS = `
+.myhora-chart-fit-stage {
+  position: relative;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.myhora-chart-fit-stage--rasi {
+  width: 500px;
+  height: 450px;
+}
+.myhora-chart-fit-stage--divisional {
+  width: 325px;
+  height: 325px;
+}
+.myhora-chart-fit-stage .cr-chart,
+.myhora-chart-fit-stage .cbv-chart,
+.myhora-chart-fit-stage .cnt-chart {
+  margin: 0 auto;
+}
+`
+
 function extractInlineStyles(raw: string): string {
   return [...raw.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/gi)]
     .map((m) => m[1])
@@ -42,6 +63,15 @@ function extractDivByClass(html: string, className: string): string | null {
 }
 
 /** ดึง div กราฟหลัก (ราศีจักร / เรือนลัคนา / นวางศ์·ตรียางศ์) */
+/** checkbox / select มุมซ้ายบน (ราศีจักร) */
+function extractCrControls(raw: string): string {
+  const parts: string[] = []
+  const re = /<div\s+class="((?:cb-cr|dd-cr|tx-cr)[^"]*)"[^>]*>[\s\S]*?<\/div>/gi
+  let m: RegExpExecArray | null
+  while ((m = re.exec(raw))) parts.push(m[0])
+  return parts.join('\n')
+}
+
 function extractEmbedControls(raw: string): string {
   const blocks: string[] = []
   for (const cls of ['cnt-set-embed', 'cr-set-embed', 'cbv-set-embed']) {
@@ -75,15 +105,26 @@ function extractChartMarkup(raw: string): string | null {
  * เตรียม HTML กราฟ myhora สำหรับ Shadow DOM / dangerouslySetInnerHTML
  * — คง CSS ตำแหน่งดาว, ตัด script/form, ซ่อนเครื่องมือ embed
  */
+function wrapChartStage(markup: string, raw: string): string {
+  if (!markup) return ''
+  const isDivisional = /\bcnt-chart\b/.test(markup)
+  const stageClass = isDivisional
+    ? 'myhora-chart-fit-stage myhora-chart-fit-stage--divisional'
+    : 'myhora-chart-fit-stage myhora-chart-fit-stage--rasi'
+  const controls = isDivisional ? '' : extractCrControls(raw)
+  return `<div class="${stageClass}">${controls}${markup}</div>`
+}
+
 export function prepareMyhoraChartHtml(raw: string): string {
   const styles = extractInlineStyles(raw)
   let markup = extractChartMarkup(raw) ?? ''
   markup = markup.replace(/<script[\s\S]*?<\/script>/gi, '')
   markup = rewriteAssetUrls(markup)
+  markup = wrapChartStage(markup, raw)
 
   const styleBlock = styles
-    ? `<style>${styles}\n${MYHORA_CHART_CHROME_CSS}</style>`
-    : `<style>${MYHORA_CHART_CHROME_CSS}</style>`
+    ? `<style>${styles}\n${MYHORA_CHART_CHROME_CSS}\n${MYHORA_CHART_FIT_STAGE_CSS}</style>`
+    : `<style>${MYHORA_CHART_CHROME_CSS}\n${MYHORA_CHART_FIT_STAGE_CSS}</style>`
 
   return `${styleBlock}${markup}`.trim()
 }
