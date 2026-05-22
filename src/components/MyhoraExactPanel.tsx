@@ -1,9 +1,7 @@
 import type { MyhoraTables } from '../types/myhora'
 import { patchMyhoraNatalEmbeds } from '../utils/myhora/patchMyhoraNatalEmbeds'
-import { isMyhoraHtmlSubstantive } from '../utils/myhora/prepareContentHtml'
 import { MyhoraChartEmbed } from './MyhoraChartEmbed'
 import { MyhoraChartsPanel } from './MyhoraChartsPanel'
-import { MyhoraEmbedFrame } from './MyhoraEmbedFrame'
 import { MyhoraHtmlBlock } from './MyhoraHtmlBlock'
 import { MyhoraTaksaTriwaiRow } from './MyhoraTaksaTriwaiRow'
 
@@ -16,9 +14,6 @@ export function MyhoraExactPanel({ tables: tablesProp }: MyhoraExactPanelProps) 
   const charts = tables.chartEmbeds
   const content = tables.contentEmbeds
   const html = tables.htmlFragments
-  const predictHtml = isMyhoraHtmlSubstantive(html?.astrologyNatal)
-    ? html!.astrologyNatal
-    : null
 
   return (
     <div className="myhora-exact-panel space-y-8">
@@ -62,25 +57,6 @@ export function MyhoraExactPanel({ tables: tablesProp }: MyhoraExactPanelProps) 
         minHeight={200}
         className="myhora-html-block--samrap"
       />
-
-      {predictHtml ? (
-        <MyhoraHtmlBlock
-          title="ทำนายดวงกำเนิด"
-          subtitle="จักรราศี"
-          html={predictHtml}
-          minHeight={320}
-          className="myhora-html-block--predict"
-        />
-      ) : content?.astrologyNatal ? (
-        <MyhoraEmbedFrame
-          embedPath={content.astrologyNatal}
-          title="ทำนายดวงกำเนิด"
-          subtitle="ลัคนา · มาตรฐานดาว · เจ้าเรือน · ดาวในเรือน/ราศี"
-          height={720}
-          wide
-          className="myhora-embed-section--natal"
-        />
-      ) : null}
 
       <MyhoraTaksaTriwaiRow tables={tables} />
     </div>
