@@ -13,6 +13,7 @@ import type { TransitInput } from '../types/transit'
 import { calculateAstrologyAsync } from '../utils/astrologyCalculator'
 import { refreshMyhoraTransit } from '../utils/formulas/buildRealAstrologyResult'
 import { isMyhoraScrapeAvailable } from '../utils/myhora/fetchMyhoraThai'
+import { patchMyhoraNatalEmbeds } from '../utils/myhora/patchMyhoraNatalEmbeds'
 import {
   formatBirthDisplay,
   formatLocationDisplay,
@@ -95,18 +96,23 @@ function migrateLegacy(raw: string): AstrologyResult | null {
   }
 }
 
+function withPatchedMyhora(result: AstrologyResult): AstrologyResult {
+  if (!result.myhora) return result
+  return { ...result, myhora: patchMyhoraNatalEmbeds(result.myhora) }
+}
+
 function loadStoredResult(): AstrologyResult | null {
   try {
     const v4 = sessionStorage.getItem(STORAGE_KEY)
     if (v4) {
       const parsed = JSON.parse(v4) as AstrologyResult
-      if (isValidResult(parsed)) return refreshResultMeta(parsed)
+      if (isValidResult(parsed)) return withPatchedMyhora(refreshResultMeta(parsed))
     }
     for (const key of ['newhora-astrology-v3', 'newhora-astrology-v2']) {
       const legacy = sessionStorage.getItem(key)
       if (legacy) {
         const migrated = migrateLegacy(legacy)
-        if (migrated) return refreshResultMeta(migrated)
+        if (migrated) return withPatchedMyhora(refreshResultMeta(migrated))
       }
     }
   } catch {

@@ -15,6 +15,7 @@ import {
   isMyhoraScrapeAvailable,
   type MyhoraScrapeResult,
 } from '../myhora/fetchMyhoraThai'
+import { patchMyhoraNatalEmbeds } from '../myhora/patchMyhoraNatalEmbeds'
 import type { TransitInput } from '../../types/transit'
 import { defaultTransitInput } from '../../types/transit'
 import { computeFullChartSync } from './pipeline'
@@ -58,7 +59,7 @@ function myhoraScrapeToResult(input: BirthInput, scraped: MyhoraScrapeResult): A
     },
     planets: scraped.planets,
     chart: lagna ? { lagna, taksa: [] } : undefined,
-    myhora: scraped.tables,
+    myhora: patchMyhoraNatalEmbeds(scraped.tables),
   }
 }
 

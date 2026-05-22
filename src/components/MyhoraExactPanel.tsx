@@ -1,4 +1,5 @@
 import type { MyhoraTables } from '../types/myhora'
+import { patchMyhoraNatalEmbeds } from '../utils/myhora/patchMyhoraNatalEmbeds'
 import { isMyhoraHtmlSubstantive } from '../utils/myhora/prepareContentHtml'
 import { MyhoraChartEmbed } from './MyhoraChartEmbed'
 import { MyhoraChartsPanel } from './MyhoraChartsPanel'
@@ -10,7 +11,8 @@ interface MyhoraExactPanelProps {
   tables: MyhoraTables
 }
 
-export function MyhoraExactPanel({ tables }: MyhoraExactPanelProps) {
+export function MyhoraExactPanel({ tables: tablesProp }: MyhoraExactPanelProps) {
+  const tables = patchMyhoraNatalEmbeds(tablesProp)
   const charts = tables.chartEmbeds
   const content = tables.contentEmbeds
   const html = tables.htmlFragments
@@ -27,10 +29,16 @@ export function MyhoraExactPanel({ tables }: MyhoraExactPanelProps) {
         >
           <header className="myhora-embed-header border-b border-hora-gold/20 bg-gradient-to-r from-hora-panel-light/90 to-hora-panel/60 px-5 py-4">
             <h3 className="font-display text-xl font-medium text-gradient-gold">กราฟดวงชะตา</h3>
-            <p className="mt-1 text-xs text-hora-gold-dim">ราศีจักร · นวางศ์จักร · ตรียางศ์จักร</p>
+            <p className="mt-1 text-xs text-hora-gold-dim">
+              ดวงจักรกำเนิด · ราศีจักร · นวางศ์จักร · ตรียางศ์จักร
+            </p>
           </header>
           <div className="myhora-charts-block-body px-3 py-4 md:px-5 md:py-5">
-            <MyhoraChartsPanel charts={charts} bare />
+            <MyhoraChartsPanel
+              charts={charts}
+              natalAnalysisFallback={content?.chartRasiAnalysisNatal}
+              bare
+            />
           </div>
         </section>
       ) : null}

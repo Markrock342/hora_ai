@@ -7,6 +7,7 @@ import {
   type NatalChartDisplayOptions,
 } from '../utils/myhora/natalChartOptions'
 import { MYHORA_CHART_NATIVE } from '../utils/myhora/chartNativeSize'
+import { resolveNatalChartPaths } from '../utils/myhora/patchMyhoraNatalEmbeds'
 import { MyhoraChartDocumentFrame } from './MyhoraChartDocumentFrame'
 import { MyhoraChartEmbed } from './MyhoraChartEmbed'
 import { MyhoraChartFitHost } from './MyhoraChartFitHost'
@@ -16,6 +17,8 @@ import { MyhoraNatalChartControls } from './MyhoraNatalChartControls'
 
 interface MyhoraChartsPanelProps {
   charts: MyhoraChartEmbeds
+  /** สำรองจาก contentEmbeds เมื่อ chartEmbeds เก่าไม่มี natalAnalysis */
+  natalAnalysisFallback?: string | null
   /** แสดงเฉพาะกราฟวงกลม ไม่มีหัวข้อการ์ด */
   bare?: boolean
 }
@@ -189,9 +192,15 @@ function ChartSlot({ label, embedPath, preparedHtml, size, bare = false }: Chart
 }
 
 /** ดวงจักรกำเนิดบน — ราศีจักรกลาง — นวางศ์/ตรียางศ์ล่างคู่กัน */
-export function MyhoraChartsPanel({ charts, bare = false }: MyhoraChartsPanelProps) {
-  const natalAnalysis = charts.natalAnalysis ?? null
-  const natalSvg = charts.natalSvg ?? null
+export function MyhoraChartsPanel({
+  charts,
+  natalAnalysisFallback = null,
+  bare = false,
+}: MyhoraChartsPanelProps) {
+  const { analysis: natalAnalysis, svg: natalSvg } = resolveNatalChartPaths(
+    charts,
+    natalAnalysisFallback,
+  )
   const hasNatal = Boolean(natalAnalysis ?? natalSvg)
   const hasRasi = Boolean(charts.rasi || charts.rasiHtml)
   const hasNavamsa = Boolean(charts.navamsa || charts.navamsaHtml)
