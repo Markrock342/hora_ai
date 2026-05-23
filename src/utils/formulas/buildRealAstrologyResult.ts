@@ -21,6 +21,22 @@ import { defaultTransitInput } from '../../types/transit'
 import { computeFullChartSync } from './pipeline'
 import { lookupSuryayatSync } from './suryayat/lookup'
 
+/** ผล scrape ต้องมีตารางดาว + ลัคนา + กราฟราศีจักร — มิฉะนั้นอย่าใช้ (จะเพี้ยน) */
+export function isValidMyhoraScrape(scraped: MyhoraScrapeResult): boolean {
+  const lagna = scraped.lagna ?? scraped.tables.lagnaSign
+  const hasPlanets = scraped.planets.some(
+    (p) => p.siderealSign && p.siderealSign !== '—',
+  )
+  const charts = scraped.tables.chartEmbeds
+  const hasChart = Boolean(
+    charts?.rasiHtml?.trim() ||
+      charts?.rasi ||
+      charts?.natalAnalysis ||
+      charts?.natalSvg,
+  )
+  return Boolean(lagna && hasPlanets && hasChart)
+}
+
 function toResult(input: BirthInput, chart: ReturnType<typeof computeFullChartSync>): AstrologyResult {
   return {
     input,
@@ -76,22 +92,34 @@ export async function refreshMyhoraTransit(
 export async function buildRealAstrologyResultAsync(
   input: BirthInput,
 ): Promise<AstrologyResult> {
+  const place = resolvePlaceCoords(input.country, input.province, input.district)
+
   if (isMyhoraScrapeAvailable()) {
     try {
       const scraped = await fetchMyhoraThaiChart(input, {
         transit: defaultTransitInput(),
       })
-      return myhoraScrapeToResult(input, scraped)
+      if (isValidMyhoraScrape(scraped)) {
+        const lagna = scraped.lagna ?? scraped.tables.lagnaSign!
+        await setCachedChart(input, place, {
+          planets: Object.fromEntries(
+            scraped.planets.map((p) => [p.planet, p.siderealSign]),
+          ),
+          lagna,
+          source: 'myhora-scrape',
+        })
+        return myhoraScrapeToResult(input, scraped)
+      }
+      console.warn('[newhora] myhora scrape incomplete, using local lookup/formulas')
     } catch (err) {
-      console.warn('[newhora] myhora scrape failed, using local formulas', err)
+      console.warn('[newhora] myhora scrape failed, using local lookup/formulas', err)
     }
   }
 
-  const place = resolvePlaceCoords(input.country, input.province, input.district)
   const cached = await getCachedChart(input, place)
   const lookup = lookupSuryayatSync(input, place)
 
-  if (cached && !lookup) {
+  if (cached && !lookup && cached.source !== 'formula-pipeline') {
     const base = computeFullChartSync(input, place)
     const planets = base.planets.map((p) => ({
       ...p,
@@ -105,15 +133,5 @@ export async function buildRealAstrologyResultAsync(
     })
   }
 
-  const result = buildRealAstrologyResult(input)
-  if (result.meta.calculationSource === 'formula-pipeline' && result.chart?.lagna) {
-    await setCachedChart(input, place, {
-      planets: Object.fromEntries(
-        result.planets.map((p) => [p.planet, p.siderealSign]),
-      ),
-      lagna: result.chart.lagna,
-      source: 'formula-pipeline',
-    })
-  }
-  return result
+  return buildRealAstrologyResult(input)
 }

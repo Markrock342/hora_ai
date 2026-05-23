@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { BirthInfoBanner } from '../components/BirthInfoBanner'
 import { CalculationSettingsBadge } from '../components/CalculationSettingsBadge'
+import { ResultCalculationNotice } from '../components/ResultCalculationNotice'
 import { DivisionalChakraChart } from '../components/DivisionalChakraChart'
 import { TransitDateControls } from '../components/TransitDateControls'
 import { PrintButton } from '../components/PrintButton'
@@ -154,6 +155,10 @@ export function ResultPage() {
         <div className="result-info-stack no-print">
           <BirthInfoBanner birth={meta.birthDisplay} location={meta.locationDisplay} />
           <CalculationSettingsBadge />
+          <ResultCalculationNotice
+            source={meta.calculationSource}
+            isMyhoraPanel={isMyhora}
+          />
           {sourceLabel ? <p className="result-source-label text-xs text-hora-gold-dim">{sourceLabel}</p> : null}
         </div>
 

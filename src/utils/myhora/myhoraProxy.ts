@@ -39,6 +39,11 @@ export function myhoraProxyUrl(path: string): string {
     return `${window.location.origin}${prefix}${normalized}`
   }
 
+  // vite-node / CLI — path-only proxy ใช้ myhora.com ตรง
+  if (origin.startsWith('/')) {
+    return `https://myhora.com${normalized}`
+  }
+
   return `${origin}${normalized}`
 }
 
