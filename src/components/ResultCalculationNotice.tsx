@@ -12,8 +12,7 @@ export function ResultCalculationNotice({
   if (source === 'myhora-scrape' && isMyhoraPanel) {
     return (
       <p className="result-calc-notice result-calc-notice--myhora rounded-lg border border-emerald-500/30 bg-emerald-950/30 px-4 py-3 text-sm text-emerald-100/90 no-print">
-        <strong className="text-emerald-200">กราฟและตารางจาก myhora.com</strong>
-        {' — '}
+      
         ตัวเลขดำในวงราศีจักร = ดวงกำเนิด · ตัวแดง = วันจร (ปรับได้ด้านล่าง)
       </p>
     )
