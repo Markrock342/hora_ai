@@ -1,4 +1,4 @@
-import { useMemo, useState, type CSSProperties } from 'react'
+import { useMemo, useState } from 'react'
 import { GlassCard } from '../components/ui/GlassCard'
 import { PageAmbient } from '../components/ui/PageAmbient'
 import { PLANETS } from '../data/astrologyConstants'
