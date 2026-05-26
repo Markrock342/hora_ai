@@ -86,7 +86,7 @@ export function Layout() {
           </NavLink>
 
           <nav
-            className="mystic-nav flex w-full justify-center gap-0.5 rounded-xl border border-hora-gold/15 bg-hora-panel/50 p-1 backdrop-blur-sm sm:w-auto sm:justify-start"
+            className="mystic-nav flex w-full justify-start overflow-x-auto whitespace-nowrap scrollbar-none gap-0.5 rounded-xl border border-hora-gold/15 bg-hora-panel/50 p-1 backdrop-blur-sm sm:w-auto sm:justify-start"
             aria-label="หลัก"
           >
             {navItems.map(({ to, label, icon, end }) => (
