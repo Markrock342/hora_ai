@@ -6,6 +6,7 @@ import { ResultCalculationNotice } from '../components/ResultCalculationNotice'
 import { DivisionalChakraChart } from '../components/DivisionalChakraChart'
 import { TransitDateControls } from '../components/TransitDateControls'
 import { PrintButton } from '../components/PrintButton'
+import { ExcelExportButton } from '../components/ExcelExportButton'
 import { ReportHeader } from '../components/ReportHeader'
 import { PLANET_SIGN_COLUMNS } from '../components/resultTableColumns'
 import { MyhoraDateSummaryBlock } from '../components/MyhoraDateSummaryBlock'
@@ -140,7 +141,10 @@ export function ResultPage() {
             {planets.length} ดาว
           </p>
         </header>
-        <PrintButton result={result} />
+        <div className="flex flex-wrap gap-2">
+          <PrintButton result={result} />
+          <ExcelExportButton result={result} />
+        </div>
       </div>
 
       <article

@@ -12,6 +12,7 @@ import { ScrollReveal } from './ui/ScrollReveal'
 const navItems = [
   { to: '/', label: 'กรอกข้อมูล', icon: '☉', end: true },
   { to: '/result', label: 'ผลดวง', icon: '☽', end: false },
+  { to: '/calendar', label: 'ปฏิทิน 100 ปี', icon: '📅', end: false },
   { to: '/admin', label: 'สูตร', icon: '⚙', end: false },
 ]
 
