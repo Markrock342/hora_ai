@@ -115,7 +115,13 @@ export function parseDateInfoFromMainHtml(html: string): {
   natal: MyhoraDateDetail | null
   transit: MyhoraDateDetail | null
 } {
-  const natalHtml = extractInnerHtmlById(html, 'n_date_info')
+  let natalHtml = extractInnerHtmlById(html, 'n_date_info')
+  if (!natalHtml) {
+    const match = html.match(/วันเกิด<\/u>[\s\S]*?<div class='rowx f108x mb-5 mt-5'>([\s\S]*?)<div class='colx f115x/i)
+    if (match) {
+      natalHtml = match[1]
+    }
+  }
   const transitHtml = extractInnerHtmlById(html, 't_date_info')
   return {
     natal: parseDateInfoBlock(natalHtml ?? undefined, 'natal'),
