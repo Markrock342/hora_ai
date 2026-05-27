@@ -24,14 +24,17 @@ export function parseViewState(html: string): { viewState: string; generator: st
 
 export function parseAscendantOption(html: string): string {
   const block = html.match(/<select name="dd_suriyayas_asc"[\s\S]*?<\/select>/)?.[0] ?? ''
+  const antonathi = [...block.matchAll(/<option value="([^"]*)"[^>]*>([^<]*)</g)].find((o) =>
+    o[2].includes('สมผุสอาทิตย์อุทัย') && o[2].includes('ปรับเวลาท้องถิ่น'),
+  )
+  if (antonathi) return antonathi[1]
+
   const selected =
     block.match(/<option selected="selected" value="([^"]*)"/)?.[1] ??
     block.match(/<option value="([^"]*)" selected="selected"/)?.[1]
   if (selected) return selected
-  const antonathi = [...block.matchAll(/<option value="([^"]*)"[^>]*>([^<]*)</g)].find((o) =>
-    o[2].includes('สมผุสอาทิตย์อุทัย') && o[2].includes('ปรับเวลาท้องถิ่น'),
-  )
-  return antonathi?.[1] ?? '3'
+
+  return '3'
 }
 
 export function parsePlanetTable(html: string): {

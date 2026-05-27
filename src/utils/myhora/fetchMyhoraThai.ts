@@ -22,10 +22,6 @@ function ceToBe(year: number): number {
   return year + 543
 }
 
-function pad2(n: number): string {
-  return String(n).padStart(2, '0')
-}
-
 function countryValue(country: string): string {
   if (country === 'ไทย' || !country.trim()) return 'ไทย(Thailand)'
   return country
@@ -54,7 +50,7 @@ export function buildMyhoraFormBody(
     __VIEWSTATEGENERATOR: generator,
     txt_name: '',
     dd_day: String(input.day),
-    dd_month: pad2(input.month),
+    dd_month: String(input.month),
     dd_year: String(be),
     dd_hh: String(Number(hh) || 0),
     dd_mm: String(Number(mm) || 0),
@@ -66,7 +62,7 @@ export function buildMyhoraFormBody(
     txt_utc_th: utcFormatted,
     txt_zoom_th: '16',
     dd_day2: String(transit.day),
-    dd_month2: pad2(transit.month),
+    dd_month2: String(transit.month),
     dd_year2: String(tBe),
     dd_hh2: String(Number(tHh) || 0),
     dd_mm2: String(Number(tMm) || 0),
