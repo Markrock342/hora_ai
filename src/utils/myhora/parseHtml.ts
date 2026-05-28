@@ -227,7 +227,8 @@ export function mergeMyhoraTables(
   const contentPaths = parseMyhoraContentPaths(mainHtml)
   const natalTableRaw = extractNatalTableHtml(mainHtml)
   const natalTablePrepared = natalTableRaw ? prepareSamrapTableHtml(natalTableRaw) : null
-  const transitTableRaw = extractTransitTableHtml(mainHtml)
+  const transitTableSource = extra?.htmlFragments?.astrologyTransit ?? mainHtml
+  const transitTableRaw = extractTransitTableHtml(transitTableSource)
   const transitTablePrepared = transitTableRaw ? prepareSamrapTableHtml(transitTableRaw) : null
 
   return {
@@ -252,6 +253,7 @@ export function mergeMyhoraTables(
       natalTable: natalTablePrepared,
       transitTable: transitTablePrepared,
       astrologyNatal: extra?.htmlFragments?.astrologyNatal ?? null,
+      astrologyTransit: extra?.htmlFragments?.astrologyTransit ?? null,
     },
     natalPlanets: extractNatalTableData(natalTableRaw),
     transitPlanets: extractNatalTableData(transitTableRaw),

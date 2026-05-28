@@ -10,31 +10,6 @@ interface MyhoraHtmlBlockProps {
   interactive?: boolean
 }
 
-const LIGHT_TEXT_COLOR =
-  /^(white|#fff(?:fff)?|#f[ef][ef][ef0-9a-f]{0,3}|#ff[ef][a-f0-9]{2,4}|#fad[a-f0-9]{0,4})$/i
-
-function stripSamrapInlineStyle(el: HTMLElement) {
-  el.removeAttribute('bgcolor')
-  el.removeAttribute('background')
-  el.removeAttribute('width')
-  el.removeAttribute('height')
-  const style = el.getAttribute('style')
-  if (!style) return
-  let next = style
-    .replace(/background(?:-color)?\s*:\s*[^;]+;?/gi, '')
-    .replace(/\bwidth\s*:\s*[^;]+;?/gi, '')
-    .replace(/\bheight\s*:\s*[^;]+;?/gi, '')
-    .replace(/\bmin-width\s*:\s*[^;]+;?/gi, '')
-    .replace(/\bmax-width\s*:\s*[^;]+;?/gi, '')
-  next = next.replace(/color\s*:\s*([^;]+);?/gi, (_m, col: string) => {
-    const c = col.trim()
-    return LIGHT_TEXT_COLOR.test(c) ? '' : `color:${col};`
-  })
-  next = next.replace(/;\s*;/g, ';').replace(/^;|;$/g, '').trim()
-  if (next) el.setAttribute('style', next)
-  else el.removeAttribute('style')
-}
-
 /** สำหรับ samrap: ไม่ strip styles ของ myhora เอาต้นฉบับมาแสดงเลย */
 function normalizeSamrapTableTheme(root: HTMLElement) {
   const tables = [...root.querySelectorAll<HTMLTableElement>('table')]

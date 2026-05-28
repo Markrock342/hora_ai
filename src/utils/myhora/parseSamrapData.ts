@@ -7,12 +7,28 @@ import type { MyhoraNatalPlanet } from '../../types/myhora'
 export function extractNatalTableData(html: string | null): MyhoraNatalPlanet[] | null {
   if (!html) return null
 
-  // Find all tr elements
-  const trRegex = /<tr\b[^>]*>([\s\S]*?)<\/tr>/gi
-  const trs = [...html.matchAll(trRegex)]
-  
-  if (trs.length <= 2) return null // First two are usually headers
+  function extractRowByClass(htmlStr: string, className: string): string[] | null {
+    const re = new RegExp(`<tr\\b[^>]*class=['"][^'"]*\\b${className}\\b[^'"]*['"][^>]*>([\\s\\S]*?)<\/tr>`, 'i')
+    const m = htmlStr.match(re)
+    if (!m) return null
+    
+    const tdRe = /<(?:td|th)\b[^>]*>([\s\S]*?)<\/(?:td|th)>/gi
+    const cells: string[] = []
+    let td: RegExpExecArray | null
+    while ((td = tdRe.exec(m[1])) !== null) {
+      cells.push(
+        td[1]
+          .replace(/<[^>]+>/g, '') 
+          .replace(/&nbsp;/gi, '') 
+          .trim()
+          .replace(/\s+/g, ' ')
+      )
+    }
+    return cells
+  }
 
+  const isTransit = html.includes('class="ttr1"') || html.includes("class='ttr1'") || html.includes('ttr1')
+  const prefix = isTransit ? 't' : ''
   const planets: MyhoraNatalPlanet[] = []
 
   const planetOrder = [
@@ -36,79 +52,47 @@ export function extractNatalTableData(html: string | null): MyhoraNatalPlanet[] 
     return 999
   }
 
-  // Group columns from both tables if they are split.
-  // Actually, each <tr> in Myhora's output contains multiple <td>s.
-  // Wait, if they are two separate tables side-by-side, we have to match rows by index.
-  const tableRegex = /<table\b[^>]*>([\s\S]*?)<\/table>/gi
-  const tables = [...html.matchAll(tableRegex)]
-  
-  let leftRows: string[][] = []
-  let rightRows: string[][] = []
+  let i = 1
+  while (true) {
+    const pCells = extractRowByClass(html, `${prefix}tr${i}`)
+    if (!pCells && i > 11) {
+      break
+    }
 
-  // Find the actual data tables by looking at their content
-  const dataTables = tables.filter(t => {
-    const content = t[1]
-    return content.includes('ดาว/ปัจจัย') || content.includes('เรือนลัคนา') || content.includes('ตรียางศ์') || content.includes('พิษ')
-  })
+    if (pCells && pCells.length >= 4) {
+      const dCells = extractRowByClass(html, `${prefix}trx${i}`)
+      const planet = pCells[0]
+      const zodiac = pCells[1]
+      const degree = pCells[2]
+      const minute = pCells[3]
 
-  if (dataTables.length >= 2) {
-    const leftTrs = [...dataTables[0][1].matchAll(trRegex)]
-    const rightTrs = [...dataTables[1][1].matchAll(trRegex)]
+      let house = ''
+      let triyang = ''
+      let poison = ''
+      let nawamang = ''
+      let rerk = ''
+      let rerkName = ''
+      let baht = ''
+      let rerk2 = ''
+      let rerkBig = ''
+      let rerkOwner = ''
+      let rerkStandard = ''
 
-    leftRows = leftTrs.map(trMatch => {
-      const tdRegex = /<(?:td|th)\b[^>]*>([\s\S]*?)<\/(?:td|th)>/gi
-      return [...trMatch[1].matchAll(tdRegex)].map(m => 
-        m[1].replace(/<[^>]+>/g, '').replace(/&nbsp;/gi, '').trim().replace(/\s+/g, ' ')
-      )
-    })
+      if (dCells && dCells.length >= 12) {
+        house = dCells[0]
+        triyang = dCells[1]
+        poison = dCells[2]
+        nawamang = dCells[3]
+        // dCells[4] is spacer cell
+        rerk = dCells[5]
+        rerkName = dCells[6]
+        baht = dCells[7]
+        rerk2 = dCells[8]
+        rerkBig = dCells[9]
+        rerkOwner = dCells[10]
+        rerkStandard = dCells[11]
+      }
 
-    rightRows = rightTrs.map(trMatch => {
-      const tdRegex = /<(?:td|th)\b[^>]*>([\s\S]*?)<\/(?:td|th)>/gi
-      return [...trMatch[1].matchAll(tdRegex)].map(m => 
-        m[1].replace(/<[^>]+>/g, '').replace(/&nbsp;/gi, '').trim().replace(/\s+/g, ' ')
-      )
-    })
-  } else if (dataTables.length === 1) {
-    // Single table
-    const allTrs = [...dataTables[0][1].matchAll(trRegex)]
-    const allRows = allTrs.map(trMatch => {
-      const tdRegex = /<(?:td|th)\b[^>]*>([\s\S]*?)<\/(?:td|th)>/gi
-      return [...trMatch[1].matchAll(tdRegex)].map(m => 
-        m[1].replace(/<[^>]+>/g, '').replace(/&nbsp;/gi, '').trim().replace(/\s+/g, ' ')
-      )
-    })
-    
-    // Split into left/right artificially for unified processing
-    leftRows = allRows.map(r => r.slice(0, 4))
-    rightRows = allRows.map(r => r.slice(4))
-  } else {
-    return null
-  }
-
-  // Merge rows (skip headers, usually 2 rows)
-  for (let i = 2; i < Math.min(leftRows.length, rightRows.length); i++) {
-    const leftCols = leftRows[i]
-    const rightCols = rightRows[i]
-    if (leftCols.length < 2) continue
-
-    const planet = leftCols[0] || ''
-    const zodiac = leftCols[1] || ''
-    const degree = leftCols[2] || ''
-    const minute = leftCols[3] || ''
-
-    const house = rightCols[0] || ''
-    const triyang = rightCols[1] || ''
-    const poison = rightCols[2] || ''
-    const nawamang = rightCols[3] || ''
-    const rerk = rightCols[4] || ''
-    const rerkName = rightCols[5] || ''
-    const baht = rightCols[6] || ''
-    const rerk2 = rightCols[7] || ''
-    const rerkBig = rightCols[8] || ''
-    const rerkOwner = rightCols[9] || ''
-    const rerkStandard = rightCols[10] || ''
-
-    if (planet && getPlanetIndex(planet) < 999) {
       planets.push({
         planet,
         zodiac,
@@ -127,6 +111,7 @@ export function extractNatalTableData(html: string | null): MyhoraNatalPlanet[] 
         rerkStandard
       })
     }
+    i++
   }
 
   // Sort by traditional order

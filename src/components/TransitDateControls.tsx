@@ -34,8 +34,6 @@ export function TransitDateControls({
   useEffect(() => {
     setDraft(transit)
   }, [transit])
-
-  const buddhistYear = draft.year >= 1900 ? draft.year + 543 : null
   const customDate = !draft.preset
 
   return (

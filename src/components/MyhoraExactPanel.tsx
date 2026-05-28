@@ -53,6 +53,8 @@ export function MyhoraExactPanel({ tables: tablesProp }: MyhoraExactPanelProps) 
       <MyhoraNatalTable
         html={html?.natalTable ?? null}
         transitHtml={html?.transitTable ?? null}
+        natalPlanets={tables.natalPlanets}
+        transitPlanets={tables.transitPlanets}
       />
 
       <MyhoraTaksaTriwaiRow tables={tables} />

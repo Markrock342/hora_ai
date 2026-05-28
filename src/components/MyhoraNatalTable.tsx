@@ -1,22 +1,24 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useMemo } from 'react'
+import type { MyhoraNatalPlanet } from '../types/myhora'
+import { extractNatalTableData } from '../utils/myhora/parseSamrapData'
 
 interface MyhoraNatalTableProps {
   /** HTML ดิบจาก myhora สำหรับดวงกำเนิด */
   html?: string | null
   /** HTML ดิบจาก myhora สำหรับดาวจร */
   transitHtml?: string | null
+  /** ข้อมูลดาวกำเนิด (ถ้า parse มาแล้ว) */
+  natalPlanets?: MyhoraNatalPlanet[] | null
+  /** ข้อมูลดาวจร (ถ้า parse มาแล้ว) */
+  transitPlanets?: MyhoraNatalPlanet[] | null
 }
 
-/**
- * แสดงตารางสมผุสจาก myhora โดยตรง (HTML ดั้งเดิม)
- * ใช้ CSS scale เพื่อให้พอดีจอโดยไม่ต้อง scroll ซ้ายขวา
- */
-function MyhoraHtmlTable({
-  html,
+function MyhoraPlanetTable({
+  planets,
   title,
   subtitle,
 }: {
-  html: string
+  planets: MyhoraNatalPlanet[]
   title: string
   subtitle?: string
 }) {
@@ -30,7 +32,7 @@ function MyhoraHtmlTable({
     if (!wrap || !inner) return
 
     const fit = () => {
-      // reset ก่อน
+      // reset
       inner.style.transform = 'none'
       inner.style.width = 'auto'
       wrap.style.height = ''
@@ -39,7 +41,7 @@ function MyhoraHtmlTable({
       const innerW = inner.scrollWidth
 
       if (innerW > wrapW && wrapW > 0) {
-        const scale = Math.max(wrapW / innerW, 0.4) // ไม่เล็กกว่า 40%
+        const scale = Math.max(wrapW / innerW, 0.3) // รองรับจอเล็กมาก
         inner.style.transform = `scale(${scale})`
         inner.style.transformOrigin = 'top left'
         inner.style.width = `${innerW}px`
@@ -47,7 +49,6 @@ function MyhoraHtmlTable({
       }
     }
 
-    // ต้อง setTimeout เพื่อให้ DOM render เสร็จก่อน
     const t = setTimeout(fit, 50)
     const ro = new ResizeObserver(fit)
     ro.observe(wrap)
@@ -55,7 +56,7 @@ function MyhoraHtmlTable({
       clearTimeout(t)
       ro.disconnect()
     }
-  }, [html])
+  }, [planets])
 
   return (
     <section
@@ -66,37 +67,83 @@ function MyhoraHtmlTable({
         <h3 className="font-display text-xl font-medium text-gradient-gold">{title}</h3>
         {subtitle && <p className="mt-1 text-xs text-hora-gold-dim">{subtitle}</p>}
       </header>
-      {/* ห้าม overflow-x ทุกกรณี — ใช้ scale แทน */}
       <div
         ref={wrapRef}
-        className="relative w-full overflow-hidden bg-white"
+        className="relative w-full overflow-hidden p-3 md:p-5"
         style={{ minHeight: 80 }}
       >
-        <div
-          ref={innerRef}
-          style={{ color: '#111', fontSize: '12px', lineHeight: '1.4' }}
-          dangerouslySetInnerHTML={{ __html: html }}
-        />
+        <div ref={innerRef} className="w-full">
+          <table className="min-w-[950px] w-full border-collapse border border-hora-gold/15 text-[12px] leading-relaxed">
+            <thead className="bg-white/5 border-b border-hora-gold/25 text-hora-gold font-medium">
+              <tr>
+                <th className="px-2 py-2.5 border-r border-hora-gold/15 text-left">ดาว/ปัจจัย</th>
+                <th className="px-2 py-2.5 border-r border-hora-gold/15 text-center">ราศี</th>
+                <th className="px-1 py-2.5 border-r border-hora-gold/15 text-center w-[45px]">ํ</th>
+                <th className="px-1 py-2.5 border-r border-hora-gold/15 text-center w-[45px]">'</th>
+                <th className="px-2 py-2.5 border-r border-hora-gold/15 text-center">เรือนลัคนา</th>
+                <th className="px-2 py-2.5 border-r border-hora-gold/15 text-center">ตรียางศ์</th>
+                <th className="px-2 py-2.5 border-r border-hora-gold/15 text-center w-[50px]">พิษ</th>
+                <th className="px-2 py-2.5 border-r border-hora-gold/15 text-center">นวางศ์</th>
+                <th className="px-2 py-2.5 border-r border-hora-gold/15 text-center">ฤกษ์:นาที</th>
+                <th className="px-2 py-2.5 border-r border-hora-gold/15 text-left">นักษัตรฤกษ์</th>
+                <th className="px-2 py-2.5 border-r border-hora-gold/15 text-center">บาท</th>
+                <th className="px-2 py-2.5 border-r border-hora-gold/15 text-center">ฤกษ์</th>
+                <th className="px-2 py-2.5 border-r border-hora-gold/15 text-center">ฤกษ์ใหญ่</th>
+                <th className="px-2 py-2.5 border-r border-hora-gold/15 text-left">เจ้าเรือน</th>
+                <th className="px-2 py-2.5 text-left">มาตรฐาน เกณฑ์ ฯ</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-hora-gold/10 text-hora-cream">
+              {planets.map((p, idx) => (
+                <tr key={idx} className="hover:bg-white/5 transition-colors">
+                  <td className="px-2 py-2 border-r border-hora-gold/10 font-medium text-white">{p.planet}</td>
+                  <td className="px-2 py-2 border-r border-hora-gold/10 text-center font-medium text-white">{p.zodiac}</td>
+                  <td className="px-1 py-2 border-r border-hora-gold/10 text-center">{p.degree}</td>
+                  <td className="px-1 py-2 border-r border-hora-gold/10 text-center">{p.minute}</td>
+                  <td className="px-2 py-2 border-r border-hora-gold/10 text-center text-hora-gold-light">{p.house}</td>
+                  <td className="px-2 py-2 border-r border-hora-gold/10 text-center text-[11px] text-hora-muted">{p.triyang}</td>
+                  <td className="px-2 py-2 border-r border-hora-gold/10 text-center font-semibold text-red-400">{p.poison || '—'}</td>
+                  <td className="px-2 py-2 border-r border-hora-gold/10 text-center text-[11px] text-hora-muted">{p.nawamang}</td>
+                  <td className="px-2 py-2 border-r border-hora-gold/10 text-center text-hora-muted">{p.rerk}</td>
+                  <td className="px-2 py-2 border-r border-hora-gold/10 text-left">{p.rerkName}</td>
+                  <td className="px-2 py-2 border-r border-hora-gold/10 text-center text-[11px] text-hora-muted">{p.baht}</td>
+                  <td className="px-2 py-2 border-r border-hora-gold/10 text-center text-[11px] text-hora-muted">{p.rerk2}</td>
+                  <td className="px-2 py-2 border-r border-hora-gold/10 text-center text-[11px] text-hora-muted">{p.rerkBig}</td>
+                  <td className="px-2 py-2 border-r border-hora-gold/10 text-left text-hora-gold-light">{p.rerkOwner}</td>
+                  <td className="px-2 py-2 text-left text-[11px] text-hora-accent font-medium">{p.rerkStandard || '—'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
   )
 }
 
-export function MyhoraNatalTable({ html, transitHtml }: MyhoraNatalTableProps) {
-  if (!html?.trim() && !transitHtml?.trim()) return null
+export function MyhoraNatalTable({
+  html,
+  transitHtml,
+  natalPlanets,
+  transitPlanets,
+}: MyhoraNatalTableProps) {
+  const natal = useMemo(() => natalPlanets ?? (html ? extractNatalTableData(html) : null), [html, natalPlanets])
+  const transit = useMemo(() => transitPlanets ?? (transitHtml ? extractNatalTableData(transitHtml) : null), [transitHtml, transitPlanets])
+
+  if (!natal && !transit) return null
 
   return (
     <div className="space-y-6">
-      {html?.trim() && (
-        <MyhoraHtmlTable
-          html={html}
+      {natal && natal.length > 0 && (
+        <MyhoraPlanetTable
+          planets={natal}
           title="ตารางสมผุสดวงกำเนิด"
           subtitle="ราศี · เรือนลัคนา · ตรียางศ์ · นวางศ์ · ทักษา · ฤกษ์"
         />
       )}
-      {transitHtml?.trim() && (
-        <MyhoraHtmlTable
-          html={transitHtml}
+      {transit && transit.length > 0 && (
+        <MyhoraPlanetTable
+          planets={transit}
           title="ตารางสมผุสดาวจร"
           subtitle="ตำแหน่งดาวจร ณ วันที่เลือก · ราศี · เรือนลัคนา · ฤกษ์"
         />
