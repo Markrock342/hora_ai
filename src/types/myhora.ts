@@ -45,6 +45,7 @@ export interface MyhoraContentEmbeds {
 export interface MyhoraHtmlFragments {
   natalTable: string | null
   astrologyNatal: string | null
+  astrologyTransit: string | null
 }
 
 export interface MyhoraTaksaCell {
