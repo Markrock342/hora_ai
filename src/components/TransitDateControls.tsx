@@ -132,13 +132,49 @@ export function TransitDateControls({
 
             <label className="transit-field transit-field--time">
               <span className="transit-label">เวลา</span>
-              <input
-                type="time"
-                className="hora-input hora-input-3d hora-input-time transit-control-input"
-                value={draft.time}
-                step={60}
-                onChange={(e) => setDraft((d) => ({ ...d, time: e.target.value }))}
-              />
+              <div className="flex items-center gap-1.5 w-full">
+                <select
+                  className="hora-input hora-input-3d hora-select transit-control-input flex-1"
+                  style={{ minWidth: '4rem', paddingRight: '1.5rem' }}
+                  value={draft.time ? draft.time.split(':')[0] : ''}
+                  onChange={(e) => {
+                    const h = e.target.value
+                    const m = draft.time ? draft.time.split(':')[1] ?? '00' : '00'
+                    setDraft((d) => ({ ...d, time: h ? `${h}:${m}` : '' }))
+                  }}
+                >
+                  <option value="">ชม.</option>
+                  {Array.from({ length: 24 }, (_, i) => {
+                    const val = String(i).padStart(2, '0')
+                    return (
+                      <option key={val} value={val}>
+                        {val}
+                      </option>
+                    )
+                  })}
+                </select>
+                <span className="text-white/60 font-bold" style={{ textShadow: '0 0 4px rgba(0,0,0,0.5)' }}>:</span>
+                <select
+                  className="hora-input hora-input-3d hora-select transit-control-input flex-1"
+                  style={{ minWidth: '4rem', paddingRight: '1.5rem' }}
+                  value={draft.time ? draft.time.split(':')[1] ?? '00' : ''}
+                  onChange={(e) => {
+                    const h = draft.time ? draft.time.split(':')[0] ?? '00' : '00'
+                    const m = e.target.value
+                    setDraft((d) => ({ ...d, time: h && m ? `${h}:${m}` : '' }))
+                  }}
+                >
+                  <option value="">นาที</option>
+                  {Array.from({ length: 60 }, (_, i) => {
+                    const val = String(i).padStart(2, '0')
+                    return (
+                      <option key={val} value={val}>
+                        {val}
+                      </option>
+                    )
+                  })}
+                </select>
+              </div>
             </label>
           </>
         ) : null}
