@@ -57,8 +57,9 @@ export function MyhoraChartHtml({
     const host = hostRef.current
     if (!host || !html) return
     const shadow = host.shadowRoot ?? host.attachShadow({ mode: 'open' })
-    shadow.innerHTML = html
-  }, [html])
+    // โคลน HTML และห่อด้วย wrapper class เพื่อให้ CSS ที่อยู่นอกหรือใน shadow DOM ทำงานร่วมกันได้
+    shadow.innerHTML = `<div class="${className}">${html}</div>`
+  }, [html, className])
 
   if (!embedPath && !preparedHtml) return null
 

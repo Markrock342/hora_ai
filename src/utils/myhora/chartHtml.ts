@@ -18,14 +18,12 @@ export const MYHORA_CHART_CHROME_CSS = `
 
 /* แยกวงจักร: เมื่อระบุว่าต้องการซ่อนดาวจร (เลขอารบิกวงนอก) ในวงดาวกำเนิด */
 .myhora-chart-rasi-stage--natal-only .cr-tsign,
-.myhora-chart-section--chart-only.myhora-chart-rasi-stage--natal-only .cr-tsign,
-.myhora-chart-html-shadow.myhora-chart-rasi-stage--natal-only .cr-tsign {
+[class*="natal-only"] .cr-tsign {
   display: none !important;
 }
 /* แยกวงจักร: เมื่อระบุว่าต้องการซ่อนดาวพื้นดวง (เลขไทยวงใน) ในวงดาวจร */
 .myhora-chart-rasi-stage--transit-only .cr-nsign,
-.myhora-chart-section--chart-only.myhora-chart-rasi-stage--transit-only .cr-nsign,
-.myhora-chart-html-shadow.myhora-chart-rasi-stage--transit-only .cr-nsign {
+[class*="transit-only"] .cr-nsign {
   display: none !important;
 }
 `
