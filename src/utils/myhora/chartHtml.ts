@@ -8,13 +8,10 @@ export const MYHORA_CHART_CHROME_CSS = `
 .cr-tool-export, .cbv-tool-export, .cnt-tool-export,
 .cr-info, .cbv-info, .cnt-info { display: none !important; }
 
-/* ทำให้ตัวหนังสือองศาตรงกลาง (เช่น 16 องศา 8) เป็นสีดำเข้มชัดเจน */
+/* ทำให้ตัวหนังสือองศาตรงกลาง (เช่น 16 องศา 8) เป็นสีเทา/ดำตามสมควรเพื่อให้แสดงผลชัดเจน */
 .cr-deg, .cbv-deg, .cnt-deg, .lx-deg, text[class*="deg"], text.cr-deg, text.cbv-deg, text.cnt-deg, text.lx-deg {
-  fill: #000000 !important;
-  color: #000000 !important;
   font-weight: bold !important;
   opacity: 1 !important;
-  stroke: none !important;
 }
 
 /* แยกวงจักร: เมื่อระบุว่าต้องการซ่อนดาวจร (เลขอารบิกวงนอก) ในวงดาวกำเนิด */

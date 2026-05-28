@@ -80,8 +80,8 @@ export function MyhoraEmbedFrame({
           rules = '.cr-nsign { display: none !important; }'
         }
         
-        // เติมกฎทำให้ 16 องศา 8 ตรงกลางเป็นสีดำเข้มชัดเจนใน iframe
-        rules += ' .cr-deg, .cbv-deg, .cnt-deg, .lx-deg, text[class*="deg"], text.cr-deg, text.cbv-deg, text.cnt-deg, text.lx-deg { fill: #000000 !important; color: #000000 !important; font-weight: bold !important; opacity: 1 !important; stroke: none !important; }'
+        // เติมกฎทำให้ องศาตรงกลางแสดงผลหนาชัดเจนขึ้นใน iframe
+        rules += ' .cr-deg, .cbv-deg, .cnt-deg, .lx-deg, text[class*="deg"], text.cr-deg, text.cbv-deg, text.cnt-deg, text.lx-deg { font-weight: bold !important; opacity: 1 !important; }'
         
         if (rules) {
           style.innerHTML = rules

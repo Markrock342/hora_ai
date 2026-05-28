@@ -61,11 +61,8 @@ svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
 }
 /* ทำให้องศาตรงกลางวงจักรสีดำเข้มชัดเจน */
 .cr-deg, .cbv-deg, .cnt-deg, .lx-deg, text[class*="deg"], text.cr-deg, text.cbv-deg, text.cnt-deg, text.lx-deg {
-  fill: #000000 !important;
-  color: #000000 !important;
   font-weight: bold !important;
   opacity: 1 !important;
-  stroke: none !important;
 }
 /* ซ่อนดาวจร (เลขเดี่ยวอารบิกวงนอก) ในวงจักรดาวกำเนิด */
 .myhora-natal-chart-stage.myhora-natal-chart-stage--natal-only .cn-tsign {

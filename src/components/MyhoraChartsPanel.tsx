@@ -24,7 +24,7 @@ interface MyhoraChartsPanelProps {
 }
 
 const DIVISIONAL_DIMS = {
-  large: MYHORA_CHART_NATIVE.rasi,
+  large: { width: 500, height: 480 },
   small: MYHORA_CHART_NATIVE.divisional,
 } as const
 
@@ -250,7 +250,7 @@ export function MyhoraChartsPanel({
                   <ChartSlot
                     label="ราศีจักร"
                     embedPath={charts.rasi}
-                    preparedHtml={charts.rasiHtml}
+                    preparedHtml={null}
                     size="large"
                     bare={bare}
                     className="myhora-chart-rasi-stage--natal-only"
@@ -265,7 +265,7 @@ export function MyhoraChartsPanel({
                   <ChartSlot
                     label="ราศีจักร"
                     embedPath={charts.rasi}
-                    preparedHtml={charts.rasiHtml}
+                    preparedHtml={null}
                     size="large"
                     bare={bare}
                     className="myhora-chart-rasi-stage--transit-only"
