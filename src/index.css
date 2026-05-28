@@ -1717,6 +1717,19 @@
   background: #fff;
 }
 
+/* Force chart slot iframe containers to take full size and never overflow (eliminate scrollbars) */
+.myhora-charts-slot .myhora-embed-section,
+.myhora-charts-slot .myhora-embed-frame-wrap,
+.myhora-charts-slot .myhora-embed-iframe {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
 .myhora-charts-slot--bare {
   box-shadow: none;
 }

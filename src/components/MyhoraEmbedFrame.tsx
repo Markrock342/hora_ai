@@ -129,7 +129,7 @@ export function MyhoraEmbedFrame({
             height,
             ...(width != null ? { width: `${width}px`, maxWidth: '100%' } : {}),
           }}
-          scrolling={chartControls ? 'auto' : 'no'}
+          scrolling={className.includes('myhora-chart-embed') ? 'no' : (chartControls ? 'auto' : 'no')}
           loading="lazy"
           onLoad={handleLoad}
         />
