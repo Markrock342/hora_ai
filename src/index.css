@@ -2781,22 +2781,27 @@
   text-align: center;
 }
 
-.myhora-html-block--samrap .myhora-html-body {
-  max-height: none;
-  background: rgba(10, 16, 14, 0.55) !important;
-  color: var(--color-hora-cream, #f0ebe3);
+.myhora-html-block--samrap {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
 }
 
-.myhora-html-body--samrap {
-  overflow-x: hidden;
-  padding-left: 0.35rem !important;
-  padding-right: 0.35rem !important;
+.myhora-html-block--samrap header {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(212, 168, 75, 0.25) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
-@media (min-width: 640px) {
-  .myhora-html-body--samrap {
-    padding-left: 1.25rem !important;
-    padding-right: 1.25rem !important;
-  }
+
+.myhora-html-block--samrap .myhora-html-body {
+  max-height: none;
+  background: transparent !important;
+  color: var(--color-hora-cream, #f0ebe3);
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 .myhora-samrap-table-wrap {
