@@ -67,6 +67,27 @@ export function MyhoraEmbedFrame({
   const handleLoad = () => {
     loadedRef.current = true
     if (!verifyLoaded()) return
+    
+    // ฉีด CSS เพิ่มเติมเข้าไปใน iframe เพื่อซ่อนดาวจรหรือดาวพื้นดวงดั้งเดิมตามคลาสส่งผ่าน
+    try {
+      const doc = iframeRef.current?.contentDocument || iframeRef.current?.contentWindow?.document
+      if (doc) {
+        const style = doc.createElement('style')
+        let rules = ''
+        if (className.includes('myhora-chart-rasi-stage--natal-only')) {
+          rules = '.cr-tsign { display: none !important; }'
+        } else if (className.includes('myhora-chart-rasi-stage--transit-only')) {
+          rules = '.cr-nsign { display: none !important; }'
+        }
+        if (rules) {
+          style.innerHTML = rules
+          doc.head.appendChild(style)
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to inject CSS into iframe due to cross-origin restriction:", e)
+    }
+
     window.setTimeout(verifyLoaded, 400)
     window.setTimeout(verifyLoaded, 1200)
   }
