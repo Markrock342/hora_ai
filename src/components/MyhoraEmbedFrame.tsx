@@ -81,7 +81,7 @@ export function MyhoraEmbedFrame({
         }
         
         // เติมกฎทำให้ 16 องศา 8 ตรงกลางเป็นสีดำเข้มชัดเจนใน iframe
-        rules += ' .cr-deg, .cbv-deg, .cnt-deg, .lx-deg, text[class*="deg"] { fill: #000000 !important; color: #000000 !important; font-weight: bold !important; opacity: 1 !important; }'
+        rules += ' .cr-deg, .cbv-deg, .cnt-deg, .lx-deg, text[class*="deg"], text.cr-deg, text.cbv-deg, text.cnt-deg, text.lx-deg { fill: #000000 !important; color: #000000 !important; font-weight: bold !important; opacity: 1 !important; stroke: none !important; }'
         
         if (rules) {
           style.innerHTML = rules
