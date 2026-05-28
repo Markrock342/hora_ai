@@ -23,8 +23,9 @@ function ceToBe(year: number): number {
 }
 
 function countryValue(country: string): string {
-  if (country === 'ไทย' || !country.trim()) return 'ไทย(Thailand)'
-  return country
+  const trimmed = country.trim()
+  if (trimmed === 'ไทย' || trimmed === 'ไทย(Thailand)' || !trimmed) return '215'
+  return trimmed
 }
 
 export function buildMyhoraFormBody(

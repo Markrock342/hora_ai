@@ -6,8 +6,6 @@ import { CALCULATION_SETTINGS_LABELS } from '../data/calculationSettings'
 import { useAstrology } from '../context/AstrologyContext'
 import type { BirthFormErrors, BirthInput } from '../types/astrology'
 import {
-  BIRTH_YEAR_MAX,
-  BIRTH_YEAR_MIN,
   daysInMonth,
   hasValidationErrors,
   validateBirthInput,
@@ -83,6 +81,11 @@ export function BirthForm() {
     () => Array.from({ length: maxDay }, (_, i) => i + 1),
     [maxDay],
   )
+
+  const [hourVal, minVal] = useMemo(() => {
+    if (!input.time || !input.time.includes(':')) return ['', '']
+    return input.time.split(':')
+  }, [input.time])
 
   const patchInput = (patch: Partial<BirthInput>) => {
     setInput(patch)
@@ -172,8 +175,6 @@ export function BirthForm() {
   const progress = Math.round((doneCount / CHECKLIST.length) * 100)
   const allFilled = doneCount === CHECKLIST.length
 
-  const buddhistYear =
-    input.year >= 1900 ? input.year + 543 : null
 
   return (
     <div
@@ -366,33 +367,34 @@ export function BirthForm() {
 
                   <InputField
                     id="year"
-                    label="ปี (ค.ศ.)"
+                    label="ปี (พ.ศ.)"
                     required
                     filled={Boolean(input.year)}
                     error={fieldError('year')}
                     errorFlashKey={errorFlashKey}
                     className="datetime-grid-year"
                     hint={
-                      buddhistYear
-                        ? `พ.ศ. ${buddhistYear}`
-                        : 'พ.ศ. = ค.ศ. + 543'
+                      input.year >= 1900
+                        ? `ค.ศ. ${input.year}`
+                        : 'ค.ศ. = พ.ศ. - 543'
                     }
                   >
                     <input
                       id="year"
                       type="number"
                       inputMode="numeric"
-                      min={BIRTH_YEAR_MIN}
-                      max={BIRTH_YEAR_MAX}
+                      min={2443}
+                      max={2643}
                       className="hora-input hora-input-3d"
-                      placeholder="เช่น 1990"
-                      value={input.year || ''}
+                      placeholder="เช่น 2533"
+                      value={input.year ? input.year + 543 : ''}
                       onChange={(e) => {
                         const raw = e.target.value.replace(/\D/g, '').slice(0, 4)
-                        const year = raw === '' ? 0 : Number(raw)
-                        const max = input.month ? daysInMonth(input.month, year) : 31
+                        const beYear = raw === '' ? 0 : Number(raw)
+                        const ceYear = beYear > 0 ? beYear - 543 : 0
+                        const max = input.month ? daysInMonth(input.month, ceYear) : 31
                         patchInput({
-                          year,
+                          year: ceYear,
                           ...(input.day > max ? { day: max } : {}),
                         })
                       }}
@@ -407,18 +409,57 @@ export function BirthForm() {
                     error={fieldError('time')}
                     errorFlashKey={errorFlashKey}
                     icon="🕐"
-                    hint="รูปแบบ 24 ชม. HH:mm"
+                    hint="รูปแบบ 24 ชม."
                     className="datetime-grid-time"
                     control="time"
                   >
-                    <input
-                      id="time"
-                      type="time"
-                      className="hora-input hora-input-3d hora-input-time"
-                      value={input.time}
-                      onChange={(e) => patchInput({ time: e.target.value })}
-                      step={60}
-                    />
+                    <div className="flex items-center gap-1.5 w-full">
+                      <select
+                        id="time-hour"
+                        aria-label="ชั่วโมง"
+                        className="hora-input hora-input-3d hora-select flex-1"
+                        style={{ minWidth: '4.5rem', paddingRight: '1.5rem' }}
+                        value={hourVal}
+                        onChange={(e) => {
+                          const h = e.target.value
+                          const m = minVal || '00'
+                          patchInput({ time: h && m ? `${h}:${m}` : '' })
+                        }}
+                      >
+                        <option value="">ชม.</option>
+                        {Array.from({ length: 24 }, (_, i) => {
+                          const val = String(i).padStart(2, '0')
+                          return (
+                            <option key={val} value={val}>
+                              {val}
+                            </option>
+                          )
+                        })}
+                      </select>
+                      <span className="text-white/60 font-bold" style={{ textShadow: '0 0 4px rgba(0,0,0,0.5)' }}>:</span>
+                      <select
+                        id="time-minute"
+                        aria-label="นาที"
+                        className="hora-input hora-input-3d hora-select flex-1"
+                        style={{ minWidth: '4.5rem', paddingRight: '1.5rem' }}
+                        value={minVal}
+                        onChange={(e) => {
+                          const h = hourVal || '00'
+                          const m = e.target.value
+                          patchInput({ time: h && m ? `${h}:${m}` : '' })
+                        }}
+                      >
+                        <option value="">นาที</option>
+                        {Array.from({ length: 60 }, (_, i) => {
+                          const val = String(i).padStart(2, '0')
+                          return (
+                            <option key={val} value={val}>
+                              {val}
+                            </option>
+                          )
+                        })}
+                      </select>
+                    </div>
                   </InputField>
                 </div>
               </div>

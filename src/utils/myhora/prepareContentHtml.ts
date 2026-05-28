@@ -91,9 +91,63 @@ export function prepareMyhoraContentHtml(raw: string, options?: { expandInteract
   return html.trim()
 }
 
-/** ตารางสมผุสดวงกำเนิด — ไม่ขยาย interactive + ลบธีมขาวจาก myhora */
+/** ตารางสมผุสดวงกำเนิด — ไม่ขยาย interactive + ลบธีมขาวจาก myhora + เรียงแถวตามดาว */
 export function prepareSamrapTableHtml(raw: string): string {
-  return prepareMyhoraContentHtml(stripSamrapLightInlineStyles(raw), { expandInteractive: false })
+  const clean = prepareMyhoraContentHtml(stripSamrapLightInlineStyles(raw), { expandInteractive: false })
+  return sortNatalTableHtmlByPlanets(clean)
+}
+
+/** เรียงลำดับแถวในตารางตามดาว: ลัคนา, อาทิตย์, จันทร์, อังคาร, พุธ, พฤหัสบดี, ศุกร์, เสาร์, ราหู, เกตุ, มฤตยู */
+export function sortNatalTableHtmlByPlanets(tableHtml: string): string {
+  const trRegex = /<tr\b[^>]*>([\s\S]*?)<\/tr>/gi
+  const trs = [...tableHtml.matchAll(trRegex)]
+  if (trs.length <= 2) return tableHtml
+
+  const dataRows = trs.slice(1).map((m) => {
+    const fullRow = m[0]
+    const tdMatch = m[1].match(/<td\b[^>]*>([\s\S]*?)<\/td>/i)
+    const cellText = tdMatch ? tdMatch[1].replace(/<[^>]+>/g, '').trim() : ''
+    return { fullRow, cellText }
+  })
+
+  const planetOrder = [
+    /ลัคนา|ล\.ลัคนา|ล\./,
+    /อาทิตย์|๑\.อาทิตย์|๑\./,
+    /จันทร์|๒\.จันทร์|๒\./,
+    /อังคาร|๓\.อังคาร|๓\./,
+    /พุธ|๔\.พุธ|๔\./,
+    /พฤหัสบดี|พฤหัส|๕\.พฤหัสบดี|๕\./,
+    /ศุกร์|๖\.ศุกร์|๖\./,
+    /เสาร์|๗\.เสาร์|๗\./,
+    /ราหู|๘\.ราหู|๘\./,
+    /เกตุ|๙\.เกตุ|๙\./,
+    /มฤตยู|๐\.มฤตยู|๐\./
+  ]
+
+  function getPlanetIndex(text: string): number {
+    for (let i = 0; i < planetOrder.length; i++) {
+      if (planetOrder[i].test(text)) return i
+    }
+    return 999
+  }
+
+  dataRows.sort((a, b) => getPlanetIndex(a.cellText) - getPlanetIndex(b.cellText))
+
+  let resultStr = ''
+  let lastIndex = 0
+
+  const sortedFullRows = dataRows.map((r) => r.fullRow)
+
+  for (let i = 1; i < trs.length; i++) {
+    const match = trs[i]
+    const matchIndex = match.index ?? 0
+    resultStr += tableHtml.substring(lastIndex, matchIndex)
+    resultStr += sortedFullRows[i - 1]
+    lastIndex = matchIndex + match[0].length
+  }
+  resultStr += tableHtml.substring(lastIndex)
+
+  return resultStr
 }
 
 /** มีข้อความจริงพอให้แสดง (ไม่ใช่แค่โครงว่างหลังตัด form) */
@@ -106,3 +160,4 @@ export function isMyhoraHtmlSubstantive(html: string | null | undefined, minChar
     .trim()
   return text.length >= minChars
 }
+

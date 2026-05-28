@@ -42,16 +42,18 @@ export function formatLocationDisplay(input: BirthInput): string {
 export function validateBirthInput(input: BirthInput): BirthFormErrors {
   const errors: BirthFormErrors = {}
 
-  const yearText = input.year > 0 ? String(input.year) : ''
+  const beYear = input.year ? input.year + 543 : 0
+  const yearText = beYear > 0 ? String(beYear) : ''
 
   if (!input.day) errors.day = 'กรุณาเลือกวัน'
   if (!input.month) errors.month = 'กรุณาเลือกเดือน'
+
   if (!input.year) {
     errors.year = 'กรุณากรอกปี'
   } else if (yearText.length < 4) {
-    errors.year = 'กรุณากรอกปีให้ครบ 4 หลัก (ค.ศ.)'
-  } else if (!isValidBirthYear(input.year)) {
-    errors.year = `ปีต้องอยู่ระหว่าง ${BIRTH_YEAR_MIN}–${BIRTH_YEAR_MAX} (ค.ศ.)`
+    errors.year = 'กรุณากรอกปีให้ครบ 4 หลัก (พ.ศ.)'
+  } else if (beYear < 2443 || beYear > 2643) {
+    errors.year = 'ปีต้องอยู่ระหว่าง 2443–2643 (พ.ศ.)'
   } else if (input.day && input.month && input.day > daysInMonth(input.month, input.year)) {
     errors.day = 'วันไม่ตรงกับเดือน/ปีที่เลือก'
   }
