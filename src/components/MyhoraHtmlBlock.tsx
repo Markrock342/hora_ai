@@ -52,13 +52,6 @@ function normalizeSamrapTableTheme(root: HTMLElement) {
 
     table.classList.add('myhora-samrap-table')
     table.classList.add(isPlanets ? 'myhora-samrap-table--planets' : 'myhora-samrap-table--grid')
-
-    if (!table.parentElement?.classList.contains('myhora-samrap-table-wrap')) {
-      const wrap = document.createElement('div')
-      wrap.className = 'myhora-samrap-table-wrap'
-      table.parentNode?.insertBefore(wrap, table)
-      wrap.appendChild(table)
-    }
   })
 }
 

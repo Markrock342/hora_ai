@@ -2798,54 +2798,55 @@
 
 .myhora-html-block--samrap .myhora-html-body {
   max-height: none;
-  background: transparent !important;
+  background: rgba(8, 12, 10, 0.45) !important;
   color: var(--color-hora-cream, #f0ebe3);
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-}
-
-.myhora-samrap-table-wrap {
-  width: 100%;
-  max-width: 100%;
-  margin: 0 0 0.85rem;
-  border: 1px solid rgba(212, 168, 75, 0.38);
-  border-radius: 0.5rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  background: rgba(8, 12, 10, 0.35);
+  padding: 0.6rem 0.5rem !important;
+  border: 1px solid rgba(212, 168, 75, 0.38) !important;
+  border-radius: 0.5rem !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  width: 100% !important;
   box-sizing: border-box;
 }
-
-.myhora-samrap-table-wrap:has(.myhora-samrap-table--planets) {
-  width: fit-content;
-  max-width: 100%;
-  margin-inline: auto;
-}
-
-.myhora-samrap-table-wrap:last-child {
-  margin-bottom: 0;
+@media (min-width: 640px) {
+  .myhora-html-block--samrap .myhora-html-body {
+    padding: 1.25rem !important;
+  }
 }
 
 .myhora-html-block--samrap .myhora-samrap-table {
-  width: 100%;
+  width: max-content !important;
   min-width: 100%;
-  margin: 0;
+  margin: 0 0 1rem !important;
   border-collapse: collapse !important;
   border-spacing: 0;
   table-layout: auto !important;
   background: transparent !important;
 }
 
+.myhora-html-block--samrap .myhora-samrap-table:last-child {
+  margin-bottom: 0 !important;
+}
+
 .myhora-html-block--samrap .myhora-samrap-table--planets {
   max-width: 36rem;
+  width: 100% !important;
 }
 
 .myhora-html-block--samrap .myhora-samrap-table--grid {
-  width: max-content !important;
-  min-width: 100% !important;
-  max-width: none !important;
   font-size: 0.72rem;
   line-height: 1.3;
+}
+
+.myhora-html-block--samrap .myhora-samrap-table--grid th,
+.myhora-html-block--samrap .myhora-samrap-table--grid td {
+  min-width: 5.2rem;
+  box-sizing: border-box;
+}
+
+.myhora-html-block--samrap .myhora-samrap-table--grid th:first-child,
+.myhora-html-block--samrap .myhora-samrap-table--grid td:first-child {
+  min-width: 6.8rem;
 }
 
 .myhora-html-block--samrap .myhora-samrap-table th,
