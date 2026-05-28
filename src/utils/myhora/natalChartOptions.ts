@@ -16,6 +16,8 @@ export interface NatalChartDisplayOptions {
   showOuter: boolean
   outerMode: NatalOuterMode
   aspectLines: boolean
+  /** แยกวงจักร: แสดงเฉพาะดาวจร (เลขเดี่ยวอารบิกวงนอก) */
+  isTransitOnly?: boolean
 }
 
 export const DEFAULT_NATAL_STD_MODE = 'A'

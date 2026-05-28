@@ -59,6 +59,14 @@ svg { display: block; margin: 0 auto; max-width: 100%; height: auto; }
 .myhora-natal-chart-stage .cn-tsign {
   z-index: 1;
 }
+/* ซ่อนดาวจร (เลขเดี่ยวอารบิกวงนอก) ในวงจักรดาวกำเนิด */
+.myhora-natal-chart-stage.myhora-natal-chart-stage--natal-only .cn-tsign {
+  display: none !important;
+}
+/* ซ่อนดาวพื้นดวง (เลขไทยวงใน) ในวงจักรดวงจร */
+.myhora-natal-chart-stage.myhora-natal-chart-stage--transit-only .cn-nsign {
+  display: none !important;
+}
 `
 
 function isNatalChartPath(embedPath: string): boolean {
@@ -90,7 +98,10 @@ function extractCnChartMarkup(html: string): string | null {
 
 function wrapNatalChartBody(body: string, opts?: NatalChartDisplayOptions): string {
   const bg = natalWheelBackgroundImage(opts?.aspectLines ?? false)
-  return `<div class="myhora-natal-chart-stage" style="background-image:${bg};">${body}</div>`
+  const extraClass = opts?.isTransitOnly 
+    ? ' myhora-natal-chart-stage--transit-only'
+    : ' myhora-natal-chart-stage--natal-only';
+  return `<div class="myhora-natal-chart-stage${extraClass}" style="background-image:${bg};">${body}</div>`
 }
 
 function isSvgMarkup(html: string): boolean {

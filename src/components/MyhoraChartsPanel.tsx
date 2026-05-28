@@ -83,30 +83,66 @@ function NatalChartSlot({
 
   if (!embedPath) return null
 
+  // กำหนดตัวเลือกเพิ่มเติมเพื่อบอก iframe ว่าแสดงแบบไหน
+  const natalOpts = { ...opts, isTransitOnly: false }
+  const transitOpts = { ...opts, isTransitOnly: true }
+
   return (
-    <figure className={`myhora-charts-slot myhora-charts-slot--xlarge${bare ? ' myhora-charts-slot--bare' : ''}`}>
-      {bare ? <figcaption className="myhora-charts-slot-label">ดวงจักรกำเนิด</figcaption> : null}
-      <div className="myhora-natal-chart-wrap">
-        <div className="myhora-charts-slot-body myhora-natal-wheel-host">
-          <MyhoraChartFrame
-            key={chartReloadKey}
-            embedPath={embedPath}
-            title="ดวงจักรกำเนิด"
-            width={NATAL_DIM.width}
-            height={NATAL_DIM.height}
-            bare={bare}
-            size="large"
-            preferDirectIframe={false}
-            natalDisplayOpts={analysisPath ? opts : undefined}
-          />
-        </div>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* วงที่ 1: ดวงจักรกำเนิด (ดาวพื้นดวง เลขไทย) */}
+        <figure className={`myhora-charts-slot myhora-charts-slot--xlarge${bare ? ' myhora-charts-slot--bare' : ''}`}>
+          <figcaption className="myhora-charts-slot-label text-center mb-2 font-display text-hora-gold text-sm font-semibold">
+            ดวงจักรกำเนิด (พื้นดวงเดิม - เลขไทย)
+          </figcaption>
+          <div className="myhora-natal-chart-wrap">
+            <div className="myhora-charts-slot-body myhora-natal-wheel-host">
+              <MyhoraChartFrame
+                key={`natal-${chartReloadKey}`}
+                embedPath={embedPath}
+                title="ดวงจักรกำเนิด"
+                width={NATAL_DIM.width}
+                height={NATAL_DIM.height}
+                bare={bare}
+                size="large"
+                preferDirectIframe={false}
+                natalDisplayOpts={analysisPath ? natalOpts : undefined}
+              />
+            </div>
+          </div>
+        </figure>
+
+        {/* วงที่ 2: ดวงจักรจร (ดาวจร เลขอารบิก) */}
+        <figure className={`myhora-charts-slot myhora-charts-slot--xlarge${bare ? ' myhora-charts-slot--bare' : ''}`}>
+          <figcaption className="myhora-charts-slot-label text-center mb-2 font-display text-hora-gold text-sm font-semibold">
+            ดวงจักรจร (ตำแหน่งดาวจร - เลขอารบิก)
+          </figcaption>
+          <div className="myhora-natal-chart-wrap">
+            <div className="myhora-charts-slot-body myhora-natal-wheel-host">
+              <MyhoraChartFrame
+                key={`transit-${chartReloadKey}`}
+                embedPath={embedPath}
+                title="ดวงจักรจร"
+                width={NATAL_DIM.width}
+                height={NATAL_DIM.height}
+                bare={bare}
+                size="large"
+                preferDirectIframe={false}
+                natalDisplayOpts={analysisPath ? transitOpts : undefined}
+              />
+            </div>
+          </div>
+        </figure>
+      </div>
+
+      <div className="flex justify-center">
         <MyhoraNatalChartControls
           options={opts}
           onChange={onOptionsChange}
           hasAnalysisLayer={Boolean(analysisPath)}
         />
       </div>
-    </figure>
+    </div>
   )
 }
 
