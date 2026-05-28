@@ -79,6 +79,10 @@ export function MyhoraEmbedFrame({
         } else if (className.includes('myhora-chart-rasi-stage--transit-only')) {
           rules = '.cr-nsign { display: none !important; }'
         }
+        
+        // เติมกฎทำให้ 16 องศา 8 ตรงกลางเป็นสีดำเข้มชัดเจนใน iframe
+        rules += ' .cr-deg, .cbv-deg, .cnt-deg, .lx-deg, text[class*="deg"] { fill: #000000 !important; color: #000000 !important; font-weight: bold !important; opacity: 1 !important; }'
+        
         if (rules) {
           style.innerHTML = rules
           doc.head.appendChild(style)

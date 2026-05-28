@@ -8,6 +8,14 @@ export const MYHORA_CHART_CHROME_CSS = `
 .cr-tool-export, .cbv-tool-export, .cnt-tool-export,
 .cr-info, .cbv-info, .cnt-info { display: none !important; }
 
+/* ทำให้ตัวหนังสือองศาตรงกลาง (เช่น 16 องศา 8) เป็นสีดำเข้มชัดเจน */
+.cr-deg, .cbv-deg, .cnt-deg, .lx-deg, text[class*="deg"] {
+  fill: #000000 !important;
+  color: #000000 !important;
+  font-weight: bold !important;
+  opacity: 1 !important;
+}
+
 /* แยกวงจักร: เมื่อระบุว่าต้องการซ่อนดาวจร (เลขอารบิกวงนอก) ในวงดาวกำเนิด */
 .myhora-chart-rasi-stage--natal-only .cr-tsign,
 .myhora-chart-section--chart-only.myhora-chart-rasi-stage--natal-only .cr-tsign,
