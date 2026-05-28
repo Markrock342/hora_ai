@@ -36,6 +36,7 @@ interface ChartSlotProps {
   preparedHtml?: string | null
   size: 'large' | 'small'
   bare?: boolean
+  className?: string
 }
 
 function ChartSlotHeader({ label, size }: { label: string; size: 'large' | 'small' }) {
@@ -117,6 +118,7 @@ function DivisionalChartContent({
   dim,
   htmlSize,
   bare,
+  className = '',
 }: {
   label: string
   embedPath: string | null
@@ -124,6 +126,7 @@ function DivisionalChartContent({
   dim: { width: number; height: number }
   htmlSize: 'large' | 'small'
   bare: boolean
+  className?: string
 }): ReactNode {
   const useHtml = Boolean(preparedHtml?.trim())
   const [useDocument, setUseDocument] = useState(false)
@@ -134,7 +137,7 @@ function DivisionalChartContent({
         embedPath={embedPath}
         preparedHtml={preparedHtml}
         size={htmlSize}
-        className="myhora-chart-section--chart-only"
+        className={`myhora-chart-section--chart-only ${className}`.trim()}
       />
     )
   }
@@ -148,6 +151,7 @@ function DivisionalChartContent({
         title={label}
         width={dim.width}
         height={dim.height}
+        className={className}
       />
     )
   }
@@ -160,12 +164,13 @@ function DivisionalChartContent({
       bare={bare}
       width={dim.width}
       height={dim.height}
+      className={className}
       onEmbedFailed={() => setUseDocument(true)}
     />
   )
 }
 
-function ChartSlot({ label, embedPath, preparedHtml, size, bare = false }: ChartSlotProps) {
+function ChartSlot({ label, embedPath, preparedHtml, size, bare = false, className = '' }: ChartSlotProps) {
   if (!embedPath && !preparedHtml?.trim()) return null
 
   const dim = DIVISIONAL_DIMS[size]
@@ -184,6 +189,7 @@ function ChartSlot({ label, embedPath, preparedHtml, size, bare = false }: Chart
             dim={dim}
             htmlSize={size}
             bare={bare}
+            className={className}
           />
         </MyhoraChartFitHost>
       </div>
@@ -234,14 +240,38 @@ export function MyhoraChartsPanel({
           aria-label="กราฟราศีจักร"
         >
           {hasRasi ? (
-            <div className="myhora-charts-triangle-top">
-              <ChartSlot
-                label="ราศีจักร"
-                embedPath={charts.rasi}
-                preparedHtml={charts.rasiHtml}
-                size="large"
-                bare={bare}
-              />
+            <div className="myhora-charts-triangle-top w-full">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+                {/* ราศีจักรดวงกำเนิด (พื้นเดิม - เลขไทย) */}
+                <div className="flex flex-col items-center">
+                  <span className="text-center mb-2 font-display text-hora-gold text-sm font-semibold">
+                    ราศีจักร (พื้นดวงเดิม - เลขไทย)
+                  </span>
+                  <ChartSlot
+                    label="ราศีจักร"
+                    embedPath={charts.rasi}
+                    preparedHtml={charts.rasiHtml}
+                    size="large"
+                    bare={bare}
+                    className="myhora-chart-rasi-stage--natal-only"
+                  />
+                </div>
+
+                {/* ราศีจักรดาวจร (ดาวจร - เลขอารบิก) */}
+                <div className="flex flex-col items-center">
+                  <span className="text-center mb-2 font-display text-hora-gold text-sm font-semibold">
+                    ราศีจักร (ตำแหน่งดาวจร - เลขอารบิก)
+                  </span>
+                  <ChartSlot
+                    label="ราศีจักร"
+                    embedPath={charts.rasi}
+                    preparedHtml={charts.rasiHtml}
+                    size="large"
+                    bare={bare}
+                    className="myhora-chart-rasi-stage--transit-only"
+                  />
+                </div>
+              </div>
             </div>
           ) : null}
 

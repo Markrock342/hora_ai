@@ -7,6 +7,19 @@ export const MYHORA_CHART_CHROME_CSS = `
 .print-btn,
 .cr-tool-export, .cbv-tool-export, .cnt-tool-export,
 .cr-info, .cbv-info, .cnt-info { display: none !important; }
+
+/* แยกวงจักร: เมื่อระบุว่าต้องการซ่อนดาวจร (เลขอารบิกวงนอก) ในวงดาวกำเนิด */
+.myhora-chart-rasi-stage--natal-only .cr-tsign,
+.myhora-chart-section--chart-only.myhora-chart-rasi-stage--natal-only .cr-tsign,
+.myhora-chart-html-shadow.myhora-chart-rasi-stage--natal-only .cr-tsign {
+  display: none !important;
+}
+/* แยกวงจักร: เมื่อระบุว่าต้องการซ่อนดาวพื้นดวง (เลขไทยวงใน) ในวงดาวจร */
+.myhora-chart-rasi-stage--transit-only .cr-nsign,
+.myhora-chart-section--chart-only.myhora-chart-rasi-stage--transit-only .cr-nsign,
+.myhora-chart-html-shadow.myhora-chart-rasi-stage--transit-only .cr-nsign {
+  display: none !important;
+}
 `
 
 /** ตอนพิมพ์ PDF — ซ่อนแถบ checkbox ในกราฟ */

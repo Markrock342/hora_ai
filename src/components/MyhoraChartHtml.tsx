@@ -78,7 +78,7 @@ export function MyhoraChartHtml({
       ) : null}
       <div
         ref={hostRef}
-        className="myhora-chart-html-shadow"
+        className={`myhora-chart-html-shadow ${className}`.trim()}
         hidden={loading || failed || !html}
         aria-hidden={loading || failed || !html}
       />
