@@ -247,7 +247,6 @@ export function mergeMyhoraTables(
     htmlFragments: {
       natalTable: natalTablePrepared,
       astrologyNatal: extra?.htmlFragments?.astrologyNatal ?? null,
-      astrologyTransit: extra?.htmlFragments?.astrologyTransit ?? null,
     },
     transit: extra?.transit ?? {
       day: new Date().getDate(),

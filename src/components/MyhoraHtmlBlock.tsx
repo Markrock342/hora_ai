@@ -47,10 +47,8 @@ function normalizeSamrapTableTheme(root: HTMLElement) {
 
   const tables = [...root.querySelectorAll<HTMLTableElement>('table')]
   tables.forEach((table, index) => {
-    const headerText = table.querySelector('tr')?.textContent ?? ''
     const colCount = table.rows[0]?.cells.length ?? 0
-    const isPlanets =
-      index === 0 && (colCount <= 6 || /ดาว|ปัจจัย|ราศี|องศา|ลิปดา/i.test(headerText))
+    const isPlanets = index === 0 && colCount <= 6
 
     table.classList.add('myhora-samrap-table')
     table.classList.add(isPlanets ? 'myhora-samrap-table--planets' : 'myhora-samrap-table--grid')

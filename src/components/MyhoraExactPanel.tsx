@@ -59,16 +59,6 @@ export function MyhoraExactPanel({ tables: tablesProp }: MyhoraExactPanelProps) 
       />
 
       <MyhoraTaksaTriwaiRow tables={tables} />
-
-      {html?.astrologyTransit ? (
-        <MyhoraHtmlBlock
-          title="ตารางสมผุสดวงจรและคำทำนาย"
-          subtitle="ดาวจรปัจจุบันและผลกระทบดวงชะตา"
-          html={html.astrologyTransit}
-          minHeight={200}
-          className="myhora-html-block--transit"
-        />
-      ) : null}
     </div>
   )
 }

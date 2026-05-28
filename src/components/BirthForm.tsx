@@ -411,7 +411,7 @@ export function BirthForm() {
                     icon="🕐"
                     hint="รูปแบบ 24 ชม."
                     className="datetime-grid-time"
-                    control="time"
+                    control="default"
                   >
                     <div className="flex items-center gap-1.5 w-full">
                       <select

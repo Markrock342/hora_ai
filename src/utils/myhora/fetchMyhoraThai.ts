@@ -4,7 +4,7 @@ import type { MyhoraChartEmbeds, MyhoraTables } from '../../types/myhora'
 import type { TransitInput } from '../../types/transit'
 import { defaultTransitInput } from '../../types/transit'
 import { prepareMyhoraChartHtml } from './chartHtml'
-import { prepareMyhoraContentHtml, sortNatalTableHtmlByPlanets } from './prepareContentHtml'
+import { prepareMyhoraContentHtml } from './prepareContentHtml'
 import { parseMyhoraContentPaths } from './parseContent'
 import {
   mergeMyhoraTables,
@@ -131,15 +131,12 @@ export async function fetchMyhoraThaiChart(
 
   const contentPaths = parseMyhoraContentPaths(resultHtml)
 
-  const [taksaHtml, triwaiHtml, natalHtml, transitHtml, rasiRaw, navamsaRaw, drekkanaRaw, bhavaRaw] =
+  const [taksaHtml, triwaiHtml, natalHtml, rasiRaw, navamsaRaw, drekkanaRaw, bhavaRaw] =
     await Promise.all([
       embeds.taksa ? fetchText(embeds.taksa) : Promise.resolve(''),
       embeds.triwai ? fetchText(embeds.triwai) : Promise.resolve(''),
       contentPaths.astrologyNatal
         ? fetchText(contentPaths.astrologyNatal)
-        : Promise.resolve(''),
-      contentPaths.astrologyTransit
-        ? fetchText(contentPaths.astrologyTransit)
         : Promise.resolve(''),
       embeds.rasi ? fetchText(embeds.rasi) : Promise.resolve(''),
       embeds.navamsa ? fetchText(embeds.navamsa) : Promise.resolve(''),
@@ -178,20 +175,11 @@ export async function fetchMyhoraThaiChart(
       )
     : null
 
-  const astrologyTransitHtml = transitHtml
-    ? sortNatalTableHtmlByPlanets(
-        prepareMyhoraContentHtml(
-          transitHtml.match(/<body[^>]*>([\s\S]*)<\/body>/i)?.[1] ?? transitHtml,
-        ),
-      )
-    : null
-
   const tables = mergeMyhoraTables(resultHtml, taksaHtml, triwaiHtml, {
     chartEmbeds,
     transit,
     htmlFragments: {
       astrologyNatal: astrologyNatalHtml,
-      astrologyTransit: astrologyTransitHtml,
     },
   })
 
