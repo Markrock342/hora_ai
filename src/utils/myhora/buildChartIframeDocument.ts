@@ -98,9 +98,12 @@ function extractCnChartMarkup(html: string): string | null {
 
 function wrapNatalChartBody(body: string, opts?: NatalChartDisplayOptions): string {
   const bg = natalWheelBackgroundImage(opts?.aspectLines ?? false)
-  const extraClass = opts?.isTransitOnly 
-    ? ' myhora-natal-chart-stage--transit-only'
-    : ' myhora-natal-chart-stage--natal-only';
+  let extraClass = '';
+  if (opts?.isTransitOnly !== undefined) {
+    extraClass = opts.isTransitOnly 
+      ? ' myhora-natal-chart-stage--transit-only'
+      : ' myhora-natal-chart-stage--natal-only';
+  }
   return `<div class="myhora-natal-chart-stage${extraClass}" style="background-image:${bg};">${body}</div>`
 }
 
