@@ -41,3 +41,16 @@ export function extractNatalTableHtml(html: string): string | null {
   const inner = m?.[1]?.trim()
   return inner && inner.length > 50 ? inner : null
 }
+
+/** ตารางสมผุสดาวจร — ฝังใน thai.aspx หลัง POST (ใน #transit-table) */
+export function extractTransitTableHtml(html: string): string | null {
+  // Try #transit-table first
+  const m1 = html.match(/id="transit-table"[^>]*>([\s\S]*?)(?=<div id="astrology_transit"|<\/div>\s*<div id="astrology_natal")/i)
+  if (m1?.[1]?.trim() && m1[1].trim().length > 50) return m1[1].trim()
+
+  // Fallback: look for ตารางสมผุสดาวจร section
+  const m2 = html.match(/ตารางสมผุสดาวจร[\s\S]*?(<table[\s\S]*?<\/table>)/i)
+  if (m2?.[1]?.trim()) return m2[1].trim()
+
+  return null
+}

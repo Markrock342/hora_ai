@@ -5,6 +5,7 @@ import type { MyhoraTables, MyhoraTaksaCell, MyhoraTriwaiCell } from '../../type
 import { parseDateInfoFromMainHtml } from './parseDateDetail'
 import {
   extractNatalTableHtml,
+  extractTransitTableHtml,
   parseMyhoraContentPaths,
 } from './parseContent'
 import { prepareSamrapTableHtml } from './prepareContentHtml'
@@ -226,6 +227,8 @@ export function mergeMyhoraTables(
   const contentPaths = parseMyhoraContentPaths(mainHtml)
   const natalTableRaw = extractNatalTableHtml(mainHtml)
   const natalTablePrepared = natalTableRaw ? prepareSamrapTableHtml(natalTableRaw) : null
+  const transitTableRaw = extractTransitTableHtml(mainHtml)
+  const transitTablePrepared = transitTableRaw ? prepareSamrapTableHtml(transitTableRaw) : null
 
   return {
     lagnaSign: lagnaSign ?? null,
@@ -247,9 +250,11 @@ export function mergeMyhoraTables(
     contentEmbeds: contentPaths,
     htmlFragments: {
       natalTable: natalTablePrepared,
+      transitTable: transitTablePrepared,
       astrologyNatal: extra?.htmlFragments?.astrologyNatal ?? null,
     },
     natalPlanets: extractNatalTableData(natalTableRaw),
+    transitPlanets: extractNatalTableData(transitTableRaw),
     transit: extra?.transit ?? {
       day: new Date().getDate(),
       month: new Date().getMonth() + 1,

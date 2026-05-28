@@ -62,6 +62,7 @@ export interface MyhoraContentEmbeds {
 /** HTML ฝังใน thai.aspx หรือดึงมาแล้วเตรียมแสดง */
 export interface MyhoraHtmlFragments {
   natalTable: string | null
+  transitTable: string | null
   astrologyNatal: string | null
 }
 
@@ -98,6 +99,10 @@ export interface MyhoraTables {
   contentEmbeds?: MyhoraContentEmbeds
   /** ตารางสมผุส + คำทำนาย (HTML พร้อมแสดง) */
   htmlFragments?: MyhoraHtmlFragments
+  /** ข้อมูลดาวกำเนิด (parse แล้ว) */
+  natalPlanets?: MyhoraNatalPlanet[] | null
+  /** ข้อมูลดาวจร (parse แล้ว) */
+  transitPlanets?: MyhoraNatalPlanet[] | null
   /** วันจรที่ใช้คำนวณรอบนี้ */
   transit?: TransitInput
   /** 3×3 ทักษา */

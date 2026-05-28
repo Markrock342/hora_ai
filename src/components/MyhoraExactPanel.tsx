@@ -50,7 +50,11 @@ export function MyhoraExactPanel({ tables: tablesProp }: MyhoraExactPanelProps) 
         </section>
       ) : null}
 
-      <MyhoraNatalTable html={html?.natalTable ?? null} />
+      <MyhoraNatalTable
+        html={html?.natalTable ?? null}
+        natalPlanets={tables.natalPlanets}
+        transitPlanets={tables.transitPlanets}
+      />
 
       <MyhoraTaksaTriwaiRow tables={tables} />
     </div>
