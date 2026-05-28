@@ -8,6 +8,7 @@ import {
   parseMyhoraContentPaths,
 } from './parseContent'
 import { prepareSamrapTableHtml } from './prepareContentHtml'
+import { extractNatalTableData } from './parseSamrapData'
 
 function planetNumFromImg(html: string): number | null {
   const m = html.match(/\/star\/A(\d)\.png/i) ?? html.match(/\/star\/a(\d)\.png/i)
@@ -248,6 +249,7 @@ export function mergeMyhoraTables(
       natalTable: natalTablePrepared,
       astrologyNatal: extra?.htmlFragments?.astrologyNatal ?? null,
     },
+    natalPlanets: extractNatalTableData(natalTableRaw),
     transit: extra?.transit ?? {
       day: new Date().getDate(),
       month: new Date().getMonth() + 1,

@@ -108,24 +108,26 @@ export function TransitDateControls({
             </label>
 
             <label className="transit-field transit-field--year">
-              <span className="transit-label">ปี (ค.ศ.)</span>
+              <span className="transit-label">ปี (พ.ศ.)</span>
               <div className="transit-year-row">
                 <input
                   type="text"
                   inputMode="numeric"
                   className="hora-input hora-input-3d transit-control-input transit-year-input"
-                  placeholder="2026"
-                  value={draft.year || ''}
+                  placeholder="เช่น 2569"
+                  value={draft.year ? draft.year + 543 : ''}
                   onChange={(e) => {
                     const raw = e.target.value.replace(/\D/g, '').slice(0, 4)
+                    const beYear = raw === '' ? 0 : Number(raw)
+                    const ceYear = beYear > 0 ? beYear - 543 : 0
                     setDraft((d) => ({
                       ...d,
-                      year: raw === '' ? 0 : Number(raw),
+                      year: ceYear,
                     }))
                   }}
                 />
-                {buddhistYear ? (
-                  <span className="transit-year-be">พ.ศ. {buddhistYear}</span>
+                {draft.year >= 1900 ? (
+                  <span className="transit-year-be text-xs text-hora-gold-dim">ค.ศ. {draft.year}</span>
                 ) : null}
               </div>
             </label>

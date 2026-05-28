@@ -55,7 +55,7 @@ export function ResultTable<T extends object>({
 
   return (
     <section
-      className={`result-table-section printable-section result-table-mystic result-table-stagger relative overflow-hidden rounded-2xl border border-hora-gold/25 bg-hora-panel/80 backdrop-blur-md print:rounded-none print:border print:border-gray-300 print:bg-white ${
+      className={`result-table-section printable-section result-table-mystic result-table-stagger relative rounded-2xl border border-hora-gold/25 bg-hora-panel/80 backdrop-blur-md print:rounded-none print:border print:border-gray-300 print:bg-white ${
         printSection ? 'print:break-inside-avoid' : ''
       } ${isChart ? 'gold-glow result-table-mystic--chart' : ''}`}
       data-print-section={printSectionId}
@@ -96,11 +96,11 @@ export function ResultTable<T extends object>({
         ) : null}
       </header>
 
-      <div className="relative overflow-x-auto print:overflow-visible">
+      <div className="relative w-full">
         <table
           className={`report-table w-full border-collapse text-sm ${
             isChart ? 'chart-table' : ''
-          } ${isChart ? 'min-w-0' : 'min-w-[480px]'}`}
+          }`}
         >
           <thead>
             <tr>

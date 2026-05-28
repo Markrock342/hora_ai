@@ -31,6 +31,24 @@ export interface MyhoraWidgetEmbeds {
   triwai: string | null
 }
 
+export interface MyhoraNatalPlanet {
+  planet: string
+  zodiac: string
+  degree: string
+  minute: string
+  house?: string
+  triyang?: string
+  poison?: string
+  nawamang?: string
+  rerk?: string
+  rerkName?: string
+  baht?: string
+  rerk2?: string
+  rerkBig?: string
+  rerkOwner?: string
+  rerkStandard?: string
+}
+
 /** iframe เพิ่ม — ดาวรอบกราฟ, คำทำนาย, เรือนลัคนา ฯลฯ */
 export interface MyhoraContentEmbeds {
   chartPlanet: string | null

@@ -35,16 +35,8 @@ function stripSamrapInlineStyle(el: HTMLElement) {
   else el.removeAttribute('style')
 }
 
+/** สำหรับ samrap: ไม่ strip styles ของ myhora เอาต้นฉบับมาแสดงเลย */
 function normalizeSamrapTableTheme(root: HTMLElement) {
-  root.querySelectorAll<HTMLElement>('table, tr, td, th').forEach(stripSamrapInlineStyle)
-
-  root.querySelectorAll<HTMLElement>('div').forEach((el) => {
-    if (el.closest('table')) return
-    stripSamrapInlineStyle(el)
-    el.style.width = ''
-    el.style.maxWidth = '100%'
-  })
-
   const tables = [...root.querySelectorAll<HTMLTableElement>('table')]
   tables.forEach((table, index) => {
     const colCount = table.rows[0]?.cells.length ?? 0
@@ -139,7 +131,7 @@ export function MyhoraHtmlBlock({
 
   return (
     <section
-      className={`myhora-html-block gold-glow overflow-hidden rounded-2xl border border-hora-gold/25 bg-hora-panel/80 backdrop-blur-md print:border-gray-300 print:bg-white ${className}`.trim()}
+      className={`myhora-html-block gold-glow rounded-2xl border border-hora-gold/25 bg-hora-panel/80 backdrop-blur-md print:border-gray-300 print:bg-white ${isSamrap ? 'myhora-html-block--samrap-outer' : 'overflow-hidden'} ${className}`.trim()}
       aria-label={title}
     >
       <header className="border-b border-hora-gold/20 bg-gradient-to-r from-hora-panel-light/90 to-hora-panel/60 px-5 py-4 print:border-gray-300 print:bg-gray-100">
@@ -150,10 +142,19 @@ export function MyhoraHtmlBlock({
       </header>
       <div
         ref={bodyRef}
-        className={`myhora-html-body px-4 py-4 text-[13px] leading-relaxed text-hora-cream print:text-black${isSamrap ? ' myhora-html-body--samrap' : ' overflow-x-auto'}`}
+        className={`myhora-html-body text-[13px] leading-relaxed print:text-black${
+          isSamrap
+            ? ' myhora-html-body--samrap bg-white px-3 py-3'
+            : ' overflow-x-auto px-4 py-4 text-hora-cream'
+        }`}
         style={{ minHeight }}
-        dangerouslySetInnerHTML={{ __html: html }}
-      />
+      >
+        {isSamrap ? (
+          <div className="flex flex-nowrap items-start w-max mx-auto" dangerouslySetInnerHTML={{ __html: html }} />
+        ) : (
+          <div dangerouslySetInnerHTML={{ __html: html }} />
+        )}
+      </div>
     </section>
   )
 }

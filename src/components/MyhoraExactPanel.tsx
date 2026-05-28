@@ -2,7 +2,7 @@ import type { MyhoraTables } from '../types/myhora'
 import { patchMyhoraNatalEmbeds } from '../utils/myhora/patchMyhoraNatalEmbeds'
 import { MyhoraChartEmbed } from './MyhoraChartEmbed'
 import { MyhoraChartsPanel } from './MyhoraChartsPanel'
-import { MyhoraHtmlBlock } from './MyhoraHtmlBlock'
+import { MyhoraNatalTable } from './MyhoraNatalTable'
 import { MyhoraTaksaTriwaiRow } from './MyhoraTaksaTriwaiRow'
 
 interface MyhoraExactPanelProps {
@@ -50,13 +50,7 @@ export function MyhoraExactPanel({ tables: tablesProp }: MyhoraExactPanelProps) 
         </section>
       ) : null}
 
-      <MyhoraHtmlBlock
-        title="ตารางสมผุสดวงกำเนิด"
-        subtitle="เรือนลัคนา · ตรียางค์ · นวางค์ · ทักษา · ฤกษ์"
-        html={html?.natalTable ?? null}
-        minHeight={200}
-        className="myhora-html-block--samrap"
-      />
+      <MyhoraNatalTable html={html?.natalTable ?? null} />
 
       <MyhoraTaksaTriwaiRow tables={tables} />
     </div>
