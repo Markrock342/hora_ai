@@ -217,7 +217,7 @@ export function MyhoraChartsPanel({
   return (
     <div className="myhora-charts-panel-root space-y-6">
       {hasNatal ? (
-        <section className="myhora-natal-wheel-section" aria-label="กราฟดวงกำเนิดแบบ myhora">
+        <section className="myhora-natal-wheel-section" aria-label="กราฟดวงกำเนิดปฏิทินดาราศาสตร์ดั้งเดิม">
           {!bare ? (
             <header className="myhora-natal-wheel-header mb-3">
               <h3 className="font-display text-lg text-gradient-gold">ดวงจักรกำเนิด</h3>
