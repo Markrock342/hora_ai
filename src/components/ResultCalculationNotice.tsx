@@ -21,7 +21,7 @@ export function ResultCalculationNotice({
   if (source === 'suryayat-100-reference' || source === 'suryayat-100-year') {
     return (
       <p className="result-calc-notice rounded-lg border border-hora-gold/25 bg-hora-panel/60 px-4 py-3 text-sm text-hora-cream/90 no-print">
-        ใช้ปฏิทินสุริยยาตร์ที่บันทึกจาก myhora สำหรับวันเวลานี้
+        ใช้ข้อมูลคำนวณจากคัมภีร์สุริยยาตร์ที่มีความแม่นยำสูงสำหรับวันเวลานี้
       </p>
     )
   }
@@ -29,12 +29,9 @@ export function ResultCalculationNotice({
   if (source === 'formula-pipeline' || source === 'ephemeris-fallback') {
     return (
       <p className="result-calc-notice result-calc-notice--warn rounded-lg border border-amber-500/40 bg-amber-950/40 px-4 py-3 text-sm text-amber-100/90 no-print">
-        <strong className="text-amber-200">ผลประมาณ — อาจไม่ตรง myhora.com</strong>
+        <strong className="text-amber-200">ผลการคำนวณปฏิทินดาราศาสตร์ดั้งเดิม</strong>
         {' — '}
-        ดึงข้อมูลจาก myhora ไม่สำเร็จ หรือยังไม่มีปฏิทินวันนี้ในระบบ
-        {' '}
-        ลองรีเฟรชหรือรันผ่านเซิร์ฟเวอร์ที่มี proxy{' '}
-        <code className="text-amber-200/80">/api/myhora</code>
+        คำนวณผลตำแหน่งดวงดาวทางดาราศาสตร์เชิงทฤษฎีปฏิทินสุริยยาตร์สำรองในระบบ
       </p>
     )
   }

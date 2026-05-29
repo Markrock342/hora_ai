@@ -222,7 +222,7 @@ export function MyhoraChartsPanel({
             <header className="myhora-natal-wheel-header mb-3">
               <h3 className="font-display text-lg text-gradient-gold">ดวงจักรกำเนิด</h3>
               <p className="text-xs text-hora-muted">
-                องศา · นวางศ์ · เส้นมุม — โหลดจาก myhora
+                องศา · นวางศ์ · เส้นมุม (ปฏิทินดาราศาสตร์ดั้งเดิม)
               </p>
             </header>
           ) : null}

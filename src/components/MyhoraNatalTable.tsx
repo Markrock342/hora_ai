@@ -25,6 +25,49 @@ function MyhoraPlanetTable({
   const wrapRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
 
+  const handleExport = () => {
+    const headers = [
+      'ดาว/ปัจจัย', 'ราศี', 'องศา', 'ลิปดา', 'เรือนลัคนา', 'ตรียางศ์', 'พิษ', 'นวางศ์',
+      'ฤกษ์:นาที', 'นักษัตรฤกษ์', 'บาท', 'ฤกษ์', 'ฤกษ์ใหญ่', 'เจ้าเรือน', 'มาตรฐาน เกณฑ์ ฯ'
+    ]
+
+    const rows = planets.map(p => [
+      p.planet,
+      p.zodiac,
+      p.degree,
+      p.minute,
+      p.house,
+      p.triyang,
+      p.poison || '—',
+      p.nawamang,
+      p.rerk,
+      p.rerkName,
+      p.baht,
+      p.rerk2,
+      p.rerkBig,
+      p.rerkOwner,
+      p.rerkStandard || '—'
+    ])
+
+    const csvContent = "\uFEFF" + [
+      headers.join(','),
+      ...rows.map(r => r.map(val => {
+        const s = String(val ?? '').replace(/"/g, '""');
+        return s.includes(',') || s.includes('"') || s.includes('\n') ? `"${s}"` : s;
+      }).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${title}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
   // scale ให้ตารางพอดีจอ ไม่ต้อง scroll
   useEffect(() => {
     const wrap = wrapRef.current
@@ -63,9 +106,18 @@ function MyhoraPlanetTable({
       className="gold-glow overflow-hidden rounded-2xl border border-hora-gold/25 bg-hora-panel/80 backdrop-blur-md"
       aria-label={title}
     >
-      <header className="border-b border-hora-gold/20 bg-gradient-to-r from-hora-panel-light/90 to-hora-panel/60 px-5 py-4">
-        <h3 className="font-display text-xl font-medium text-gradient-gold">{title}</h3>
-        {subtitle && <p className="mt-1 text-xs text-hora-gold-dim">{subtitle}</p>}
+      <header className="border-b border-hora-gold/20 bg-gradient-to-r from-hora-panel-light/90 to-hora-panel/60 px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <h3 className="font-display text-xl font-medium text-gradient-gold">{title}</h3>
+          {subtitle && <p className="mt-1 text-xs text-hora-gold-dim">{subtitle}</p>}
+        </div>
+        <button
+          onClick={handleExport}
+          className="no-print flex-shrink-0 flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg border border-hora-gold/45 bg-gradient-to-r from-hora-gold/20 to-hora-gold/5 text-hora-gold-light hover:from-hora-gold/30 hover:to-hora-gold/15 active:scale-95 transition-all shadow-md cursor-pointer"
+        >
+          <span className="text-lg">📥</span>
+          ส่งออก Excel
+        </button>
       </header>
       <div
         ref={wrapRef}
